@@ -39,6 +39,12 @@ function check_requirements() {
       exit 11
    fi
 
+   type ruby > /dev/null 2> /dev/null
+   if [[ "$?" -ne 0 ]]; then
+      err 'ruby required to generate psl files'
+      exit 12
+   fi
+
    type java > /dev/null 2> /dev/null
    if [[ "$?" -ne 0 ]]; then
       err 'java required to run project'
