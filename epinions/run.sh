@@ -80,24 +80,40 @@ function run() {
 
    OUT_BASE_DIR="${BASE_DIR}/out"
 
-   FOLDS='22050 33075 38588 44100 49613 55125 66150'
+   FOLDS=`seq -s ' ' 0 19`
+   METHOD_LEARN='learn'
+   METHOD_EVAL='eval'
 
    PSL_CLI_DIR="${BASE_DIR}/psl-cli"
-   MODEL_PATH="${PSL_CLI_DIR}/party-affiliation.psl"
-   DATA_TEMPLATE_PATH="${PSL_CLI_DIR}/party-affiliation-template.data"
+   MODEL_PATH="${PSL_CLI_DIR}/epinions.psl"
+   DATA_TEMPLATE_PATH="${PSL_CLI_DIR}/epinions-template.data"
+   LEARNED_MODEL_FILENAME='epinions-learned.psl'
+   LEARNED_MODEL_PATH="${PSL_CLI_DIR}/${LEARNED_MODEL_FILENAME}"
 
    for fold in $FOLDS; do
       outDir="${OUT_BASE_DIR}/${fold}"
       mkdir -p $outDir
 
+      outputLearnPath="${outDir}/out-learn.txt"
       outputEvalPath="${outDir}/out-eval.txt"
+
+      learnDataFilePath="${outDir}/${fold}-learn.data"
       evalDataFilePath="${outDir}/${fold}-eval.data"
+
+      learnedModelPath="${outDir}/${LEARNED_MODEL_FILENAME}"
+
+      echo "Generating learn data file to ${learnDataFilePath}."
+      ruby $GENERATE_DATAFILE_SCRIPT $DATA_TEMPLATE_PATH $learnDataFilePath $fold $METHOD_LEARN
+
+      echo "Running ${fold} (learn). Output redirected to ${outputLearnPath}."
+      time java -jar $JAR_PATH -l -d ${learnDataFilePath} -m ${MODEL_PATH} -D log4j.threshold=DEBUG > ${outputLearnPath}
+      mv ${LEARNED_MODEL_PATH} ${learnedModelPath}
 
       echo "Generating eval data file to ${evalDataFilePath}."
       ruby $GENERATE_DATAFILE_SCRIPT $DATA_TEMPLATE_PATH $evalDataFilePath $fold $METHOD_EVAL
 
       echo "Running ${fold} (eval). Output redirected to ${outputEvalPath}."
-      time java -jar $JAR_PATH -i -d ${evalDataFilePath} -m ${MODEL_PATH} -D log4j.threshold=DEBUG -o ${outDir} > ${outputEvalPath}
+      time java -jar $JAR_PATH -i -d ${evalDataFilePath} -m ${learnedModelPath} -D log4j.threshold=DEBUG -ed -o ${outDir} > ${outputEvalPath}
    done
 }
 

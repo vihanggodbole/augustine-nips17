@@ -7,23 +7,6 @@ FETCH_DATA_SCRIPT="fetchData.sh"
 JAR_PATH='psl-cli-CANARY.jar'
 JAR_URL='https://linqs-data.soe.ucsc.edu/maven/repositories/psl-releases/org/linqs/psl-cli/CANARY/psl-cli-CANARY.jar'
 
-BASE_DIR=`pwd`
-SCRIPTS_DIR="${BASE_DIR}/scripts"
-GENERATE_DATAFILE_SCRIPT="${SCRIPTS_DIR}/generateDataFiles.rb"
-
-OUT_BASE_DIR="${BASE_DIR}/out"
-
-DATASETS='citeseer cora'
-FOLDS=`seq -s ' ' 0 19`
-METHOD_LEARN='learn'
-METHOD_EVAL='eval'
-
-PSL_CLI_DIR="${BASE_DIR}/psl-cli"
-MODEL_PATH="${PSL_CLI_DIR}/collective-classification-citeseer-neighbor.psl"
-DATA_TEMPLATE_PATH="${PSL_CLI_DIR}/collective-classification-template.data"
-LEARNED_MODEL_FILENAME='collective-classification-citeseer-neighbor-learned.psl'
-LEARNED_MODEL_PATH="${PSL_CLI_DIR}/${LEARNED_MODEL_FILENAME}"
-
 FETCH_COMMAND=''
 
 function err() {
@@ -64,6 +47,7 @@ function check_requirements() {
 }
 
 function fetch_data() {
+   pushd . > /dev/null
    cd $DATA_DIR
 
    bash $FETCH_DATA_SCRIPT
@@ -72,7 +56,7 @@ function fetch_data() {
       exit 20
    fi
 
-   cd $BASE_DIR
+   popd > /dev/null
 }
 
 function fetch_jar() {
@@ -90,6 +74,23 @@ function fetch_jar() {
 }
 
 function run() {
+   BASE_DIR=`pwd`
+   SCRIPTS_DIR="${BASE_DIR}/scripts"
+   GENERATE_DATAFILE_SCRIPT="${SCRIPTS_DIR}/generateDataFiles.rb"
+
+   OUT_BASE_DIR="${BASE_DIR}/out"
+
+   DATASETS='citeseer cora'
+   FOLDS=`seq -s ' ' 0 19`
+   METHOD_LEARN='learn'
+   METHOD_EVAL='eval'
+
+   PSL_CLI_DIR="${BASE_DIR}/psl-cli"
+   MODEL_PATH="${PSL_CLI_DIR}/collective-classification-citeseer-neighbor.psl"
+   DATA_TEMPLATE_PATH="${PSL_CLI_DIR}/collective-classification-template.data"
+   LEARNED_MODEL_FILENAME='collective-classification-citeseer-neighbor-learned.psl'
+   LEARNED_MODEL_PATH="${PSL_CLI_DIR}/${LEARNED_MODEL_FILENAME}"
+
    for dataset in $DATASETS; do
       for fold in $FOLDS; do
          outDir="${OUT_BASE_DIR}/${dataset}/${fold}"
