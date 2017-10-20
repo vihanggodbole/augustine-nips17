@@ -112,14 +112,14 @@ function run() {
       ruby $GENERATE_DATAFILE_SCRIPT $DATA_TEMPLATE_PATH $learnDataFilePath $dataset $METHOD_LEARN
 
       echo "Running ${dataset} (learn). Output redirected to ${outputLearnPath}."
-      time java -jar $JAR_PATH -l -d ${learnDataFilePath} -m ${MODEL_PATH} -D log4j.threshold=DEBUG > ${outputLearnPath}
+      time java -jar $JAR_PATH -l -d ${learnDataFilePath} -m ${MODEL_PATH} -D log4j.threshold=DEBUG -D votedperceptron.stepsize=5.0 -D votedperceptron.numsteps=100 > ${outputLearnPath}
       mv ${LEARNED_MODEL_PATH} ${learnedModelPath}
 
       echo "Generating eval data file to ${evalDataFilePath}."
       ruby $GENERATE_DATAFILE_SCRIPT $DATA_TEMPLATE_PATH $evalDataFilePath $dataset $METHOD_EVAL
 
       echo "Running ${dataset} (eval). Output redirected to ${outputEvalPath}."
-      time java -jar $JAR_PATH -i -d ${evalDataFilePath} -m ${learnedModelPath} -D log4j.threshold=DEBUG -ed -o ${outDir} > ${outputEvalPath}
+      time java -jar $JAR_PATH -i -d ${evalDataFilePath} -m ${learnedModelPath} -D log4j.threshold=DEBUG -ec -o ${outDir} > ${outputEvalPath}
    done
 }
 
