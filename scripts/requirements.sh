@@ -1,13 +1,16 @@
 #!/bin/bash
 
-scriptDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" && source "${THIS_DIR}/util.sh"
+THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-source "${scriptDir}/util.sh"
+LIB_DIR="${THIS_DIR}/lib"
+mkdir -p "${LIB_DIR}"
 
-PSL_JAR_PATH='../psl-cli-CANARY.jar'
+PSL_JAR_PATH="${LIB_DIR}/psl-cli-CANARY.jar"
 PSL_JAR_URL='https://linqs-data.soe.ucsc.edu/maven/repositories/psl-releases/org/linqs/psl-cli/CANARY/psl-cli-CANARY.jar'
 
-TUFFY_JAR_PATH='../tuffy-modified.jar'
+TUFFY_JAR_PATH="${LIB_DIR}/tuffy-modified.jar"
+TUFFY_CONFIG_PATH="${THIS_DIR}/tuffy.conf"
 TUFFY_JAR_URL='https://linqs-data.soe.ucsc.edu/public/augustine-nips17-data/tuffy-modified.jar'
 
 function requirements::get_fetch_command() {

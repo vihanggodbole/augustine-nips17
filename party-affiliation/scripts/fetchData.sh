@@ -1,20 +1,21 @@
 #!/bin/bash
 
-scriptDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" && source "${scriptDir}/../../scripts/requirements.sh"
-scriptDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" && source "${scriptDir}/../../scripts/util.sh"
+THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" && source "${THIS_DIR}/../../scripts/requirements.sh"
+THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" && source "${THIS_DIR}/../../scripts/util.sh"
+THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-readonly BASE_DATA_DIR='data'
-readonly DATA_URL='https://linqs-data.soe.ucsc.edu/public/augustine-nips17-data/party-affiliation/processed.tar.gz'
-readonly DATA_FILE='processed.tar.gz'
-readonly DATA_DIR='processed'
+BASE_DATA_DIR="${THIS_DIR}/../data"
+DATA_URL='https://linqs-data.soe.ucsc.edu/public/augustine-nips17-data/party-affiliation/processed.tar.gz'
+DATA_FILE='processed.tar.gz'
+DATA_DIR='processed'
 
 function fetchData::main() {
-   pushd .
+   pushd . > /dev/null
 
    cd "${BASE_DATA_DIR}"
    requirements::fetch_and_extract_tar "${DATA_URL}" "${DATA_FILE}" "${DATA_DIR}" 'data'
 
-   popd
+   popd > /dev/null
 }
 
 # Run main if not sourced.
