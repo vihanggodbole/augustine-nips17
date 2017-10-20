@@ -4,7 +4,7 @@ trap exit SIGINT
 
 DATA_DIR='data'
 FETCH_DATA_SCRIPT="fetchData.sh"
-JAR_PATH='psl-cli-CANARY.jar'
+JAR_PATH='../psl-cli-CANARY.jar'
 JAR_URL='https://linqs-data.soe.ucsc.edu/maven/repositories/psl-releases/org/linqs/psl-cli/CANARY/psl-cli-CANARY.jar'
 
 FETCH_COMMAND=''
