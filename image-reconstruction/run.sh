@@ -84,7 +84,7 @@ function run() {
    SCRIPTS_DIR="${BASE_DIR}/scripts"
    GENERATE_DATAFILE_SCRIPT="${SCRIPTS_DIR}/generateDataFiles.rb"
 
-   OUT_BASE_DIR="${BASE_DIR}/out"
+   OUT_BASE_DIR="${BASE_DIR}/out/psl"
 
    DATASETS='caltech olivetti'
    METHOD_LEARN='learn'
