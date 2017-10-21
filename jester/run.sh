@@ -2,18 +2,34 @@
 
 THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" && source "${THIS_DIR}/scripts/fetchData.sh"
 THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" && source "${THIS_DIR}/../scripts/requirements.sh"
+THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" && source "${THIS_DIR}/../scripts/psl.sh"
 THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-
-EXPERIMENT_SCRIPTS_DIR="${THIS_DIR}/scripts"
 
 function run() {
    local outBaseDir="${THIS_DIR}/out"
    local folds=`seq -s ' ' 0 9`
 
    for fold in $folds; do
-      # TEST
-      runPSL $fold "${outBaseDir}"
-      # runTuffy $fold "${outBaseDir}"
+      psl::runLearn \
+         "${outBaseDir}/psl/${fold}" \
+         'jester' \
+         "${THIS_DIR}/psl-cli" \
+         "${THIS_DIR}/scripts" \
+         "${fold} learn" \
+         '' \
+         "${PSL_JAR_PATH}"
+
+      psl::runEval \
+         "${outBaseDir}/psl/${fold}" \
+         'jester' \
+         "${THIS_DIR}/psl-cli" \
+         "${THIS_DIR}/scripts" \
+         "${fold} eval" \
+         "${outBaseDir}/psl/${fold}/${LEARNED_MODEL_FILENAME}" \
+         '-ec' \
+         "${PSL_JAR_PATH}"
+
+      runTuffy $fold "${outBaseDir}"
    done
 }
 
@@ -59,7 +75,7 @@ function runTuffy() {
 
    mkdir -p $outDir
 
-   local generateDataScript="${EXPERIMENT_SCRIPTS_DIR}/generateMLNData.rb"
+   local generateDataScript="${THIS_DIR}/scripts/generateMLNData.rb"
 
    local mlnCliDir="${THIS_DIR}/mln"
    local programPath="${mlnCliDir}/prog.mln"

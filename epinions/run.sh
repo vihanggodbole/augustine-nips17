@@ -2,54 +2,35 @@
 
 THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" && source "${THIS_DIR}/scripts/fetchData.sh"
 THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" && source "${THIS_DIR}/../scripts/requirements.sh"
+THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" && source "${THIS_DIR}/../scripts/psl.sh"
 THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-
-EXPERIMENT_SCRIPTS_DIR="${THIS_DIR}/scripts"
 
 function run() {
    local outBaseDir="${THIS_DIR}/out"
    local folds=`seq -s ' ' 0 19`
 
    for fold in $folds; do
-      runPSL $fold "${outBaseDir}"
+      psl::runLearn \
+         "${outBaseDir}/psl/${fold}" \
+         'epinions' \
+         "${THIS_DIR}/psl-cli" \
+         "${THIS_DIR}/scripts" \
+         "${fold} learn" \
+         '' \
+         "${PSL_JAR_PATH}"
+
+      psl::runEval \
+         "${outBaseDir}/psl/${fold}" \
+         'epinions' \
+         "${THIS_DIR}/psl-cli" \
+         "${THIS_DIR}/scripts" \
+         "${fold} eval" \
+         "${outBaseDir}/psl/${fold}/${LEARNED_MODEL_FILENAME}" \
+         '-ec 0.5' \
+         "${PSL_JAR_PATH}"
+
       runTuffy $fold "${outBaseDir}"
    done
-}
-
-function runPSL() {
-   local fold=$1
-   local outDir="${2}/psl/${fold}"
-
-   mkdir -p $outDir
-
-   local generateDataScript="${EXPERIMENT_SCRIPTS_DIR}/generateDataFiles.rb"
-
-   local plsCliDir="${THIS_DIR}/psl-cli"
-   local modelPath="${plsCliDir}/epinions.psl"
-   local dataTemplatePath="${plsCliDir}/epinions-template.data"
-   local learnedModelFilename='epinions-learned.psl'
-   local defaultLearnedModelPath="${plsCliDir}/${learnedModelFilename}"
-
-   local outputLearnPath="${outDir}/out-learn.txt"
-   local outputEvalPath="${outDir}/out-eval.txt"
-
-   local learnDataFilePath="${outDir}/learn.data"
-   local evalDataFilePath="${outDir}/eval.data"
-
-   local learnedModelPath="${outDir}/${learnedModelFilename}"
-
-   echo "Generating PSL learn data file to ${learnDataFilePath}."
-   ruby $generateDataScript $dataTemplatePath $learnDataFilePath $fold 'learn'
-
-   echo "Running PSL ${fold} (learn). Output redirected to ${outputLearnPath}."
-   time java -jar "${PSL_JAR_PATH}" -l -d ${learnDataFilePath} -m ${modelPath} -D log4j.threshold=DEBUG > ${outputLearnPath}
-   mv ${defaultLearnedModelPath} ${learnedModelPath}
-
-   echo "Generating PSL eval data file to ${evalDataFilePath}."
-   ruby $generateDataScript $dataTemplatePath $evalDataFilePath $fold 'eval'
-
-   echo "Running PSL ${fold} (eval). Output redirected to ${outputEvalPath}."
-   time java -jar "${PSL_JAR_PATH}" -i -d ${evalDataFilePath} -m ${learnedModelPath} -D log4j.threshold=DEBUG -ed -o ${outDir} > ${outputEvalPath}
 }
 
 function runTuffy() {
@@ -58,7 +39,7 @@ function runTuffy() {
 
    mkdir -p $outDir
 
-   local generateDataScript="${EXPERIMENT_SCRIPTS_DIR}/generateMLNData.rb"
+   local generateDataScript="${THIS_DIR}/scripts/generateMLNData.rb"
 
    local mlnCliDir="${THIS_DIR}/mln"
    local programPath="${mlnCliDir}/prog.mln"

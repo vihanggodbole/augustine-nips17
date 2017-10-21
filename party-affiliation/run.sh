@@ -2,40 +2,26 @@
 
 THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" && source "${THIS_DIR}/scripts/fetchData.sh"
 THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" && source "${THIS_DIR}/../scripts/requirements.sh"
+THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" && source "${THIS_DIR}/../scripts/psl.sh"
 THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-
-EXPERIMENT_SCRIPTS_DIR="${THIS_DIR}/scripts"
 
 function run() {
    local outBaseDir="${THIS_DIR}/out"
    local folds='22050 33075 38588 44100 49613 55125 66150'
 
    for fold in $folds; do
-      runPSL $fold "${outBaseDir}"
+      psl::runEval \
+         "${outBaseDir}/psl/${fold}" \
+         'party-affiliation' \
+         "${THIS_DIR}/psl-cli" \
+         "${THIS_DIR}/scripts" \
+         "${fold}" \
+         "${THIS_DIR}/psl-cli/party-affiliation.psl" \
+         '' \
+         "${PSL_JAR_PATH}"
+
       runTuffy $fold "${outBaseDir}"
    done
-}
-
-function runPSL() {
-   local fold=$1
-   local outDir="${2}/psl/${fold}"
-
-   mkdir -p $outDir
-
-   local generateDataScript="${EXPERIMENT_SCRIPTS_DIR}/generateDataFiles.rb"
-
-   local pslCliDir="${THIS_DIR}/psl-cli"
-   local modelPath="${pslCliDir}/party-affiliation.psl"
-   local dataTemplatePath="${pslCliDir}/party-affiliation-template.data"
-
-   local outputEvalPath="${outDir}/out-eval.txt"
-   local evalDataFilePath="${outDir}/${fold}-eval.data"
-
-   echo "Generating PSL eval data file to ${evalDataFilePath}."
-   ruby $generateDataScript $dataTemplatePath $evalDataFilePath $fold
-
-   echo "Running PSL ${fold} (eval). Output redirected to ${outputEvalPath}."
-   time java -jar $PSL_JAR_PATH -i -d ${evalDataFilePath} -m ${modelPath} -D log4j.threshold=DEBUG -o ${outDir} > ${outputEvalPath}
 }
 
 function runTuffy() {
@@ -44,7 +30,7 @@ function runTuffy() {
 
    mkdir -p $outDir
 
-   local generateDataScript="${EXPERIMENT_SCRIPTS_DIR}/generateMLNData.rb"
+   local generateDataScript="${THIS_DIR}/scripts/generateMLNData.rb"
 
    local mlnCliDir="${THIS_DIR}/mln"
    local programPath="${mlnCliDir}/prog.mln"

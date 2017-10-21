@@ -13,6 +13,11 @@ TUFFY_JAR_PATH="${LIB_DIR}/tuffy-modified.jar"
 TUFFY_CONFIG_PATH="${THIS_DIR}/tuffy.conf"
 TUFFY_JAR_URL='https://linqs-data.soe.ucsc.edu/public/augustine-nips17-data/tuffy-modified.jar'
 
+# Get the java command we want all tests using.
+function requirements::java() {
+   echo 'java -Xmx25G -Xms25G'
+}
+
 function requirements::get_fetch_command() {
    type curl > /dev/null 2> /dev/null
    if [[ "$?" -eq 0 ]]; then
