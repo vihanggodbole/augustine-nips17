@@ -4,9 +4,9 @@ THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" && source "${THIS_D
 THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 BASE_DATA_DIR="${THIS_DIR}/../data"
-DATA_URL='https://linqs-data.soe.ucsc.edu/public/augustine-nips17-data/party-affiliation/processed.tar.gz'
-DATA_FILE='processed.tar.gz'
-DATA_DIR='processed'
+DATA_URL='https://linqs-data.soe.ucsc.edu/public/augustine-nips17-data/collective-classification/splits.tar.gz'
+DATA_FILE='splits.tar.gz'
+DATA_DIR='splits'
 
 function fetchData::main() {
    pushd . > /dev/null

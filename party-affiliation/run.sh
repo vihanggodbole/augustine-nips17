@@ -53,12 +53,10 @@ function runTuffy() {
    local resultsPath="${outDir}/votes.txt"
 
    local outputEvalPath="${outDir}/out-eval.txt"
-   local evalDataFilePath="${outDir}/${fold}-eval.data"
 
    local sourceDataDir="${THIS_DIR}/data/processed/${fold}"
-   local evidencePath="${THIS_DIR}/evidence.db"
 
-   echo "Generating Tuffy eval data file to ${evalDataFilePath}."
+   echo "Generating Tuffy eval data file to ${evidencePath}."
    ruby "${generateDataScript}" "${sourceDataDir}" "${evidencePath}"
 
    echo "Running Tuffy ${fold} (eval). Output redirected to ${outputEvalPath}."
