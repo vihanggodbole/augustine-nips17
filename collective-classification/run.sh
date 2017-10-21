@@ -70,7 +70,7 @@ function runTuffy() {
    local queryPath="${mlnCliDir}/query.db"
    local evidencePath="${THIS_DIR}/evidence.db"
 
-   local resultsLearnPath="${outDir}/learn_hasCat.txt"
+   local resultsLearnPath="${outDir}/learned_model.txt"
    local resultsEvalPath="${outDir}/eval_hasCat.txt"
 
    local outputLearnPath="${outDir}/out-learn.txt"
@@ -88,7 +88,7 @@ function runTuffy() {
    ruby "${generateDataScript}" "${evalSourceDataDir}" "${evidencePath}" 'eval'
 
    echo "Running Tuffy ${dataset}/${fold} (eval). Output redirected to ${outputEvalPath}."
-   time java -jar "${TUFFY_JAR_PATH}" -conf "${TUFFY_CONFIG_PATH}" -i "${programPath}" -e "${evidencePath}" -queryFile "${queryPath}" -r "${resultsEvalPath}" -marginal > ${outputEvalPath}
+   time java -jar "${TUFFY_JAR_PATH}" -conf "${TUFFY_CONFIG_PATH}" -i "${resultsLearnPath}" -e "${evidencePath}" -queryFile "${queryPath}" -r "${resultsEvalPath}" -marginal > ${outputEvalPath}
 
    rm -f "${evidencePath}"
 }
