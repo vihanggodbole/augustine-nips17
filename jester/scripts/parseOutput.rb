@@ -22,9 +22,6 @@ end
 def main(paths)
    sumStats = [0.0] * STATS.size()
 
-   # TEST
-   puts "[#{paths}]"
-
    puts "#{STATS.join("\t")}\tpath"
    paths.each{|path|
       stats = parseOutputForStats(path)

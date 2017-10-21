@@ -3,7 +3,7 @@
 THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" && source "${THIS_DIR}/../scripts/requirements.sh"
 THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-LEARNED_MODEL_FILENAME='learned-model.psl'
+LEARNED_PSL_MODEL_FILENAME='learned-model.psl'
 
 function psl::runLearn() {
    local outDir=$1
@@ -22,7 +22,7 @@ function psl::runLearn() {
    local defaultLearnedModelPath="${cliDir}/${modelName}-learned.psl"
    local outputLearnPath="${outDir}/out-learn.txt"
    local learnDataFilePath="${outDir}/learn.data"
-   local learnedModelPath="${outDir}/${LEARNED_MODEL_FILENAME}"
+   local learnedModelPath="${outDir}/${LEARNED_PSL_MODEL_FILENAME}"
 
    echo "Generating PSL (learn) data file to ${learnDataFilePath}."
    ruby $generateDataScript $dataTemplatePath $learnDataFilePath $genDataParams

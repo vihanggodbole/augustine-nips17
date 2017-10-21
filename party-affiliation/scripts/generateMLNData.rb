@@ -38,7 +38,7 @@ def main(dataDir, outPath)
 end
 
 def loadArgs(args)
-   if (args.size() != 2 || args.map{|arg| arg.gsub('-', '').downcase()}.include?('help'))
+   if (![2, 3].include?(args.size()) || args.map{|arg| arg.gsub('-', '').downcase()}.include?('help'))
       puts "USAGE: ruby #{$0} <data dir> <out path>"
       puts "   As per MLN convention, all evidence will be put into a single file."
       exit(1)

@@ -3,6 +3,7 @@
 THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" && source "${THIS_DIR}/scripts/fetchData.sh"
 THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" && source "${THIS_DIR}/../scripts/requirements.sh"
 THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" && source "${THIS_DIR}/../scripts/psl.sh"
+THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" && source "${THIS_DIR}/../scripts/tuffy.sh"
 THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 function run() {
@@ -20,35 +21,13 @@ function run() {
          '' \
          "${PSL_JAR_PATH}"
 
-      runTuffy $fold "${outBaseDir}"
+      tuffy::runEval \
+         "${outBaseDir}/tuffy/${fold}" \
+         "${THIS_DIR}/mln" \
+         "${THIS_DIR}/scripts" \
+         "${THIS_DIR}/data/processed/${fold}" \
+         "${THIS_DIR}/mln/prog.mln"
    done
-}
-
-function runTuffy() {
-   local fold=$1
-   local outDir="${2}/tuffy/${fold}"
-
-   mkdir -p $outDir
-
-   local generateDataScript="${THIS_DIR}/scripts/generateMLNData.rb"
-
-   local mlnCliDir="${THIS_DIR}/mln"
-   local programPath="${mlnCliDir}/prog.mln"
-   local queryPath="${mlnCliDir}/query.db"
-   local evidencePath="${THIS_DIR}/evidence.db"
-   local resultsPath="${outDir}/votes.txt"
-
-   local outputEvalPath="${outDir}/out-eval.txt"
-
-   local sourceDataDir="${THIS_DIR}/data/processed/${fold}"
-
-   echo "Generating Tuffy eval data file to ${evidencePath}."
-   ruby "${generateDataScript}" "${sourceDataDir}" "${evidencePath}"
-
-   echo "Running Tuffy ${fold} (eval). Output redirected to ${outputEvalPath}."
-   time java -jar "${TUFFY_JAR_PATH}" -conf "${TUFFY_CONFIG_PATH}" -i "${programPath}" -e "${evidencePath}" -queryFile "${queryPath}" -r "${resultsPath}" -marginal > ${outputEvalPath}
-
-   rm -f "${evidencePath}"
 }
 
 function main() {
