@@ -12,8 +12,8 @@ function run() {
 
    for fold in $folds; do
       # TEST
-      # runPSL $fold "${outBaseDir}"
-      runTuffy $fold "${outBaseDir}"
+      runPSL $fold "${outBaseDir}"
+      # runTuffy $fold "${outBaseDir}"
    done
 }
 

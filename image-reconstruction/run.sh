@@ -26,9 +26,9 @@ function runPSL() {
    local generateDataScript="${EXPERIMENT_SCRIPTS_DIR}/generateDataFiles.rb"
 
    local plsCliDir="${THIS_DIR}/psl-cli"
-   local modelPath="${plsCliDir}/collective-classification.psl"
-   local dataTemplatePath="${plsCliDir}/collective-classification-template.data"
-   local learnedModelFilename='collective-classification-learned.psl'
+   local modelPath="${plsCliDir}/image-reconstruction.psl"
+   local dataTemplatePath="${plsCliDir}/image-reconstruction-template.data"
+   local learnedModelFilename='image-reconstruction-learned.psl'
    local defaultLearnedModelPath="${plsCliDir}/${learnedModelFilename}"
 
    local outputLearnPath="${outDir}/out-learn.txt"
