@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 EXPERIMENTS='collective-classification epinions image-reconstruction jester party-affiliation'
 
