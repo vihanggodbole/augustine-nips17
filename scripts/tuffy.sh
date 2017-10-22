@@ -4,6 +4,8 @@ THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" && source "${THIS_D
 THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 LEARNED_MLN_MODEL_FILENAME='learned-model.mln'
+RAW_LEARNED_MLN_MODEL_FILENAME='raw-learned-model.mln'
+TRANSFER_WEIGHTS_SCRIPT="${THIS_DIR}/transferTuffyLearnedWeights.rb"
 
 function tuffy::runLearn() {
    local outDir=$1
@@ -17,6 +19,7 @@ function tuffy::runLearn() {
    local programPath="${cliDir}/prog.mln"
    local queryPath="${cliDir}/query.db"
    local evidencePath="${outDir}/evidence.db"
+   local rawResultsLearnPath="${outDir}/${RAW_LEARNED_MLN_MODEL_FILENAME}"
    local resultsLearnPath="${outDir}/${LEARNED_MLN_MODEL_FILENAME}"
    local outputLearnPath="${outDir}/out-learn.txt"
 
@@ -24,7 +27,12 @@ function tuffy::runLearn() {
    ruby "${generateDataScript}" "${sourceDataDir}" "${evidencePath}" 'learn'
 
    echo "Running Tuffy (learn). Output redirected to ${outputLearnPath}."
-   time `requirements::java` -jar "${TUFFY_JAR_PATH}" -learnwt -dMaxIter 25 -conf "${TUFFY_CONFIG_PATH}" -i "${programPath}" -e "${evidencePath}" -queryFile "${queryPath}" -r "${resultsLearnPath}" -marginal > ${outputLearnPath}
+   time `requirements::java` -jar "${TUFFY_JAR_PATH}" -learnwt -dMaxIter 25 -conf "${TUFFY_CONFIG_PATH}" -i "${programPath}" -e "${evidencePath}" -queryFile "${queryPath}" -r "${rawResultsLearnPath}" -marginal > ${outputLearnPath}
+
+   # Transcribe the learned weights into the model.
+   # We need to do this since Tuffy will lose constraints in the learned model.
+   echo "Transposing weights to ${resultsLearnPath}."
+   ruby "${TRANSFER_WEIGHTS_SCRIPT}" "${programPath}" "${rawResultsLearnPath}" "${resultsLearnPath}"
 
    rm -f "${evidencePath}"
 }

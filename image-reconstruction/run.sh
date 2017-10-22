@@ -34,7 +34,7 @@ function run() {
          "${outBaseDir}/tuffy/${dataset}" \
          "${THIS_DIR}/mln" \
          "${THIS_DIR}/scripts" \
-         "${THIS_DIR}/data/processed/${dataset}/eval"
+         "${THIS_DIR}/data/processed/${dataset}/learn"
 
       tuffy::runEval \
          "${outBaseDir}/tuffy/${dataset}" \
