@@ -8,7 +8,7 @@ THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 function run() {
    local outBaseDir="${THIS_DIR}/out"
-   local folds=`seq -s ' ' 0 19`
+   local folds=`seq -s ' ' 0 7`
 
    for fold in $folds; do
       psl::runLearn \
