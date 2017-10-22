@@ -106,7 +106,7 @@ function requirements::extract_tar() {
    echo "Extracting the ${name} tar"
    tar xf "${path}"
    if [[ "$?" -ne 0 ]]; then
-      err "Failed to extract ${name} tar"
+      util::err "Failed to extract ${name} tar"
       exit 40
    fi
 }

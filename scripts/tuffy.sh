@@ -23,6 +23,11 @@ function tuffy::runLearn() {
    local resultsLearnPath="${outDir}/${LEARNED_MLN_MODEL_FILENAME}"
    local outputLearnPath="${outDir}/out-learn.txt"
 
+   if [ -f "${outputLearnPath}" ]; then
+      echo "Target Tuffy (learn) file exists (${outputLearnPath}), skipping run."
+      return
+   fi
+
    echo "Generating Tuffy (learn) data file to ${evidencePath}."
    ruby "${generateDataScript}" "${sourceDataDir}" "${evidencePath}" 'learn'
 
@@ -51,6 +56,11 @@ function tuffy::runEval() {
    local evidencePath="${outDir}/evidence.db"
    local outputEvalPath="${outDir}/out-eval.txt"
    local resultsEvalPath="${outDir}/results.txt"
+
+   if [ -f "${outputEvalPath}" ]; then
+      echo "Target Tuffy (eval) file exists (${outputEvalPath}), skipping run."
+      return
+   fi
 
    echo "Generating Tuffy (eval) data file to ${evidencePath}."
    ruby "${generateDataScript}" "${sourceDataDir}" "${evidencePath}" 'eval'

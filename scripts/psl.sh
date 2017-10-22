@@ -24,6 +24,11 @@ function psl::runLearn() {
    local learnDataFilePath="${outDir}/learn.data"
    local learnedModelPath="${outDir}/${LEARNED_PSL_MODEL_FILENAME}"
 
+   if [ -f "${outputLearnPath}" ]; then
+      echo "Target PSL (learn) file exists (${outputLearnPath}), skipping run."
+      return
+   fi
+
    echo "Generating PSL (learn) data file to ${learnDataFilePath}."
    ruby $generateDataScript $dataTemplatePath $learnDataFilePath $genDataParams
 
@@ -48,6 +53,11 @@ function psl::runEval() {
    local dataTemplatePath="${cliDir}/${modelName}-template.data"
    local outputEvalPath="${outDir}/out-eval.txt"
    local evalDataFilePath="${outDir}/eval.data"
+
+   if [ -f "${outputEvalPath}" ]; then
+      echo "Target PSL (eval) file exists (${outputEvalPath}), skipping run."
+      return
+   fi
 
    echo "Generating PSL (eval) data file to ${evalDataFilePath}."
    ruby $generateDataScript $dataTemplatePath $evalDataFilePath $genDataParams
