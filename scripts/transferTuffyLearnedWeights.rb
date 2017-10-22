@@ -1,5 +1,13 @@
 require 'fileutils'
 
+# Open up String and add a float checking method.
+# http://mentalized.net/journal/2011/04/14/ruby-how-to-check-if-a-string-is-numeric/
+class String
+   def numeric?
+      Float(self) != nil rescue false
+   end
+end
+
 # Returns: {ruleIndex: weight, ...}
 # Note that MLN 1-indexes, and this will correct back to a zero-index.
 def parseWeights(learningOutputPath)
@@ -7,7 +15,11 @@ def parseWeights(learningOutputPath)
 
    File.open(learningOutputPath, 'r'){|file|
       file.each{|line|
-         if (match = line.match(/^(\d+\.?\d*)\s.*\s\/\/(\d).?\d*$/))
+         if (match = line.match(/^(-?\d+\.?\d*)\s.*\s\/\/(\d).?\d*$/))
+            if (!match[1].numeric?)
+               raise("Found non-float rule: #{learningOutputPath}.")
+            end
+
             weights[match[2].to_i() - 1] = match[1]
          end
       }
@@ -27,7 +39,7 @@ def main(mlnProgramPath, learningOutputPath, outPath)
          inFile.each{|line|
             if (match = line.match(/^(\d+\.?\d*)(\s.*)$/))
                if (ruleIndex >= weights.size())
-                  raise("Found more rules than weights.")
+                  raise("Found more rules than weights: #{learningOutputPath}.")
                end
 
                line = "#{weights[ruleIndex]} #{match[2]}"
@@ -40,7 +52,7 @@ def main(mlnProgramPath, learningOutputPath, outPath)
    }
 
    if (ruleIndex < weights.size())
-      raise("Found more weights than rules.")
+      raise("Found more weights than rules: #{learningOutputPath}.")
    end
 end
 
