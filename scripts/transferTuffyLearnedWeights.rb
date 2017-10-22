@@ -15,7 +15,7 @@ def parseWeights(learningOutputPath)
 
    File.open(learningOutputPath, 'r'){|file|
       file.each{|line|
-         if (match = line.match(/^(-?\d+\.?\d*)\s.*\s\/\/(\d).?\d*$/))
+         if (match = line.match(/^(-?\d+\.?\d*)\s.*\s\/\/(\d+).?\d*$/))
             if (!match[1].numeric?)
                raise("Found non-float rule: #{learningOutputPath}.")
             end
