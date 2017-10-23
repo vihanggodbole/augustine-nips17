@@ -11,6 +11,7 @@ function run() {
    local datasets='caltech olivetti'
 
    for dataset in $datasets; do
+      # PSL 2.1 (H2)
       psl::runLearn \
          "${outBaseDir}/psl/${dataset}" \
          'image-reconstruction' \
@@ -30,6 +31,47 @@ function run() {
          '-ec' \
          "${PSL_JAR_PATH}"
 
+      # PSL 2.1 (Postgres)
+      psl::runLearn \
+         "${outBaseDir}/psl-postgres/${dataset}" \
+         'image-reconstruction' \
+         "${THIS_DIR}/psl-cli" \
+         "${THIS_DIR}/scripts" \
+         "${dataset} learn" \
+         '--postgres psl' \
+         "${PSL_JAR_PATH}"
+
+      psl::runEval \
+         "${outBaseDir}/psl-postgres/${dataset}" \
+         'image-reconstruction' \
+         "${THIS_DIR}/psl-cli" \
+         "${THIS_DIR}/scripts" \
+         "${dataset} eval" \
+         "${outBaseDir}/psl-postgres/${dataset}/${LEARNED_PSL_MODEL_FILENAME}" \
+         '--postgres psl -ec' \
+         "${PSL_JAR_PATH}"
+
+      # PSL 2.0
+      psl::runLearn \
+         "${outBaseDir}/psl-2.0/${dataset}" \
+         'image-reconstruction' \
+         "${THIS_DIR}/psl-cli" \
+         "${THIS_DIR}/scripts" \
+         "${dataset} learn" \
+         '' \
+         "${PSL2_JAR_PATH}"
+
+      psl::runEval \
+         "${outBaseDir}/psl-2.0/${dataset}" \
+         'image-reconstruction' \
+         "${THIS_DIR}/psl-cli" \
+         "${THIS_DIR}/scripts" \
+         "${dataset} eval" \
+         "${outBaseDir}/psl-2.0/${dataset}/${LEARNED_PSL_MODEL_FILENAME}" \
+         '-ec' \
+         "${PSL2_JAR_PATH}"
+
+      # Tuffy
       tuffy::runLearn \
          "${outBaseDir}/tuffy/${dataset}" \
          "${THIS_DIR}/mln" \

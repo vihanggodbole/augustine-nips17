@@ -11,6 +11,7 @@ function run() {
    local folds='22050 33075 38588 44100 49613 55125 66150'
 
    for fold in $folds; do
+      # PSL 2.1 (H2)
       psl::runEval \
          "${outBaseDir}/psl/${fold}" \
          'party-affiliation' \
@@ -21,6 +22,29 @@ function run() {
          '' \
          "${PSL_JAR_PATH}"
 
+      # PSL 2.1 (Postgres)
+      psl::runEval \
+         "${outBaseDir}/psl-postgres/${fold}" \
+         'party-affiliation' \
+         "${THIS_DIR}/psl-cli" \
+         "${THIS_DIR}/scripts" \
+         "${fold}" \
+         "${THIS_DIR}/psl-cli/party-affiliation.psl" \
+         '--postgres psl' \
+         "${PSL_JAR_PATH}"
+
+      # PSL 2.0
+      psl::runEval \
+         "${outBaseDir}/psl-2.0/${fold}" \
+         'party-affiliation' \
+         "${THIS_DIR}/psl-cli" \
+         "${THIS_DIR}/scripts" \
+         "${fold}" \
+         "${THIS_DIR}/psl-cli/party-affiliation.psl" \
+         '' \
+         "${PSL2_JAR_PATH}"
+
+      # Tuffy
       tuffy::runEval \
          "${outBaseDir}/tuffy/${fold}" \
          "${THIS_DIR}/mln" \

@@ -13,6 +13,7 @@ function run() {
 
    for dataset in $datasets; do
       for fold in $folds; do
+         # PSL 2.1 (H2)
          psl::runLearn \
             "${outBaseDir}/psl/${dataset}/${fold}" \
             'collective-classification' \
@@ -32,6 +33,47 @@ function run() {
             '-ed 0.5' \
             "${PSL_JAR_PATH}"
 
+         # PSL 2.1 (Postgres)
+         psl::runLearn \
+            "${outBaseDir}/psl-postgres/${dataset}/${fold}" \
+            'collective-classification' \
+            "${THIS_DIR}/psl-cli" \
+            "${THIS_DIR}/scripts" \
+            "${dataset} ${fold} learn" \
+            '--postgres psl' \
+            "${PSL_JAR_PATH}"
+
+         psl::runEval \
+            "${outBaseDir}/psl-postgres/${dataset}/${fold}" \
+            'collective-classification' \
+            "${THIS_DIR}/psl-cli" \
+            "${THIS_DIR}/scripts" \
+            "${dataset} ${fold} eval" \
+            "${outBaseDir}/psl-postgres/${dataset}/${fold}/${LEARNED_PSL_MODEL_FILENAME}" \
+            '--postgres psl -ed 0.5' \
+            "${PSL_JAR_PATH}"
+
+         # PSL 2.0
+         psl::runLearn \
+            "${outBaseDir}/psl-2.0/${dataset}/${fold}" \
+            'collective-classification' \
+            "${THIS_DIR}/psl-cli" \
+            "${THIS_DIR}/scripts" \
+            "${dataset} ${fold} learn" \
+            '' \
+            "${PSL2_JAR_PATH}"
+
+         psl::runEval \
+            "${outBaseDir}/psl-2.0/${dataset}/${fold}" \
+            'collective-classification' \
+            "${THIS_DIR}/psl-cli" \
+            "${THIS_DIR}/scripts" \
+            "${dataset} ${fold} eval" \
+            "${outBaseDir}/psl-2.0/${dataset}/${fold}/${LEARNED_PSL_MODEL_FILENAME}" \
+            '-ed 0.5' \
+            "${PSL2_JAR_PATH}"
+
+         # Tuffy
          tuffy::runLearn \
             "${outBaseDir}/tuffy/${dataset}/${fold}" \
             "${THIS_DIR}/mln" \

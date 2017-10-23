@@ -33,7 +33,7 @@ function psl::runLearn() {
    ruby $generateDataScript $dataTemplatePath $learnDataFilePath $genDataParams
 
    echo "Running PSL (learn). Output redirected to ${outputLearnPath}."
-   time `requirements::java` -jar "${jarPath}" -l -d ${learnDataFilePath} -m ${modelPath} -D log4j.threshold=DEBUG ${extraCliOptions} > ${outputLearnPath}
+   time `requirements::java` -jar "${jarPath}" -learn -data ${learnDataFilePath} -model ${modelPath} -D log4j.threshold=DEBUG ${extraCliOptions} > ${outputLearnPath}
    mv ${defaultLearnedModelPath} ${learnedModelPath}
 }
 
@@ -63,5 +63,5 @@ function psl::runEval() {
    ruby $generateDataScript $dataTemplatePath $evalDataFilePath $genDataParams
 
    echo "Running PSL (eval). Output redirected to ${outputEvalPath}."
-   time `requirements::java` -jar "${jarPath}" -i -d ${evalDataFilePath} -m ${modelPath} -D log4j.threshold=DEBUG ${extraCliOptions} -o ${outDir} > ${outputEvalPath}
+   time `requirements::java` -jar "${jarPath}" -infer -data ${evalDataFilePath} -model ${modelPath} -D log4j.threshold=DEBUG ${extraCliOptions} -output ${outDir} > ${outputEvalPath}
 }
