@@ -7,55 +7,123 @@ HEADERS = [
    'Data Loading',
    'Grounding',
    'Inference',
-   'Comitting Results'
+   'Comitting Results',
+   'Total'
 ]
 NUM_GROUNDINGS_INDEX = 0
 DATA_LOADING_INDEX = 1
 GROUNDING_INDEX = 2
 INFERENCE_INDEX = 3
 COMITTING_RESULTS_INDEX = 4
+TOTAL_INDEX = 5
 
 # We know we are in a run's output directry when we see this file.
 SIGNAL_FILE = EVAL_OUTPUT_FILENAME
+
+# Take in an array of arrays of values and mean all the columns.
+def meanColumns(rows)
+   sums = Array.new(rows[0].size(), 0)
+
+   rows.each{|row|
+      row.each_index{|i|
+         sums[i] += row[i]
+      }
+   }
+
+   return sums.map{|sum| sum / rows.size().to_f()}
+end
+
+# Make sure that all run ids are 4 sections long: Framework, Dataset, Fold
+def normalizeRunIds(results, experiment)
+   results.each{|result|
+      if (experiment == 'epinions')
+         result.insert(1, '')
+      elsif (experiment == 'image-reconstruction')
+         result.insert(2, '')
+      elsif (experiment == 'jester')
+         result.insert(1, '')
+      elsif (experiment == 'party-affiliation')
+         result.insert(2, '')
+      end
+   }
+end
+
+def parsePSL2Run(path, runId)
+   stats = Array.new(HEADERS.size(), -1)
+
+   File.open(File.join(path, EVAL_OUTPUT_FILENAME), 'r'){|file|
+      startTime = nil
+      time = nil
+
+      file.each{|line|
+         line.strip!()
+
+         if (match = line.match(/^(\d+)\s/))
+            time = match[1].to_i()
+         end
+
+         if (match = line.match(/- Determining max partition, no partitions found null$/))
+            startTime = time
+         elsif (match = line.match(/- data:: loading:: ::done$/))
+            stats[DATA_LOADING_INDEX] = time - startTime
+         elsif (match = line.match(/- Grounding out model\.$/))
+            startTime = time
+         elsif (match = line.match(/- Beginning inference\.$/))
+            stats[GROUNDING_INDEX] = time - startTime
+            startTime = time
+         elsif (match = line.match(/- Initializing objective terms for (\d+) ground kernels$/))
+            stats[NUM_GROUNDINGS_INDEX] = match[1].to_i()
+         elsif (match = line.match(/- Optimization completed in.*$/))
+            stats[INFERENCE_INDEX] = time - startTime
+         elsif (match = line.match(/- Inference complete. Writing results to Database.$/))
+            startTime = time
+         elsif (match = line.match(/- operation::infer ::done$/))
+            stats[COMITTING_RESULTS_INDEX] = time - startTime
+         end
+      }
+
+      stats[TOTAL_INDEX] = time
+   }
+
+   return stats
+end
 
 def parsePSLRun(path, runId)
    stats = Array.new(HEADERS.size(), -1)
 
    File.open(File.join(path, EVAL_OUTPUT_FILENAME), 'r'){|file|
       startTime = nil
+      time = nil
 
       file.each{|line|
          line.strip!()
 
-         if (match = line.match(/^(\d+) .* - Loading data for.*$/))
+         if (match = line.match(/^(\d+)\s/))
+            time = match[1].to_i()
+         end
+
+         if (match = line.match(/- Loading data for.*$/))
             if (startTime != nil)
                next
             end
 
-            time = match[1].to_i()
             startTime = time
-         elsif (match = line.match(/^(\d+) .* - Data loading complete$/))
-            time = match[1].to_i()
+         elsif (match = line.match(/- Data loading complete$/))
             stats[DATA_LOADING_INDEX] = time - startTime
-         elsif (match = line.match(/^(\d+) .* - Grounding out model\.$/))
-            time = match[1].to_i()
+         elsif (match = line.match(/- Grounding out model\.$/))
             startTime = time
-         elsif (match = line.match(/^(\d+) .* - Beginning inference\.$/))
-            time = match[1].to_i()
+         elsif (match = line.match(/- Beginning inference\.$/))
             stats[GROUNDING_INDEX] = time - startTime
             startTime = time
-         elsif (match = line.match(/^(\d+) .* - Initializing objective terms for (\d+) ground kernels$/))
-            time = match[1].to_i()
-            stats[NUM_GROUNDINGS_INDEX] = match[2].to_i()
-         elsif (match = line.match(/^(\d+) .* - Optimization completed in.*$/))
-            time = match[1].to_i()
+         elsif (match = line.match(/- Initializing objective terms for (\d+) ground kernels$/))
+            stats[NUM_GROUNDINGS_INDEX] = match[1].to_i()
+         elsif (match = line.match(/- Optimization completed in.*$/))
             stats[INFERENCE_INDEX] = time - startTime
-         elsif (match = line.match(/^(\d+) .* - Inference complete. Writing results to Database.$/))
-            time = match[1].to_i()
+         elsif (match = line.match(/- Inference complete. Writing results to Database.$/))
             startTime = time
-         elsif (match = line.match(/^(\d+) .* - Inference Complete$/))
-            time = match[1].to_i()
+         elsif (match = line.match(/- Inference Complete$/))
             stats[COMITTING_RESULTS_INDEX] = time - startTime
+            stats[TOTAL_INDEX] = time
          end
       }
    }
@@ -68,33 +136,34 @@ def parseTuffyRun(path, runId)
 
    File.open(File.join(path, EVAL_OUTPUT_FILENAME), 'r'){|file|
       startTime = nil
+      time = nil
 
       file.each{|line|
          line.strip!()
 
-         if (match = line.match(/^(\d+)\s+>>> Parsing evidence file:.*$/))
+         if (match = line.match(/^(\d+)\s/))
             time = match[1].to_i()
+         end
+
+         if (match = line.match(/\s+>>> Parsing evidence file:.*$/))
             startTime = time
-         elsif (match = line.match(/^(\d+)\s+>>> Grounding...$/))
-            time = match[1].to_i()
+         elsif (match = line.match(/\s+>>> Grounding...$/))
             stats[DATA_LOADING_INDEX] = time - startTime
             startTime = time
-         elsif (match = line.match(/^(\d+)\s+### atoms = ([\d,]+); clauses = ([\d,]+)/))
-            time = match[1].to_i()
-            stats[NUM_GROUNDINGS_INDEX] = match[3].gsub(',', '').to_i()
-         elsif (match = line.match(/^(\d+)\s+>>> Grouping Components into Buckets...$/))
-            time = match[1].to_i()
+         elsif (match = line.match(/\s+### atoms = ([\d,]+); clauses = ([\d,]+)/))
+            stats[NUM_GROUNDINGS_INDEX] = match[2].gsub(',', '').to_i()
+         elsif (match = line.match(/\s+>>> Grouping Components into Buckets...$/))
             stats[GROUNDING_INDEX] = time - startTime
             startTime = time
-         elsif (match = line.match(/^(\d+)\s+flushing states of/))
-            time = match[1].to_i()
+         elsif (match = line.match(/\s+flushing states of/))
             stats[INFERENCE_INDEX] = time - startTime
             startTime = time
-         elsif (match = line.match(/^(\d+)\s+>>> Cleaning up temporary data$/))
-            time = match[1].to_i()
+         elsif (match = line.match(/\s+>>> Cleaning up temporary data$/))
             stats[COMITTING_RESULTS_INDEX] = time - startTime
          end
       }
+
+      stats[TOTAL_INDEX] = time
    }
 
    return stats
@@ -132,12 +201,14 @@ def parseDir(path, runId = [])
    else
       # This dir has the results.
       # Make sure to wrap the results in an extra array.
-      if (runId.include?('psl'))
+      if (runId.include?('psl') || runId.include?('psl-postgres'))
          return [runId + parsePSLRun(path, runId)]
+      elsif (runId.include?('psl-2.0'))
+         return [runId + parsePSL2Run(path, runId)]
       elsif (runId.include?('tuffy'))
          return [runId + parseTuffyRun(path, runId)]
       else
-         puts "ERROR: Unknown run type: '#{path}'."
+         raise("ERROR: Unknown run type: '#{path}'.")
       end
    end
 end
@@ -154,10 +225,26 @@ def main(baseDir)
       experiment = File.basename(File.dirname(path))
 
       # puts "Parsing out directory: '#{path}'"
-      results += parseDir(path).map{|stats| [experiment] + stats}
+      experimentResults = parseDir(path)
+
+      normalizeRunIds(experimentResults, experiment)
+
+      results += experimentResults.map{|stats| [experiment] + stats}
    }
 
    puts results.sort().map{|stats| stats.join("\t")}.join("\n")
+
+   # Aggregate folds.
+   # Aggregate all results that have matching first three columns.
+   aggregate = Hash.new{|hash, key| hash[key] = []}
+   results.each{|result|
+      key, values = result[0...3], result[4..-1]
+      aggregate[key] << values
+   }
+   aggregate = aggregate.to_a().map{|key, values| key + meanColumns(values).map{|val| val.to_i()}}
+
+   puts "---"
+   puts aggregate.sort().map{|stats| stats.join("\t")}.join("\n")
 end
 
 def loadArgs(args)
