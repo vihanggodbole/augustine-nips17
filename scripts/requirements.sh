@@ -21,6 +21,13 @@ function requirements::java() {
    echo 'java -Xmx25G -Xms25G'
 }
 
+# The time command to use.
+# Note that we are not using the builtin time command so we can get
+# peak memory information.
+function requirements::time() {
+   echo '/usr/bin/time -v'
+}
+
 function requirements::get_fetch_command() {
    type curl > /dev/null 2> /dev/null
    if [[ "$?" -eq 0 ]]; then

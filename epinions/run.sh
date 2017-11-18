@@ -11,9 +11,9 @@ function run() {
    local folds=`seq -s ' ' 0 7`
 
    for fold in $folds; do
-      # PSL 2.1 (H2)
+      # PSL 2.1 ADMM (H2)
       psl::runLearn \
-         "${outBaseDir}/psl/${fold}" \
+         "${outBaseDir}/psl-admm-h2/${fold}" \
          'epinions' \
          "${THIS_DIR}/psl-cli" \
          "${THIS_DIR}/scripts" \
@@ -22,7 +22,7 @@ function run() {
          "${PSL_JAR_PATH}"
 
       psl::runEval \
-         "${outBaseDir}/psl/${fold}" \
+         "${outBaseDir}/psl-admm-h2/${fold}" \
          'epinions' \
          "${THIS_DIR}/psl-cli" \
          "${THIS_DIR}/scripts" \
@@ -31,9 +31,9 @@ function run() {
          '-ec 0.5' \
          "${PSL_JAR_PATH}"
 
-      # PSL 2.1 (Postgres)
+      # PSL 2.1 ADMM (Postgres)
       psl::runLearn \
-         "${outBaseDir}/psl-postgres/${fold}" \
+         "${outBaseDir}/psl-admm-postgres/${fold}" \
          'epinions' \
          "${THIS_DIR}/psl-cli" \
          "${THIS_DIR}/scripts" \
@@ -42,13 +42,53 @@ function run() {
          "${PSL_JAR_PATH}"
 
       psl::runEval \
-         "${outBaseDir}/psl-postgres/${fold}" \
+         "${outBaseDir}/psl-admm-postgres/${fold}" \
          'epinions' \
          "${THIS_DIR}/psl-cli" \
          "${THIS_DIR}/scripts" \
          "${fold} eval" \
          "${outBaseDir}/psl-postgres/${fold}/${LEARNED_PSL_MODEL_FILENAME}" \
          '--postgres psl -ec 0.5' \
+         "${PSL_JAR_PATH}"
+
+      # PSL 2.1 MaxWalkSat (H2)
+      psl::runLearn \
+         "${outBaseDir}/psl-maxwalksat-h2/${fold}" \
+         'epinions' \
+         "${THIS_DIR}/psl-cli" \
+         "${THIS_DIR}/scripts" \
+         "${fold} learn" \
+         "`psl::maxwalksatOptions`" \
+         "${PSL_JAR_PATH}"
+
+      psl::runEval \
+         "${outBaseDir}/psl-maxwalksat-h2/${fold}" \
+         'epinions' \
+         "${THIS_DIR}/psl-cli" \
+         "${THIS_DIR}/scripts" \
+         "${fold} eval" \
+         "${outBaseDir}/psl/${fold}/${LEARNED_PSL_MODEL_FILENAME}" \
+         "-ec 0.5 `psl::maxwalksatOptions`" \
+         "${PSL_JAR_PATH}"
+
+      # PSL 2.1 MaxWalkSat (Postgres)
+      psl::runLearn \
+         "${outBaseDir}/psl-maxwalksat-postgres/${fold}" \
+         'epinions' \
+         "${THIS_DIR}/psl-cli" \
+         "${THIS_DIR}/scripts" \
+         "${fold} learn" \
+         "--postgres psl `psl::maxwalksatOptions`" \
+         "${PSL_JAR_PATH}"
+
+      psl::runEval \
+         "${outBaseDir}/psl-maxwalksat-postgres/${fold}" \
+         'epinions' \
+         "${THIS_DIR}/psl-cli" \
+         "${THIS_DIR}/scripts" \
+         "${fold} eval" \
+         "${outBaseDir}/psl-postgres/${fold}/${LEARNED_PSL_MODEL_FILENAME}" \
+         "--postgres psl -ec 0.5 `psl::maxwalksatOptions`" \
          "${PSL_JAR_PATH}"
 
       # PSL 2.0

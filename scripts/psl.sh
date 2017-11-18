@@ -5,6 +5,10 @@ THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 LEARNED_PSL_MODEL_FILENAME='learned-model.psl'
 
+function psl::maxwalksatOptions() {
+   echo '-Dmpeinference.reasoner=org.linqs.psl.reasoner.bool.BooleanMaxWalkSat -Dmpeinference.groundrulestore=org.linqs.psl.application.groundrulestore.AtomRegisterGroundRuleStore -Dmpeinference.termstore=org.linqs.psl.reasoner.term.ConstraintBlockerTermStore -Dmpeinference.termgenerator=org.linqs.psl.reasoner.term.ConstraintBlockerTermGenerator'
+}
+
 function psl::runLearn() {
    local outDir=$1
    local modelName=$2
@@ -21,6 +25,7 @@ function psl::runLearn() {
    local dataTemplatePath="${cliDir}/${modelName}-template.data"
    local defaultLearnedModelPath="${cliDir}/${modelName}-learned.psl"
    local outputLearnPath="${outDir}/out-learn.txt"
+   local outputTimePath="${outDir}/time.txt"
    local learnDataFilePath="${outDir}/learn.data"
    local learnedModelPath="${outDir}/${LEARNED_PSL_MODEL_FILENAME}"
 
@@ -33,7 +38,7 @@ function psl::runLearn() {
    ruby $generateDataScript $dataTemplatePath $learnDataFilePath $genDataParams
 
    echo "Running PSL (learn). Output redirected to ${outputLearnPath}."
-   time `requirements::java` -jar "${jarPath}" -learn -data ${learnDataFilePath} -model ${modelPath} -D log4j.threshold=DEBUG ${extraCliOptions} > ${outputLearnPath}
+   `requirements::time` `requirements::java` -jar "${jarPath}" -learn -data ${learnDataFilePath} -model ${modelPath} -D log4j.threshold=DEBUG ${extraCliOptions} > ${outputLearnPath} 2> ${outputTimePath}
    mv ${defaultLearnedModelPath} ${learnedModelPath}
 }
 
@@ -52,6 +57,7 @@ function psl::runEval() {
    local generateDataScript="${scriptsDir}/generateDataFiles.rb"
    local dataTemplatePath="${cliDir}/${modelName}-template.data"
    local outputEvalPath="${outDir}/out-eval.txt"
+   local outputTimePath="${outDir}/time.txt"
    local evalDataFilePath="${outDir}/eval.data"
 
    if [ -f "${outputEvalPath}" ]; then
@@ -63,5 +69,5 @@ function psl::runEval() {
    ruby $generateDataScript $dataTemplatePath $evalDataFilePath $genDataParams
 
    echo "Running PSL (eval). Output redirected to ${outputEvalPath}."
-   time `requirements::java` -jar "${jarPath}" -infer -data ${evalDataFilePath} -model ${modelPath} -D log4j.threshold=DEBUG ${extraCliOptions} -output ${outDir} > ${outputEvalPath}
+   `requirements::time` `requirements::java` -jar "${jarPath}" -infer -data ${evalDataFilePath} -model ${modelPath} -D log4j.threshold=DEBUG ${extraCliOptions} -output ${outDir} > ${outputEvalPath} 2> ${outputTimePath}
 }

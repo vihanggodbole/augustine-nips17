@@ -13,9 +13,9 @@ function run() {
 
    for dataset in $datasets; do
       for fold in $folds; do
-         # PSL 2.1 (H2)
+         # PSL 2.1 ADMM (H2)
          psl::runLearn \
-            "${outBaseDir}/psl/${dataset}/${fold}" \
+            "${outBaseDir}/psl-admm-h2/${dataset}/${fold}" \
             'collective-classification' \
             "${THIS_DIR}/psl-cli" \
             "${THIS_DIR}/scripts" \
@@ -24,7 +24,7 @@ function run() {
             "${PSL_JAR_PATH}"
 
          psl::runEval \
-            "${outBaseDir}/psl/${dataset}/${fold}" \
+            "${outBaseDir}/psl-admm-h2/${dataset}/${fold}" \
             'collective-classification' \
             "${THIS_DIR}/psl-cli" \
             "${THIS_DIR}/scripts" \
@@ -33,9 +33,9 @@ function run() {
             '-ed 0.5' \
             "${PSL_JAR_PATH}"
 
-         # PSL 2.1 (Postgres)
+         # PSL 2.1 ADMM (Postgres)
          psl::runLearn \
-            "${outBaseDir}/psl-postgres/${dataset}/${fold}" \
+            "${outBaseDir}/psl-admm-postgres/${dataset}/${fold}" \
             'collective-classification' \
             "${THIS_DIR}/psl-cli" \
             "${THIS_DIR}/scripts" \
@@ -44,13 +44,53 @@ function run() {
             "${PSL_JAR_PATH}"
 
          psl::runEval \
-            "${outBaseDir}/psl-postgres/${dataset}/${fold}" \
+            "${outBaseDir}/psl-admm-postgres/${dataset}/${fold}" \
             'collective-classification' \
             "${THIS_DIR}/psl-cli" \
             "${THIS_DIR}/scripts" \
             "${dataset} ${fold} eval" \
             "${outBaseDir}/psl-postgres/${dataset}/${fold}/${LEARNED_PSL_MODEL_FILENAME}" \
             '--postgres psl -ed 0.5' \
+            "${PSL_JAR_PATH}"
+
+         # PSL 2.1 MaxWalkSat (H2)
+         psl::runLearn \
+            "${outBaseDir}/psl-maxwalksat-h2/${dataset}/${fold}" \
+            'collective-classification' \
+            "${THIS_DIR}/psl-cli" \
+            "${THIS_DIR}/scripts" \
+            "${dataset} ${fold} learn" \
+            "`psl::maxwalksatOptions`" \
+            "${PSL_JAR_PATH}"
+
+         psl::runEval \
+            "${outBaseDir}/psl-maxwalksat-h2/${dataset}/${fold}" \
+            'collective-classification' \
+            "${THIS_DIR}/psl-cli" \
+            "${THIS_DIR}/scripts" \
+            "${dataset} ${fold} eval" \
+            "${outBaseDir}/psl/${dataset}/${fold}/${LEARNED_PSL_MODEL_FILENAME}" \
+            "-ed 0.5 `psl::maxwalksatOptions`" \
+            "${PSL_JAR_PATH}"
+
+         # PSL 2.1 MaxWalkSat (Postgres)
+         psl::runLearn \
+            "${outBaseDir}/psl-maxwalksat-postgres/${dataset}/${fold}" \
+            'collective-classification' \
+            "${THIS_DIR}/psl-cli" \
+            "${THIS_DIR}/scripts" \
+            "${dataset} ${fold} learn" \
+            "--postgres psl `psl::maxwalksatOptions`" \
+            "${PSL_JAR_PATH}"
+
+         psl::runEval \
+            "${outBaseDir}/psl-maxwalksat-postgres/${dataset}/${fold}" \
+            'collective-classification' \
+            "${THIS_DIR}/psl-cli" \
+            "${THIS_DIR}/scripts" \
+            "${dataset} ${fold} eval" \
+            "${outBaseDir}/psl-postgres/${dataset}/${fold}/${LEARNED_PSL_MODEL_FILENAME}" \
+            "--postgres psl -ed 0.5 `psl::maxwalksatOptions`" \
             "${PSL_JAR_PATH}"
 
          # PSL 2.0

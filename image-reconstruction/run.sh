@@ -11,9 +11,9 @@ function run() {
    local datasets='caltech olivetti'
 
    for dataset in $datasets; do
-      # PSL 2.1 (H2)
+      # PSL 2.1 ADMM (H2)
       psl::runLearn \
-         "${outBaseDir}/psl/${dataset}" \
+         "${outBaseDir}/psl-admm-h2/${dataset}" \
          'image-reconstruction' \
          "${THIS_DIR}/psl-cli" \
          "${THIS_DIR}/scripts" \
@@ -22,7 +22,7 @@ function run() {
          "${PSL_JAR_PATH}"
 
       psl::runEval \
-         "${outBaseDir}/psl/${dataset}" \
+         "${outBaseDir}/psl-admm-h2/${dataset}" \
          'image-reconstruction' \
          "${THIS_DIR}/psl-cli" \
          "${THIS_DIR}/scripts" \
@@ -31,9 +31,9 @@ function run() {
          '-ec' \
          "${PSL_JAR_PATH}"
 
-      # PSL 2.1 (Postgres)
+      # PSL 2.1 ADMM (Postgres)
       psl::runLearn \
-         "${outBaseDir}/psl-postgres/${dataset}" \
+         "${outBaseDir}/psl-admm-postgres/${dataset}" \
          'image-reconstruction' \
          "${THIS_DIR}/psl-cli" \
          "${THIS_DIR}/scripts" \
@@ -42,13 +42,53 @@ function run() {
          "${PSL_JAR_PATH}"
 
       psl::runEval \
-         "${outBaseDir}/psl-postgres/${dataset}" \
+         "${outBaseDir}/psl-admm-postgres/${dataset}" \
          'image-reconstruction' \
          "${THIS_DIR}/psl-cli" \
          "${THIS_DIR}/scripts" \
          "${dataset} eval" \
          "${outBaseDir}/psl-postgres/${dataset}/${LEARNED_PSL_MODEL_FILENAME}" \
          '--postgres psl -ec' \
+         "${PSL_JAR_PATH}"
+
+      # PSL 2.1 MaxWalkSat (H2)
+      psl::runLearn \
+         "${outBaseDir}/psl-maxwalksat-h2/${dataset}" \
+         'image-reconstruction' \
+         "${THIS_DIR}/psl-cli" \
+         "${THIS_DIR}/scripts" \
+         "${dataset} learn" \
+         "`psl::maxwalksatOptions`" \
+         "${PSL_JAR_PATH}"
+
+      psl::runEval \
+         "${outBaseDir}/psl-maxwalksat-h2/${dataset}" \
+         'image-reconstruction' \
+         "${THIS_DIR}/psl-cli" \
+         "${THIS_DIR}/scripts" \
+         "${dataset} eval" \
+         "${outBaseDir}/psl/${dataset}/${LEARNED_PSL_MODEL_FILENAME}" \
+         "-ec `psl::maxwalksatOptions`" \
+         "${PSL_JAR_PATH}"
+
+      # PSL 2.1 MaxWalkSat (Postgres)
+      psl::runLearn \
+         "${outBaseDir}/psl-maxwalksat-postgres/${dataset}" \
+         'image-reconstruction' \
+         "${THIS_DIR}/psl-cli" \
+         "${THIS_DIR}/scripts" \
+         "${dataset} learn" \
+         "--postgres psl `psl::maxwalksatOptions`" \
+         "${PSL_JAR_PATH}"
+
+      psl::runEval \
+         "${outBaseDir}/psl-maxwalksat-postgres/${dataset}" \
+         'image-reconstruction' \
+         "${THIS_DIR}/psl-cli" \
+         "${THIS_DIR}/scripts" \
+         "${dataset} eval" \
+         "${outBaseDir}/psl-postgres/${dataset}/${LEARNED_PSL_MODEL_FILENAME}" \
+         "--postgres psl -ec `psl::maxwalksatOptions`" \
          "${PSL_JAR_PATH}"
 
       # PSL 2.0

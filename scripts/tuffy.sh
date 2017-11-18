@@ -22,6 +22,7 @@ function tuffy::runLearn() {
    local rawResultsLearnPath="${outDir}/${RAW_LEARNED_MLN_MODEL_FILENAME}"
    local resultsLearnPath="${outDir}/${LEARNED_MLN_MODEL_FILENAME}"
    local outputLearnPath="${outDir}/out-learn.txt"
+   local outputTimePath="${outDir}/time.txt"
 
    if [ -f "${outputLearnPath}" ]; then
       echo "Target Tuffy (learn) file exists (${outputLearnPath}), skipping run."
@@ -32,7 +33,7 @@ function tuffy::runLearn() {
    ruby "${generateDataScript}" "${sourceDataDir}" "${evidencePath}" 'learn'
 
    echo "Running Tuffy (learn). Output redirected to ${outputLearnPath}."
-   time `requirements::java` -jar "${TUFFY_JAR_PATH}" -learnwt -dMaxIter 25 -conf "${TUFFY_CONFIG_PATH}" -i "${programPath}" -e "${evidencePath}" -queryFile "${queryPath}" -r "${rawResultsLearnPath}" -marginal > ${outputLearnPath}
+   `requirements::time` `requirements::java` -jar "${TUFFY_JAR_PATH}" -learnwt -dMaxIter 25 -conf "${TUFFY_CONFIG_PATH}" -i "${programPath}" -e "${evidencePath}" -queryFile "${queryPath}" -r "${rawResultsLearnPath}" -marginal > ${outputLearnPath} 2> ${outputTimePath}
 
    # Transcribe the learned weights into the model.
    # We need to do this since Tuffy will lose constraints in the learned model.
@@ -55,6 +56,7 @@ function tuffy::runEval() {
    local queryPath="${cliDir}/query.db"
    local evidencePath="${outDir}/evidence.db"
    local outputEvalPath="${outDir}/out-eval.txt"
+   local outputTimePath="${outDir}/time.txt"
    local resultsEvalPath="${outDir}/results.txt"
 
    if [ -f "${outputEvalPath}" ]; then
@@ -66,7 +68,7 @@ function tuffy::runEval() {
    ruby "${generateDataScript}" "${sourceDataDir}" "${evidencePath}" 'eval'
 
    echo "Running Tuffy (eval). Output redirected to ${outputEvalPath}."
-   time java -jar "${TUFFY_JAR_PATH}" -conf "${TUFFY_CONFIG_PATH}" -i "${programPath}" -e "${evidencePath}" -queryFile "${queryPath}" -r "${resultsEvalPath}" -marginal > ${outputEvalPath}
+   `requirements::time` java -jar "${TUFFY_JAR_PATH}" -conf "${TUFFY_CONFIG_PATH}" -i "${programPath}" -e "${evidencePath}" -queryFile "${queryPath}" -r "${resultsEvalPath}" -marginal > ${outputEvalPath} 2> ${outputTimePath}
 
    rm -f "${evidencePath}"
 }
