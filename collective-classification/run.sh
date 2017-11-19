@@ -10,6 +10,7 @@ function run() {
    local outBaseDir="${THIS_DIR}/out"
    local datasets='citeseer cora'
    local folds=`seq -s ' ' 0 19`
+   local model=''
 
    for dataset in $datasets; do
       for fold in $folds; do
@@ -29,7 +30,7 @@ function run() {
             "${THIS_DIR}/psl-cli" \
             "${THIS_DIR}/scripts" \
             "${dataset} ${fold} eval" \
-            "${outBaseDir}/psl/${dataset}/${fold}/${LEARNED_PSL_MODEL_FILENAME}" \
+            "${outBaseDir}/psl-admm-h2/${dataset}/${fold}/${LEARNED_PSL_MODEL_FILENAME}" \
             '-ed 0.5' \
             "${PSL_JAR_PATH}"
 
@@ -49,7 +50,7 @@ function run() {
             "${THIS_DIR}/psl-cli" \
             "${THIS_DIR}/scripts" \
             "${dataset} ${fold} eval" \
-            "${outBaseDir}/psl-postgres/${dataset}/${fold}/${LEARNED_PSL_MODEL_FILENAME}" \
+            "${outBaseDir}/psl-admm-postgres/${dataset}/${fold}/${LEARNED_PSL_MODEL_FILENAME}" \
             '--postgres psl -ed 0.5' \
             "${PSL_JAR_PATH}"
 
@@ -69,7 +70,7 @@ function run() {
             "${THIS_DIR}/psl-cli" \
             "${THIS_DIR}/scripts" \
             "${dataset} ${fold} eval" \
-            "${outBaseDir}/psl/${dataset}/${fold}/${LEARNED_PSL_MODEL_FILENAME}" \
+            "${outBaseDir}/psl-maxwalksat-h2/${dataset}/${fold}/${LEARNED_PSL_MODEL_FILENAME}" \
             "-ed 0.5 `psl::maxwalksatOptions`" \
             "${PSL_JAR_PATH}"
 
@@ -89,7 +90,7 @@ function run() {
             "${THIS_DIR}/psl-cli" \
             "${THIS_DIR}/scripts" \
             "${dataset} ${fold} eval" \
-            "${outBaseDir}/psl-postgres/${dataset}/${fold}/${LEARNED_PSL_MODEL_FILENAME}" \
+            "${outBaseDir}/psl-maxwalksat-postgres/${dataset}/${fold}/${LEARNED_PSL_MODEL_FILENAME}" \
             "--postgres psl -ed 0.5 `psl::maxwalksatOptions`" \
             "${PSL_JAR_PATH}"
 

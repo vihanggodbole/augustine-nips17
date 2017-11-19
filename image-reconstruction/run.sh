@@ -27,7 +27,7 @@ function run() {
          "${THIS_DIR}/psl-cli" \
          "${THIS_DIR}/scripts" \
          "${dataset} eval" \
-         "${outBaseDir}/psl/${dataset}/${LEARNED_PSL_MODEL_FILENAME}" \
+         "${outBaseDir}/psl-admm-h2/${dataset}/${LEARNED_PSL_MODEL_FILENAME}" \
          '-ec' \
          "${PSL_JAR_PATH}"
 
@@ -47,7 +47,7 @@ function run() {
          "${THIS_DIR}/psl-cli" \
          "${THIS_DIR}/scripts" \
          "${dataset} eval" \
-         "${outBaseDir}/psl-postgres/${dataset}/${LEARNED_PSL_MODEL_FILENAME}" \
+         "${outBaseDir}/psl-admm-postgres/${dataset}/${LEARNED_PSL_MODEL_FILENAME}" \
          '--postgres psl -ec' \
          "${PSL_JAR_PATH}"
 
@@ -67,7 +67,7 @@ function run() {
          "${THIS_DIR}/psl-cli" \
          "${THIS_DIR}/scripts" \
          "${dataset} eval" \
-         "${outBaseDir}/psl/${dataset}/${LEARNED_PSL_MODEL_FILENAME}" \
+         "${outBaseDir}/psl-maxwalksat-h2/${dataset}/${LEARNED_PSL_MODEL_FILENAME}" \
          "-ec `psl::maxwalksatOptions`" \
          "${PSL_JAR_PATH}"
 
@@ -87,7 +87,7 @@ function run() {
          "${THIS_DIR}/psl-cli" \
          "${THIS_DIR}/scripts" \
          "${dataset} eval" \
-         "${outBaseDir}/psl-postgres/${dataset}/${LEARNED_PSL_MODEL_FILENAME}" \
+         "${outBaseDir}/psl-maxwalksat-postgres/${dataset}/${LEARNED_PSL_MODEL_FILENAME}" \
          "--postgres psl -ec `psl::maxwalksatOptions`" \
          "${PSL_JAR_PATH}"
 

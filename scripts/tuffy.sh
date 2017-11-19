@@ -22,7 +22,7 @@ function tuffy::runLearn() {
    local rawResultsLearnPath="${outDir}/${RAW_LEARNED_MLN_MODEL_FILENAME}"
    local resultsLearnPath="${outDir}/${LEARNED_MLN_MODEL_FILENAME}"
    local outputLearnPath="${outDir}/out-learn.txt"
-   local outputTimePath="${outDir}/time.txt"
+   local outputTimePath="${outDir}/time-learn.txt"
 
    if [ -f "${outputLearnPath}" ]; then
       echo "Target Tuffy (learn) file exists (${outputLearnPath}), skipping run."
@@ -56,7 +56,7 @@ function tuffy::runEval() {
    local queryPath="${cliDir}/query.db"
    local evidencePath="${outDir}/evidence.db"
    local outputEvalPath="${outDir}/out-eval.txt"
-   local outputTimePath="${outDir}/time.txt"
+   local outputTimePath="${outDir}/time-eval.txt"
    local resultsEvalPath="${outDir}/results.txt"
 
    if [ -f "${outputEvalPath}" ]; then

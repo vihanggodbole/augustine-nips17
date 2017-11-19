@@ -25,7 +25,7 @@ function psl::runLearn() {
    local dataTemplatePath="${cliDir}/${modelName}-template.data"
    local defaultLearnedModelPath="${cliDir}/${modelName}-learned.psl"
    local outputLearnPath="${outDir}/out-learn.txt"
-   local outputTimePath="${outDir}/time.txt"
+   local outputTimePath="${outDir}/time-learn.txt"
    local learnDataFilePath="${outDir}/learn.data"
    local learnedModelPath="${outDir}/${LEARNED_PSL_MODEL_FILENAME}"
 
@@ -57,7 +57,7 @@ function psl::runEval() {
    local generateDataScript="${scriptsDir}/generateDataFiles.rb"
    local dataTemplatePath="${cliDir}/${modelName}-template.data"
    local outputEvalPath="${outDir}/out-eval.txt"
-   local outputTimePath="${outDir}/time.txt"
+   local outputTimePath="${outDir}/time-eval.txt"
    local evalDataFilePath="${outDir}/eval.data"
 
    if [ -f "${outputEvalPath}" ]; then

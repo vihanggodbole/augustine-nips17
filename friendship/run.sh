@@ -18,16 +18,16 @@ function run() {
       ruby $DATA_GEN_SCRIPT -p $fold -l 10 -fh 0.85 -fl 0.15 -n friendship
       local dataDir="${THIS_DIR}/data/friendship_${fold}_0010"
 
-#      # PSL 2.1 ADMM (H2)
-#      psl::runEval \
-#         "${outBaseDir}/psl-admm-h2/${fold}" \
-#         'friendship' \
-#         "${THIS_DIR}/psl-cli" \
-#         "${THIS_DIR}/scripts" \
-#         "${fold}" \
-#         "${THIS_DIR}/psl-cli/friendship.psl" \
-#         '-ec -ed 0.5' \
-#         "${PSL_JAR_PATH}"
+      # PSL 2.1 ADMM (H2)
+      psl::runEval \
+         "${outBaseDir}/psl-admm-h2/${fold}" \
+         'friendship' \
+         "${THIS_DIR}/psl-cli" \
+         "${THIS_DIR}/scripts" \
+         "${fold}" \
+         "${THIS_DIR}/psl-cli/friendship.psl" \
+         '-ec -ed 0.5' \
+         "${PSL_JAR_PATH}"
 
       # PSL 2.1 ADMM (Postgres)
       psl::runEval \
