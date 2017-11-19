@@ -10,7 +10,6 @@ function run() {
    local outBaseDir="${THIS_DIR}/out"
    local datasets='citeseer cora'
    local folds=`seq -s ' ' 0 19`
-   local model=''
 
    for dataset in $datasets; do
       for fold in $folds; do
