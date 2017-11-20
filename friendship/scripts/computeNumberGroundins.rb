@@ -23,7 +23,7 @@ end
 
 def loadArgs(args)
    if (args.size() != 2 || args.map{|arg| arg.gsub('-', '').downcase()}.include?('help'))
-      puts "USAGE: ruby #{$0} <num people> <num locations (blocks)"
+      puts "USAGE: ruby #{$0} <num people> <num locations (blocks)>"
       exit(1)
    end
 

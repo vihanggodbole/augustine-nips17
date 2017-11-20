@@ -9,9 +9,7 @@ DATA_GEN_SCRIPT="${THIS_DIR}/scripts/generateFriendshipData.rb"
 
 function run() {
    local outBaseDir="${THIS_DIR}/out"
-   # TEST
-   # local folds=`seq -w -s ' ' 100 100 2000`
-   local folds='1000'
+   local folds=`seq -w -s ' ' 100 100 2000`
 
    for fold in $folds; do
       # Generate the data.
