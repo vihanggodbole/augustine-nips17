@@ -13,105 +13,15 @@ function run() {
 
    for dataset in $datasets; do
       for fold in $folds; do
-         # PSL 2.1 ADMM (H2)
-         psl::runLearn \
-            "${outBaseDir}/psl-admm-h2/${dataset}/${fold}" \
+         # PSL
+         psl::runSuite \
             'collective-classification' \
-            "${THIS_DIR}/psl-cli" \
-            "${THIS_DIR}/scripts" \
+            "${THIS_DIR}" \
+            "${dataset}/${fold}" \
             "${dataset} ${fold} learn" \
-            '' \
-            "${PSL_JAR_PATH}"
-
-         psl::runEval \
-            "${outBaseDir}/psl-admm-h2/${dataset}/${fold}" \
-            'collective-classification' \
-            "${THIS_DIR}/psl-cli" \
-            "${THIS_DIR}/scripts" \
             "${dataset} ${fold} eval" \
-            "${outBaseDir}/psl-admm-h2/${dataset}/${fold}/${LEARNED_PSL_MODEL_FILENAME}" \
             '-ed 0.5' \
-            "${PSL_JAR_PATH}"
-
-         # PSL 2.1 ADMM (Postgres)
-         psl::runLearn \
-            "${outBaseDir}/psl-admm-postgres/${dataset}/${fold}" \
-            'collective-classification' \
-            "${THIS_DIR}/psl-cli" \
-            "${THIS_DIR}/scripts" \
-            "${dataset} ${fold} learn" \
-            '--postgres psl' \
-            "${PSL_JAR_PATH}"
-
-         psl::runEval \
-            "${outBaseDir}/psl-admm-postgres/${dataset}/${fold}" \
-            'collective-classification' \
-            "${THIS_DIR}/psl-cli" \
-            "${THIS_DIR}/scripts" \
-            "${dataset} ${fold} eval" \
-            "${outBaseDir}/psl-admm-postgres/${dataset}/${fold}/${LEARNED_PSL_MODEL_FILENAME}" \
-            '--postgres psl -ed 0.5' \
-            "${PSL_JAR_PATH}"
-
-         # PSL 2.1 MaxWalkSat (H2)
-         psl::runLearn \
-            "${outBaseDir}/psl-maxwalksat-h2/${dataset}/${fold}" \
-            'collective-classification' \
-            "${THIS_DIR}/psl-cli" \
-            "${THIS_DIR}/scripts" \
-            "${dataset} ${fold} learn" \
-            "`psl::maxwalksatOptions`" \
-            "${PSL_JAR_PATH}"
-
-         psl::runEval \
-            "${outBaseDir}/psl-maxwalksat-h2/${dataset}/${fold}" \
-            'collective-classification' \
-            "${THIS_DIR}/psl-cli" \
-            "${THIS_DIR}/scripts" \
-            "${dataset} ${fold} eval" \
-            "${outBaseDir}/psl-maxwalksat-h2/${dataset}/${fold}/${LEARNED_PSL_MODEL_FILENAME}" \
-            "-ed 0.5 `psl::maxwalksatOptions`" \
-            "${PSL_JAR_PATH}"
-
-         # PSL 2.1 MaxWalkSat (Postgres)
-         psl::runLearn \
-            "${outBaseDir}/psl-maxwalksat-postgres/${dataset}/${fold}" \
-            'collective-classification' \
-            "${THIS_DIR}/psl-cli" \
-            "${THIS_DIR}/scripts" \
-            "${dataset} ${fold} learn" \
-            "--postgres psl `psl::maxwalksatOptions`" \
-            "${PSL_JAR_PATH}"
-
-         psl::runEval \
-            "${outBaseDir}/psl-maxwalksat-postgres/${dataset}/${fold}" \
-            'collective-classification' \
-            "${THIS_DIR}/psl-cli" \
-            "${THIS_DIR}/scripts" \
-            "${dataset} ${fold} eval" \
-            "${outBaseDir}/psl-maxwalksat-postgres/${dataset}/${fold}/${LEARNED_PSL_MODEL_FILENAME}" \
-            "--postgres psl -ed 0.5 `psl::maxwalksatOptions`" \
-            "${PSL_JAR_PATH}"
-
-         # PSL 2.0
-         psl::runLearn \
-            "${outBaseDir}/psl-2.0/${dataset}/${fold}" \
-            'collective-classification' \
-            "${THIS_DIR}/psl-cli" \
-            "${THIS_DIR}/scripts" \
-            "${dataset} ${fold} learn" \
-            '' \
-            "${PSL2_JAR_PATH}"
-
-         psl::runEval \
-            "${outBaseDir}/psl-2.0/${dataset}/${fold}" \
-            'collective-classification' \
-            "${THIS_DIR}/psl-cli" \
-            "${THIS_DIR}/scripts" \
-            "${dataset} ${fold} eval" \
-            "${outBaseDir}/psl-2.0/${dataset}/${fold}/${LEARNED_PSL_MODEL_FILENAME}" \
-            '-ed 0.5' \
-            "${PSL2_JAR_PATH}"
+            true
 
          # Tuffy
          tuffy::runLearn \

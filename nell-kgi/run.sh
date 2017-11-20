@@ -10,110 +10,15 @@ function run() {
    local outBaseDir="${THIS_DIR}/out"
    local method=''
 
-   # PSL 2.1 ADMM (H2)
-   method='psl-admm-h2'
-   psl::runLearn \
-      "${outBaseDir}/${method}" \
+   # PSL
+   psl::runSuite \
       'nell-kgi' \
-      "${THIS_DIR}/psl-cli" \
-      "${THIS_DIR}/scripts" \
-      'learn' \
+      "${THIS_DIR}" \
       '' \
-      "${PSL_JAR_PATH}"
-
-   psl::runEval \
-      "${outBaseDir}/${method}" \
-      'nell-kgi' \
-      "${THIS_DIR}/psl-cli" \
-      "${THIS_DIR}/scripts" \
-      'eval' \
-      "${outBaseDir}/${method}/${LEARNED_PSL_MODEL_FILENAME}" \
+      "learn" \
+      "eval" \
       '-ec -ed 0.5' \
-      "${PSL_JAR_PATH}"
-
-   # PSL 2.1 ADMM (Postgres)
-   method='psl-admm-postgres'
-   psl::runLearn \
-      "${outBaseDir}/${method}" \
-      'nell-kgi' \
-      "${THIS_DIR}/psl-cli" \
-      "${THIS_DIR}/scripts" \
-      'learn' \
-      '--postgres psl' \
-      "${PSL_JAR_PATH}"
-
-   psl::runEval \
-      "${outBaseDir}/${method}" \
-      'nell-kgi' \
-      "${THIS_DIR}/psl-cli" \
-      "${THIS_DIR}/scripts" \
-      'eval' \
-      "${outBaseDir}/${method}/${LEARNED_PSL_MODEL_FILENAME}" \
-      '--postgres psl -ec -ed 0.5' \
-      "${PSL_JAR_PATH}"
-
-   # PSL 2.1 MaxWalkSat (H2)
-   method='psl-maxwalksat-h2'
-   psl::runLearn \
-      "${outBaseDir}/${method}" \
-      'nell-kgi' \
-      "${THIS_DIR}/psl-cli" \
-      "${THIS_DIR}/scripts" \
-      'learn' \
-      "`psl::maxwalksatOptions`" \
-      "${PSL_JAR_PATH}"
-
-   psl::runEval \
-      "${outBaseDir}/${method}" \
-      'nell-kgi' \
-      "${THIS_DIR}/psl-cli" \
-      "${THIS_DIR}/scripts" \
-      'eval' \
-      "${outBaseDir}/${method}/${LEARNED_PSL_MODEL_FILENAME}" \
-      "-ec -ed 0.5 `psl::maxwalksatOptions`" \
-      "${PSL_JAR_PATH}"
-
-   # PSL 2.1 MaxWalkSat (Postgres)
-   method='psl-maxwalksat-postgres'
-   psl::runLearn \
-      "${outBaseDir}/${method}" \
-      'nell-kgi' \
-      "${THIS_DIR}/psl-cli" \
-      "${THIS_DIR}/scripts" \
-      'learn' \
-      "--postgres psl `psl::maxwalksatOptions`" \
-      "${PSL_JAR_PATH}"
-
-   psl::runEval \
-      "${outBaseDir}/${method}" \
-      'nell-kgi' \
-      "${THIS_DIR}/psl-cli" \
-      "${THIS_DIR}/scripts" \
-      'eval' \
-      "${outBaseDir}/${method}/${LEARNED_PSL_MODEL_FILENAME}" \
-      "--postgres psl -ec -ed 0.5 `psl::maxwalksatOptions`" \
-      "${PSL_JAR_PATH}"
-
-   # PSL 2.0
-   method='psl-2.0'
-   psl::runLearn \
-      "${outBaseDir}/${method}" \
-      'nell-kgi' \
-      "${THIS_DIR}/psl-cli" \
-      "${THIS_DIR}/scripts" \
-      'learn' \
-      '' \
-      "${PSL2_JAR_PATH}"
-
-   psl::runEval \
-      "${outBaseDir}/${method}" \
-      'nell-kgi' \
-      "${THIS_DIR}/psl-cli" \
-      "${THIS_DIR}/scripts" \
-      'eval' \
-      "${outBaseDir}/${method}/${LEARNED_PSL_MODEL_FILENAME}" \
-      '-ec -ed 0.5' \
-      "${PSL2_JAR_PATH}"
+      true
 
    # Tuffy
    method='tuffy'
