@@ -6,8 +6,11 @@ THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 LIB_DIR="${THIS_DIR}/lib"
 mkdir -p "${LIB_DIR}"
 
-PSL_JAR_PATH="${LIB_DIR}/psl-cli-CANARY.jar"
-PSL_JAR_URL='https://linqs-data.soe.ucsc.edu/maven/repositories/psl-releases/org/linqs/psl-cli/CANARY/psl-cli-CANARY.jar'
+PSL_JAR_PATH="${LIB_DIR}/psl-cli-2.1.0-NIPS17.jar"
+PSL_JAR_URL='https://linqs-data.soe.ucsc.edu/public/augustine-nips17-data/psl-cli-2.1.0-NIPS17.jar'
+
+PSL_CANARY_JAR_PATH="${LIB_DIR}/psl-cli-CANARY.jar"
+PSL_CANARY_JAR_URL='https://linqs-data.soe.ucsc.edu/maven/repositories/psl-releases/org/linqs/psl-cli/CANARY/psl-cli-CANARY.jar'
 
 PSL2_JAR_PATH="${LIB_DIR}/psl-cli-2.0.0-NIPS17.jar"
 PSL2_JAR_URL='https://linqs-data.soe.ucsc.edu/public/augustine-nips17-data/psl-cli-2.0.0-NIPS17.jar'
@@ -133,6 +136,7 @@ function requirements::fetch_and_extract_tar() {
 
 function requirements::fetch_all_jars() {
    requirements::fetch_file "${PSL_JAR_URL}" "${PSL_JAR_PATH}" 'PSL'
+   requirements::fetch_file "${PSL_CANARY_JAR_URL}" "${PSL_CANARY_JAR_PATH}" 'PSL_CANARY'
    requirements::fetch_file "${PSL2_JAR_URL}" "${PSL2_JAR_PATH}" 'PSL2'
    requirements::fetch_file "${TUFFY_JAR_URL}" "${TUFFY_JAR_PATH}" 'Tuffy'
 }
