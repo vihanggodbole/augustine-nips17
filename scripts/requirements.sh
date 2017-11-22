@@ -12,6 +12,9 @@ PSL_JAR_URL='https://linqs-data.soe.ucsc.edu/public/augustine-nips17-data/psl-cl
 PSL_CANARY_JAR_PATH="${LIB_DIR}/psl-cli-CANARY.jar"
 PSL_CANARY_JAR_URL='https://linqs-data.soe.ucsc.edu/maven/repositories/psl-releases/org/linqs/psl-cli/CANARY/psl-cli-CANARY.jar'
 
+PSL_MOSEK_JAR_PATH="${LIB_DIR}/psl-mosek-CANARY.jar"
+PSL_MOSEK_JAR_URL='https://linqs-data.soe.ucsc.edu/maven/repositories/psl-releases/org/linqs/psl-mosek/CANARY/psl-mosek-CANARY.jar'
+
 PSL2_JAR_PATH="${LIB_DIR}/psl-cli-2.0.0-NIPS17.jar"
 PSL2_JAR_URL='https://linqs-data.soe.ucsc.edu/public/augustine-nips17-data/psl-cli-2.0.0-NIPS17.jar'
 
@@ -137,6 +140,7 @@ function requirements::fetch_and_extract_tar() {
 function requirements::fetch_all_jars() {
    requirements::fetch_file "${PSL_JAR_URL}" "${PSL_JAR_PATH}" 'PSL'
    requirements::fetch_file "${PSL_CANARY_JAR_URL}" "${PSL_CANARY_JAR_PATH}" 'PSL_CANARY'
+   requirements::fetch_file "${PSL_MOSEK_JAR_URL}" "${PSL_MOSEK_JAR_PATH}" 'PSL_MOSEK'
    requirements::fetch_file "${PSL2_JAR_URL}" "${PSL2_JAR_PATH}" 'PSL2'
    requirements::fetch_file "${TUFFY_JAR_URL}" "${TUFFY_JAR_PATH}" 'Tuffy'
 }

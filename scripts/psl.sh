@@ -4,6 +4,7 @@ THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" && source "${THIS_D
 THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 LEARNED_PSL_MODEL_FILENAME='learned-model.psl'
+CLI_MAIN_CLASS='org.linqs.psl.cli.Launcher'
 
 function psl::maxwalksatOptions() {
    echo '-Dmpeinference.reasoner=org.linqs.psl.reasoner.bool.BooleanMaxWalkSat -Dmpeinference.groundrulestore=org.linqs.psl.application.groundrulestore.AtomRegisterGroundRuleStore -Dmpeinference.termstore=org.linqs.psl.reasoner.term.ConstraintBlockerTermStore -Dmpeinference.termgenerator=org.linqs.psl.reasoner.term.ConstraintBlockerTermGenerator'
@@ -13,9 +14,13 @@ function psl::mcsatOptions() {
    echo '-Dmpeinference.reasoner=org.linqs.psl.reasoner.bool.BooleanMCSat -Dmpeinference.groundrulestore=org.linqs.psl.application.groundrulestore.AtomRegisterGroundRuleStore -Dmpeinference.termstore=org.linqs.psl.reasoner.term.ConstraintBlockerTermStore -Dmpeinference.termgenerator=org.linqs.psl.reasoner.term.ConstraintBlockerTermGenerator'
 }
 
-PSL_METHODS=('psl-admm-h2' 'psl-admm-postgres' 'psl-maxwalksat-h2' 'psl-maxwalksat-postgres' 'psl-mcsat-h2' 'psl-mcsat-postgres' 'psl-2.0')
-PSL_METHODS_CLI_OPTIONS=('' '--postgres psl' "`psl::maxwalksatOptions`" "`psl::maxwalksatOptions` --postgres psl" "`psl::mcsatOptions`" "`psl::mcsatOptions` --postgres psl" '')
-PSL_METHODS_JARS=("${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL2_JAR_PATH}")
+function psl::mosekOptions() {
+   echo '-Dconictermstore.conicprogramsolver=org.linqs.psl.experimental.optimizer.conic.mosek.Mosek -Dmpeinference.reasoner=org.linqs.psl.experimental.reasoner.conic.ConicReasoner -Dmpeinference.termstore=org.linqs.psl.experimental.reasoner.conic.ConicTermStore -Dmpeinference.termgenerator=org.linqs.psl.experimental.reasoner.conic.ConicTermGenerator'
+}
+
+PSL_METHODS=('psl-admm-h2' 'psl-admm-postgres' 'psl-maxwalksat-h2' 'psl-maxwalksat-postgres' 'psl-mcsat-h2' 'psl-mcsat-postgres' 'psl-2.0' 'psl-mosek-h2' 'psl-mosek-postgres')
+PSL_METHODS_CLI_OPTIONS=('' '--postgres psl' "`psl::maxwalksatOptions`" "`psl::maxwalksatOptions` --postgres psl" "`psl::mcsatOptions`" "`psl::mcsatOptions` --postgres psl" '' "`psl::mosekOptions`" "`psl::mosekOptions` --postgres psl")
+PSL_METHODS_JARS=("${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL2_JAR_PATH}" "${PSL_JAR_PATH}:${PSL_MOSEK_JAR_PATH}" "${PSL_JAR_PATH}:${PSL_MOSEK_JAR_PATH}")
 
 function psl::runSuite() {
    local modelName=$1
@@ -72,7 +77,7 @@ function psl::runLearn() {
    local genDataParams=$5
    local modelPath=$6
    local extraCliOptions=$7
-   local jarPath=$8
+   local classpath=$8
 
    mkdir -p $outDir
 
@@ -93,7 +98,7 @@ function psl::runLearn() {
    ruby $generateDataScript $dataTemplatePath $learnDataFilePath $genDataParams
 
    echo "Running PSL (learn). Output redirected to ${outputLearnPath}."
-   `requirements::time` `requirements::java` -jar "${jarPath}" -learn -data ${learnDataFilePath} -model ${modelPath} -D log4j.threshold=DEBUG ${extraCliOptions} > ${outputLearnPath} 2> ${outputTimePath}
+   `requirements::time` `requirements::java` -cp "${classpath}" "${CLI_MAIN_CLASS}" -learn -data ${learnDataFilePath} -model ${modelPath} -D log4j.threshold=DEBUG ${extraCliOptions} > ${outputLearnPath} 2> ${outputTimePath}
    mv ${defaultLearnedModelPath} ${learnedModelPath}
 }
 
@@ -105,7 +110,7 @@ function psl::runEval() {
    local genDataParams=$5
    local modelPath=$6
    local extraCliOptions=$7
-   local jarPath=$8
+   local classpath=$8
 
    mkdir -p $outDir
 
@@ -124,5 +129,5 @@ function psl::runEval() {
    ruby $generateDataScript $dataTemplatePath $evalDataFilePath $genDataParams
 
    echo "Running PSL (eval). Output redirected to ${outputEvalPath}."
-   `requirements::time` `requirements::java` -jar "${jarPath}" -infer -data ${evalDataFilePath} -model ${modelPath} -D log4j.threshold=DEBUG ${extraCliOptions} -output ${outDir} > ${outputEvalPath} 2> ${outputTimePath}
+   `requirements::time` `requirements::java` -cp "${classpath}" "${CLI_MAIN_CLASS}" -infer -data ${evalDataFilePath} -model ${modelPath} -D log4j.threshold=DEBUG ${extraCliOptions} -output ${outDir} > ${outputEvalPath} 2> ${outputTimePath}
 }
