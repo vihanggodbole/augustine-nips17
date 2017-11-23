@@ -1,11 +1,11 @@
 package org.linqs.psl.nips17.psl121;
 
-import org.linqs.psl.config.ConfigBundle;
-import org.linqs.psl.config.ConfigManager;
-import org.linqs.psl.database.DataStore;
-import org.linqs.psl.database.rdbms.driver.H2DatabaseDriver;
-import org.linqs.psl.database.rdbms.driver.H2DatabaseDriver.Type;
-import org.linqs.psl.database.rdbms.RDBMSDataStore;
+import edu.umd.cs.psl.config.ConfigBundle;
+import edu.umd.cs.psl.config.ConfigManager;
+import edu.umd.cs.psl.database.DataStore;
+import edu.umd.cs.psl.database.rdbms.driver.H2DatabaseDriver;
+import edu.umd.cs.psl.database.rdbms.driver.H2DatabaseDriver.Type;
+import edu.umd.cs.psl.database.rdbms.RDBMSDataStore;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -171,13 +171,19 @@ public class Launcher {
    private void run() {
       experiment.definePredicates();
       experiment.defineRules();
+
+      log.info("Starting data loading.");
       experiment.loadData(dataPath);
+      log.info("Finished data loading.");
 
       if (learn) {
          experiment.learn();
       }
       
+      log.info("Starting inference.");
       experiment.runInference();
+      log.info("Finished inference.");
+
       experiment.writeOutput(outputDir);
       experiment.eval();
 

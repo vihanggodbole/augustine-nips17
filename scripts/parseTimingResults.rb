@@ -139,6 +139,47 @@ def parsePSL2Run(path, runId)
    return stats
 end
 
+def parsePSL121Run(path, runId)
+   # Drop "Total"
+   stats = Array.new(HEADERS.size(), -1)
+
+   File.open(File.join(path, EVAL_OUTPUT_FILENAME), 'r'){|file|
+      startTime = nil
+      time = nil
+
+      file.each{|line|
+         line.strip!()
+
+         if (match = line.match(/^(\d+)\s/))
+            time = match[1].to_i()
+         end
+
+         if (match = line.match(/- Starting data loading\.$/))
+            startTime = time
+         elsif (match = line.match(/- Finished data loading\.$/))
+            stats[DATA_LOADING_INDEX] = time - startTime
+         elsif (match = line.match(/- Grounding out model\.$/))
+            startTime = time
+         elsif (match = line.match(/- Beginning inference\.$/))
+            stats[GROUNDING_INDEX] = time - startTime
+            startTime = time
+         elsif (match = line.match(/- Initializing objective terms for (\d+) ground kernels$/))
+            stats[NUM_GROUNDINGS_INDEX] = match[1].to_i()
+         elsif (match = line.match(/- Optimization completed in.*$/))
+            stats[INFERENCE_INDEX] = time - startTime
+         elsif (match = line.match(/- Inference complete. Writing results to Database.$/))
+            startTime = time
+         elsif (match = line.match(/- Finished inference\.$/))
+            stats[COMITTING_RESULTS_INDEX] = time - startTime
+         end
+      }
+
+      stats[TOTAL_INDEX] = time
+   }
+
+   return stats
+end
+
 def parseTuffyRun(path, runId)
    stats = Array.new(HEADERS.size(), -1)
 
@@ -207,7 +248,7 @@ def parseDir(path, runId = [])
 
       return results
    else
-      methodId = runId[0]
+      methodId = runId[0].to_s()
 
       # This dir has the results.
       # Make sure to wrap the results in an extra array.
@@ -217,6 +258,8 @@ def parseDir(path, runId = [])
          return [runId + parsePSL2Run(path, runId)]
       elsif (methodId =='tuffy')
          return [runId + parseTuffyRun(path, runId)]
+      elsif (methodId == 'psl-1.2.1')
+         return [runId + parsePSL121Run(path, runId)]
       else
          raise("ERROR: Unknown run type: '#{path}'.")
       end

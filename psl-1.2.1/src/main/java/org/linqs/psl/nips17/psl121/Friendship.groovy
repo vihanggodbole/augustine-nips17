@@ -1,12 +1,12 @@
 package org.linqs.psl.nips17.psl121;
 
-import org.linqs.psl.config.ConfigBundle;
-import org.linqs.psl.database.DataStore;
-import org.linqs.psl.database.loading.Inserter;
-import org.linqs.psl.groovy.PSLModel;
-import org.linqs.psl.model.predicate.StandardPredicate;
-import org.linqs.psl.model.term.ConstantType;
-import org.linqs.psl.utils.dataloading.InserterUtils;
+import edu.umd.cs.psl.config.ConfigBundle;
+import edu.umd.cs.psl.database.DataStore;
+import edu.umd.cs.psl.database.loading.Inserter;
+import edu.umd.cs.psl.groovy.PSLModel;
+import edu.umd.cs.psl.model.predicate.StandardPredicate;
+import edu.umd.cs.psl.model.argument.ArgumentType;
+import edu.umd.cs.psl.ui.loading.InserterUtils;
 
 import java.nio.file.Paths;
 import java.util.HashSet;
@@ -21,47 +21,45 @@ public class Friendship extends Experiment {
 
    @Override
    public void definePredicates() {
-      ConstantType idType = ConstantType.UniqueIntID;
-
       model.add(
          predicate: "Similar",
-         types: [idType, idType]
+         types: [ArgumentType.UniqueID, ArgumentType.UniqueID]
       );
 
       model.add(
          predicate: "Friends",
-         types: [idType, idType]
+         types: [ArgumentType.UniqueID, ArgumentType.UniqueID]
       );
 
       model.add(
          predicate: "Block",
-         types: [idType, idType]
+         types: [ArgumentType.UniqueID, ArgumentType.UniqueID]
       );
    }
 
    @Override
    public void defineRules() {
       model.add(
-         rule: "Block(P1, A) & Block(P2, A) & Similar(P1, P2) & P1 != P2 -> Friends(P1, P2)",
+         rule: ( Block(P1, A) & Block(P2, A) & Similar(P1, P2) & (P1 - P2) ) >> Friends(P1, P2),
          squared: true,
          weight : 10
       );
 
       model.add(
-         rule: "Block(P1, A) & Block(P2, A) & Block(P3, A) & Friends(P1, P2) & Friends(P2, P3) & P1 != P2 & P2 != P3 & P1 != P3 -> Friends(P1, P3)",
+         rule: ( Block(P1, A) & Block(P2, A) & Block(P3, A) & Friends(P1, P2) & Friends(P2, P3) & (P1 - P2) & (P2 - P3) & (P1 - P3) ) >> Friends(P1, P3),
          squared: true,
          weight : 10
       );
 
       model.add(
-         rule: "Block(P1, A) & Block(P2, A) & Friends(P1, P2) & P1 != P2 -> Friends(P2, P1)",
+         rule: ( Block(P1, A) & Block(P2, A) & Friends(P1, P2) & (P1 - P2) ) >> Friends(P2, P1),
          squared: true,
          weight : 10
       );
 
       // Prior (only deal with values in the same block).
       model.add(
-         rule: "Block(P1, A) & Block(P2, A) -> !Friends(P1, P2)",
+         rule: ~Friends(P1, P2),
          squared: true,
          weight : 1
       );

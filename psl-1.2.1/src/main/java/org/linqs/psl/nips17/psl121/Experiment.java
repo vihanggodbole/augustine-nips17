@@ -1,20 +1,20 @@
 package org.linqs.psl.nips17.psl121;
 
-import org.linqs.psl.application.inference.MPEInference;
-import org.linqs.psl.application.learning.weight.maxlikelihood.MaxLikelihoodMPE;
-import org.linqs.psl.application.learning.weight.maxlikelihood.VotedPerceptron;
-import org.linqs.psl.config.ConfigBundle;
-import org.linqs.psl.database.Database;
-import org.linqs.psl.database.DataStore;
-import org.linqs.psl.database.Partition;
-import org.linqs.psl.database.Queries;
-import org.linqs.psl.groovy.PSLModel;
-import org.linqs.psl.model.atom.GroundAtom;
-import org.linqs.psl.model.predicate.StandardPredicate;
-import org.linqs.psl.model.term.Constant;
-import org.linqs.psl.utils.evaluation.statistics.ContinuousPredictionComparator;
-import org.linqs.psl.utils.evaluation.statistics.DiscretePredictionComparator;
-import org.linqs.psl.utils.evaluation.statistics.DiscretePredictionStatistics;
+import edu.umd.cs.psl.application.inference.MPEInference;
+import edu.umd.cs.psl.application.learning.weight.maxlikelihood.MaxLikelihoodMPE;
+import edu.umd.cs.psl.application.learning.weight.maxlikelihood.VotedPerceptron;
+import edu.umd.cs.psl.config.ConfigBundle;
+import edu.umd.cs.psl.database.Database;
+import edu.umd.cs.psl.database.DataStore;
+import edu.umd.cs.psl.database.Partition;
+import edu.umd.cs.psl.util.database.Queries;
+import edu.umd.cs.psl.groovy.PSLModel;
+import edu.umd.cs.psl.model.atom.GroundAtom;
+import edu.umd.cs.psl.model.predicate.StandardPredicate;
+import edu.umd.cs.psl.model.argument.GroundTerm;
+import edu.umd.cs.psl.evaluation.statistics.ContinuousPredictionComparator;
+import edu.umd.cs.psl.evaluation.statistics.DiscretePredictionComparator;
+import edu.umd.cs.psl.evaluation.statistics.DiscretePredictionStatistics;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,9 +29,9 @@ import java.util.Set;
  * Experiments are responsible for keeping their own Model (PSLModel).
  */
 public abstract class Experiment {
-   private static final String PARTITION_OBSERVATIONS = "observations";
-   private static final String PARTITION_TARGETS = "targets";
-   private static final String PARTITION_TRUTH = "truth";
+   private static final int PARTITION_OBSERVATIONS = 1;
+   private static final int PARTITION_TARGETS = 2;
+   private static final int PARTITION_TRUTH = 3;
 
    private static Logger log = LoggerFactory.getLogger(Experiment.class);
 
@@ -49,16 +49,21 @@ public abstract class Experiment {
       this.config = config;
       this.dataStore = dataStore;
 
-      obsPartition = dataStore.getPartition(PARTITION_OBSERVATIONS);
-      targetsPartition = dataStore.getPartition(PARTITION_TARGETS);
-      truthPartition = dataStore.getPartition(PARTITION_TRUTH);
+      obsPartition = new Partition(PARTITION_OBSERVATIONS);
+      targetsPartition = new Partition(PARTITION_TARGETS);
+      truthPartition = new Partition(PARTITION_TRUTH);
    }
 
    public void runInference() {
       Set<StandardPredicate> closedPredicates = getClosedPredicates();
       Database database = dataStore.getDatabase(targetsPartition, closedPredicates, obsPartition);
 
-      MPEInference mpe = new MPEInference(model, database, config);
+      MPEInference mpe = null;
+      try {
+         mpe = new MPEInference(model, database, config);
+      } catch (Exception ex) {
+         throw new RuntimeException("Failed to construct MPEInference.", ex);
+      }
       mpe.mpeInference();
 
       mpe.close();
@@ -81,7 +86,7 @@ public abstract class Experiment {
 				FileWriter predFileWriter = new FileWriter(new File(outputDirectory, openPredicate.getName() + ".txt"));
 
 				for (GroundAtom atom : Queries.getAllAtoms(database, openPredicate)) {
-					for (Constant term : atom.getArguments()) {
+					for (GroundTerm term : atom.getArguments()) {
 						predFileWriter.write(term.toString() + "\t");
 					}
 					predFileWriter.write(Double.toString(atom.getValue()));
@@ -106,7 +111,11 @@ public abstract class Experiment {
 		Database observedTruthDatabase = dataStore.getDatabase(truthPartition, dataStore.getRegisteredPredicates());
 
 		VotedPerceptron vp = new MaxLikelihoodMPE(model, randomVariableDatabase, observedTruthDatabase, config);
-		vp.learn();
+      try {
+		   vp.learn();
+      } catch (Exception ex) {
+         throw new RuntimeException("Failed to run weight learning.", ex);
+      }
 
 		randomVariableDatabase.close();
 		observedTruthDatabase.close();
@@ -114,7 +123,7 @@ public abstract class Experiment {
 		log.info("Weight learning complete");
 
       // Write out the learned model.
-      System.out.println(model.asString().replaceAll("\\( | \\)", ""));
+      System.out.println(model.toString());
 	}
 
 	protected void continuousEval() {
@@ -131,19 +140,15 @@ public abstract class Experiment {
 		comparator.setBaseline(truthDatabase);
 
 		for (StandardPredicate targetPredicate : openPredicates) {
-			// Before we run evaluation, ensure that the truth database actaully has instances of the target predicate.
-			if (Queries.countAllGroundAtoms(truthDatabase, targetPredicate) == 0) {
-				log.info("Skipping continuous evaluation for {} since there are no ground truth atoms", targetPredicate);
-				continue;
-			}
-
 			comparator.setMetric(ContinuousPredictionComparator.Metric.MAE);
 			double mae = comparator.compare(targetPredicate);
 
 			comparator.setMetric(ContinuousPredictionComparator.Metric.MSE);
 			double mse = comparator.compare(targetPredicate);
 
-			log.info("Continuous evaluation results for {} -- MAE: {}, MSE: {}", targetPredicate.getName(), mae, mse);
+			log.info(String.format(
+               "Continuous evaluation results for %s -- MAE: %f, MSE: %f",
+               targetPredicate.getName(), mae, mse));
 		}
 
 		predictionDatabase.close();
@@ -167,12 +172,6 @@ public abstract class Experiment {
 		comparator.setBaseline(truthDatabase);
 
 		for (StandardPredicate targetPredicate : openPredicates) {
-			// Before we run evaluation, ensure that the truth database actaully has instances of the target predicate.
-			if (Queries.countAllGroundAtoms(truthDatabase, targetPredicate) == 0) {
-				log.info("Skipping discrete evaluation for {} since there are no ground truth atoms", targetPredicate);
-				continue;
-			}
-
 			DiscretePredictionStatistics stats = comparator.compare(targetPredicate);
 
 			double accuracy = stats.getAccuracy();
@@ -182,12 +181,14 @@ public abstract class Experiment {
 			double negativePrecision = stats.getPrecision(DiscretePredictionStatistics.BinaryClass.NEGATIVE);
 			double negativeRecall = stats.getRecall(DiscretePredictionStatistics.BinaryClass.NEGATIVE);
 
-			log.info("Discrete evaluation results for {} --" +
-					" Accuracy: {}, Error: {}," +
-					" Positive Class Precision: {}, Positive Class Recall: {}," +
-					" Negative Class Precision: {}, Negative Class Recall: {},",
+			log.info(String.format(
+               "Discrete evaluation results for %s --" +
+					" Accuracy: %f, Error: %f," +
+					" Positive Class Precision: %f, Positive Class Recall: %f," +
+					" Negative Class Precision: %f, Negative Class Recall: %f,",
 					targetPredicate.getName(),
-					accuracy, error, positivePrecision, positiveRecall, negativePrecision, negativeRecall);
+					accuracy, error, positivePrecision, positiveRecall,
+               negativePrecision, negativeRecall));
 		}
 
 		predictionDatabase.close();
