@@ -7,15 +7,15 @@ LEARNED_PSL_MODEL_FILENAME='learned-model.psl'
 CLI_MAIN_CLASS='org.linqs.psl.cli.Launcher'
 
 function psl::maxwalksatOptions() {
-   echo '-Dmpeinference.reasoner=org.linqs.psl.reasoner.bool.BooleanMaxWalkSat -Dmpeinference.groundrulestore=org.linqs.psl.application.groundrulestore.AtomRegisterGroundRuleStore -Dmpeinference.termstore=org.linqs.psl.reasoner.term.ConstraintBlockerTermStore -Dmpeinference.termgenerator=org.linqs.psl.reasoner.term.ConstraintBlockerTermGenerator'
+   echo '-D mpeinference.reasoner=org.linqs.psl.reasoner.bool.BooleanMaxWalkSat -D mpeinference.groundrulestore=org.linqs.psl.application.groundrulestore.AtomRegisterGroundRuleStore -D mpeinference.termstore=org.linqs.psl.reasoner.term.ConstraintBlockerTermStore -D mpeinference.termgenerator=org.linqs.psl.reasoner.term.ConstraintBlockerTermGenerator'
 }
 
 function psl::mcsatOptions() {
-   echo '-Dmpeinference.reasoner=org.linqs.psl.reasoner.bool.BooleanMCSat -Dmpeinference.groundrulestore=org.linqs.psl.application.groundrulestore.AtomRegisterGroundRuleStore -Dmpeinference.termstore=org.linqs.psl.reasoner.term.ConstraintBlockerTermStore -Dmpeinference.termgenerator=org.linqs.psl.reasoner.term.ConstraintBlockerTermGenerator'
+   echo '-D mpeinference.reasoner=org.linqs.psl.reasoner.bool.BooleanMCSat -D mpeinference.groundrulestore=org.linqs.psl.application.groundrulestore.AtomRegisterGroundRuleStore -D mpeinference.termstore=org.linqs.psl.reasoner.term.ConstraintBlockerTermStore -D mpeinference.termgenerator=org.linqs.psl.reasoner.term.ConstraintBlockerTermGenerator'
 }
 
 function psl::mosekOptions() {
-   echo '-Dconictermstore.conicprogramsolver=org.linqs.psl.experimental.optimizer.conic.mosek.Mosek -Dmpeinference.reasoner=org.linqs.psl.experimental.reasoner.conic.ConicReasoner -Dmpeinference.termstore=org.linqs.psl.experimental.reasoner.conic.ConicTermStore -Dmpeinference.termgenerator=org.linqs.psl.experimental.reasoner.conic.ConicTermGenerator'
+   echo '-D conictermstore.conicprogramsolver=org.linqs.psl.experimental.optimizer.conic.mosek.Mosek -D mpeinference.reasoner=org.linqs.psl.experimental.reasoner.conic.ConicReasoner -D mpeinference.termstore=org.linqs.psl.experimental.reasoner.conic.ConicTermStore -D mpeinference.termgenerator=org.linqs.psl.experimental.reasoner.conic.ConicTermGenerator'
 }
 
 PSL_METHODS=('psl-admm-h2' 'psl-admm-postgres' 'psl-maxwalksat-h2' 'psl-maxwalksat-postgres' 'psl-mcsat-h2' 'psl-mcsat-postgres' 'psl-2.0' 'psl-mosek-h2' 'psl-mosek-postgres')
