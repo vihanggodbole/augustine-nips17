@@ -33,22 +33,73 @@ def meanColumns(rows)
    return sums.map{|sum| sum / rows.size().to_f()}
 end
 
-# Make sure that all run ids are 4 sections long: Framework, Dataset, Fold
+# Make sure that all run ids are 3 sections long: Method, Dataset, Fold
 def normalizeRunIds(results, experiment)
    results.each{|result|
       if (experiment == 'epinions')
          result.insert(1, '')
+      elsif (experiment == 'friendship')
+         result.insert(2, '')
       elsif (experiment == 'image-reconstruction')
          result.insert(2, '')
       elsif (experiment == 'jester')
          result.insert(1, '')
+      elsif (experiment == 'nell-kgi')
+         result.insert(1, '')
+         result.insert(1, '')
       elsif (experiment == 'party-affiliation')
+         result.insert(2, '')
+      elsif (experiment == 'party-affiliation-scaling')
          result.insert(2, '')
       end
    }
 end
 
+def parsePSLRun(path, runId)
+   # Drop "Total"
+   stats = Array.new(HEADERS.size(), -1)
+
+   File.open(File.join(path, EVAL_OUTPUT_FILENAME), 'r'){|file|
+      startTime = nil
+      time = nil
+
+      file.each{|line|
+         line.strip!()
+
+         if (match = line.match(/^(\d+)\s/))
+            time = match[1].to_i()
+         end
+
+         if (match = line.match(/- Loading data for.*$/))
+            if (startTime != nil)
+               next
+            end
+
+            startTime = time
+         elsif (match = line.match(/- Data loading complete$/))
+            stats[DATA_LOADING_INDEX] = time - startTime
+         elsif (match = line.match(/- Grounding out model\.$/))
+            startTime = time
+         elsif (match = line.match(/- Initializing objective terms for (\d+) ground rules\.$/))
+            stats[NUM_GROUNDINGS_INDEX] = match[1].to_i()
+            stats[GROUNDING_INDEX] = time - startTime
+         elsif (match = line.match(/- Beginning inference\.$/))
+            startTime = time
+         elsif (match = line.match(/- Inference complete. Writing results to Database\.$/))
+            stats[INFERENCE_INDEX] = time - startTime
+            startTime = time
+         elsif (match = line.match(/- Inference Complete$/))
+            stats[COMITTING_RESULTS_INDEX] = time - startTime
+            stats[TOTAL_INDEX] = time
+         end
+      }
+   }
+
+   return stats
+end
+
 def parsePSL2Run(path, runId)
+   # Drop "Total"
    stats = Array.new(HEADERS.size(), -1)
 
    File.open(File.join(path, EVAL_OUTPUT_FILENAME), 'r'){|file|
@@ -83,49 +134,6 @@ def parsePSL2Run(path, runId)
       }
 
       stats[TOTAL_INDEX] = time
-   }
-
-   return stats
-end
-
-def parsePSLRun(path, runId)
-   stats = Array.new(HEADERS.size(), -1)
-
-   File.open(File.join(path, EVAL_OUTPUT_FILENAME), 'r'){|file|
-      startTime = nil
-      time = nil
-
-      file.each{|line|
-         line.strip!()
-
-         if (match = line.match(/^(\d+)\s/))
-            time = match[1].to_i()
-         end
-
-         if (match = line.match(/- Loading data for.*$/))
-            if (startTime != nil)
-               next
-            end
-
-            startTime = time
-         elsif (match = line.match(/- Data loading complete$/))
-            stats[DATA_LOADING_INDEX] = time - startTime
-         elsif (match = line.match(/- Grounding out model\.$/))
-            startTime = time
-         elsif (match = line.match(/- Beginning inference\.$/))
-            stats[GROUNDING_INDEX] = time - startTime
-            startTime = time
-         elsif (match = line.match(/- Initializing objective terms for (\d+) ground kernels$/))
-            stats[NUM_GROUNDINGS_INDEX] = match[1].to_i()
-         elsif (match = line.match(/- Optimization completed in.*$/))
-            stats[INFERENCE_INDEX] = time - startTime
-         elsif (match = line.match(/- Inference complete. Writing results to Database.$/))
-            startTime = time
-         elsif (match = line.match(/- Inference Complete$/))
-            stats[COMITTING_RESULTS_INDEX] = time - startTime
-            stats[TOTAL_INDEX] = time
-         end
-      }
    }
 
    return stats
@@ -199,13 +207,15 @@ def parseDir(path, runId = [])
 
       return results
    else
+      methodId = runId[0]
+
       # This dir has the results.
       # Make sure to wrap the results in an extra array.
-      if (runId.include?('psl') || runId.include?('psl-postgres'))
+      if (methodId.match(/^psl-\w+-(h2|postgres)$/))
          return [runId + parsePSLRun(path, runId)]
-      elsif (runId.include?('psl-2.0'))
+      elsif (methodId =='psl-2.0')
          return [runId + parsePSL2Run(path, runId)]
-      elsif (runId.include?('tuffy'))
+      elsif (methodId =='tuffy')
          return [runId + parseTuffyRun(path, runId)]
       else
          raise("ERROR: Unknown run type: '#{path}'.")
@@ -215,6 +225,8 @@ end
 
 def main(baseDir)
    results = []
+
+   puts (['Dataset', 'Method', 'Sub-Dataset', 'Fold'] + HEADERS).join("\t")
 
    # Look for 'out' directories.
    Dir[File.join(baseDir, '*', 'out')].each{|path|
