@@ -3,7 +3,6 @@
 THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" && source "${THIS_DIR}/../scripts/requirements.sh"
 THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-LEARNED_PSL_MODEL_FILENAME='learned-model.psl'
 CLI_MAIN_CLASS='org.linqs.psl.cli.Launcher'
 
 function psl::maxwalksatOptions() {
@@ -18,9 +17,15 @@ function psl::mosekOptions() {
    echo '-D conictermstore.conicprogramsolver=org.linqs.psl.experimental.optimizer.conic.mosek.Mosek -D mpeinference.reasoner=org.linqs.psl.experimental.reasoner.conic.ConicReasoner -D mpeinference.termstore=org.linqs.psl.experimental.reasoner.conic.ConicTermStore -D mpeinference.termgenerator=org.linqs.psl.experimental.reasoner.conic.ConicTermGenerator'
 }
 
-PSL_METHODS=('psl-admm-h2' 'psl-admm-postgres' 'psl-maxwalksat-h2' 'psl-maxwalksat-postgres' 'psl-mcsat-h2' 'psl-mcsat-postgres' 'psl-2.0' 'psl-mosek-h2' 'psl-mosek-postgres')
-PSL_METHODS_CLI_OPTIONS=('' '--postgres psl' "`psl::maxwalksatOptions`" "`psl::maxwalksatOptions` --postgres psl" "`psl::mcsatOptions`" "`psl::mcsatOptions` --postgres psl" '' "`psl::mosekOptions`" "`psl::mosekOptions` --postgres psl")
-PSL_METHODS_JARS=("${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL2_JAR_PATH}" "${PSL_JAR_PATH}:${PSL_MOSEK_JAR_PATH}" "${PSL_JAR_PATH}:${PSL_MOSEK_JAR_PATH}")
+# TEST
+# PSL_METHODS=('psl-admm-h2' 'psl-admm-postgres' 'psl-maxwalksat-h2' 'psl-maxwalksat-postgres' 'psl-mcsat-h2' 'psl-mcsat-postgres' 'psl-2.0' 'psl-mosek-h2' 'psl-mosek-postgres')
+# PSL_METHODS_CLI_OPTIONS=('' '--postgres psl' "`psl::maxwalksatOptions`" "`psl::maxwalksatOptions` --postgres psl" "`psl::mcsatOptions`" "`psl::mcsatOptions` --postgres psl" '' "`psl::mosekOptions`" "`psl::mosekOptions` --postgres psl")
+# PSL_METHODS_JARS=("${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL2_JAR_PATH}" "${PSL_JAR_PATH}:${PSL_MOSEK_JAR_PATH}" "${PSL_JAR_PATH}:${PSL_MOSEK_JAR_PATH}")
+
+# TEST
+PSL_METHODS=('psl-1.2.1')
+PSL_METHODS_CLI_OPTIONS=('')
+PSL_METHODS_JARS=("/home/eriq/code/augustine-nips17/scripts/lib/psl121-1.2.1.jar")
 
 function psl::runSuite() {
    local modelName=$1
@@ -54,7 +59,7 @@ function psl::runSuite() {
             "${methodCliOptions}" \
             "${methodJar}"
 
-         modelPath="${outDir}/${LEARNED_PSL_MODEL_FILENAME}"
+         modelPath="${outDir}/${modelName}-learned.psl"
       fi
 
       psl::runEval \
@@ -87,7 +92,7 @@ function psl::runLearn() {
    local outputLearnPath="${outDir}/out-learn.txt"
    local outputTimePath="${outDir}/time-learn.txt"
    local learnDataFilePath="${outDir}/learn.data"
-   local learnedModelPath="${outDir}/${LEARNED_PSL_MODEL_FILENAME}"
+   local learnedModelPath="${outDir}/${modelName}-learned.psl"
 
    if [ -f "${outputLearnPath}" ]; then
       echo "Target PSL (learn) file exists (${outputLearnPath}), skipping run."
@@ -98,7 +103,7 @@ function psl::runLearn() {
    ruby $generateDataScript $dataTemplatePath $learnDataFilePath $genDataParams
 
    echo "Running PSL (learn). Output redirected to ${outputLearnPath}."
-   `requirements::time` `requirements::java` -cp "${classpath}" "${CLI_MAIN_CLASS}" -learn -data ${learnDataFilePath} -model ${modelPath} -D log4j.threshold=DEBUG ${extraCliOptions} > ${outputLearnPath} 2> ${outputTimePath}
+   `requirements::time` `requirements::java` -cp "${classpath}" "${CLI_MAIN_CLASS}" -learn -data ${learnDataFilePath} -model ${modelPath} -D log4j.threshold=DEBUG ${extraCliOptions} -output ${outDir} > ${outputLearnPath} 2> ${outputTimePath}
    mv ${defaultLearnedModelPath} ${learnedModelPath}
 }
 

@@ -38,42 +38,37 @@ public class Friendship extends Experiment {
    }
 
    @Override
-   public void defineRules() {
+   public double[] getDefaultWeights() {
+      return [10.0, 10.0, 10.0, 1.0];
+   }
+
+   @Override
+   public void defineRules(double[] weights) {
       model.add(
          rule: ( Block(P1, A) & Block(P2, A) & Similar(P1, P2) & (P1 - P2) ) >> Friends(P1, P2),
          squared: true,
-         weight : 10
+         weight: weights[0]
       );
 
       model.add(
          rule: ( Block(P1, A) & Block(P2, A) & Block(P3, A) & Friends(P1, P2) & Friends(P2, P3) & (P1 - P2) & (P2 - P3) & (P1 - P3) ) >> Friends(P1, P3),
          squared: true,
-         weight : 10
+         weight: weights[1]
       );
 
       model.add(
          rule: ( Block(P1, A) & Block(P2, A) & Friends(P1, P2) & (P1 - P2) ) >> Friends(P2, P1),
          squared: true,
-         weight : 10
+         weight: weights[2]
       );
 
-      // Prior (only deal with values in the same block).
       model.add(
          rule: ~Friends(P1, P2),
          squared: true,
-         weight : 1
+         weight: weights[3]
       );
    }
 
-   /**
-    * Load data from text files into the DataStore. Three partitions are defined
-    * and populated: observations, targets, and truth.
-    * Observations contains evidence that we treat as background knowledge and
-    * use to condition our inferences
-    * Targets contains the inference targets - the unknown variables we wish to infer
-    * Truth contains the true values of the inference variables and will be used
-    * to evaluate the model's performance
-    */
    @Override
    public void loadData(String dataPath) {
       Inserter inserter = dataStore.getInserter(Similar, obsPartition);

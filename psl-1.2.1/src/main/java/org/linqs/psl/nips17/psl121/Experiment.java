@@ -9,6 +9,7 @@ import edu.umd.cs.psl.database.DataStore;
 import edu.umd.cs.psl.database.Partition;
 import edu.umd.cs.psl.util.database.Queries;
 import edu.umd.cs.psl.groovy.PSLModel;
+import edu.umd.cs.psl.model.Model;
 import edu.umd.cs.psl.model.atom.GroundAtom;
 import edu.umd.cs.psl.model.predicate.StandardPredicate;
 import edu.umd.cs.psl.model.argument.GroundTerm;
@@ -52,6 +53,10 @@ public abstract class Experiment {
       obsPartition = new Partition(PARTITION_OBSERVATIONS);
       targetsPartition = new Partition(PARTITION_TARGETS);
       truthPartition = new Partition(PARTITION_TRUTH);
+   }
+
+   public Model getModel() {
+      return model;
    }
 
    public void runInference() {
@@ -121,9 +126,6 @@ public abstract class Experiment {
 		observedTruthDatabase.close();
 
 		log.info("Weight learning complete");
-
-      // Write out the learned model.
-      System.out.println(model.toString());
 	}
 
 	protected void continuousEval() {
@@ -202,7 +204,15 @@ public abstract class Experiment {
    }
 
    public abstract void definePredicates();
-   public abstract void defineRules();
+
+   /**
+    * All rules will get an initial weight.
+    * If the launcher finds a weight file (indicating that a run of weight learning
+    * happened earlier), then those weights will be passed in instead of these.
+    */
+   public abstract double[] getDefaultWeights();
+
+   public abstract void defineRules(double[] weights);
    public abstract void loadData(String dataPath);
    public abstract void eval();
 
