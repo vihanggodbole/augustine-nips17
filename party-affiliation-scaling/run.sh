@@ -10,7 +10,6 @@ DATA_GEN_SCRIPT="${THIS_DIR}/scripts/generateGraphData.rb"
 
 function run() {
    local outBaseDir="${THIS_DIR}/out"
-   local folds='22050 33075 38588 44100 49613 55125 66150'
    local folds=`seq -w -s ' ' 100000 100000 1000000`
 
    for fold in $folds; do

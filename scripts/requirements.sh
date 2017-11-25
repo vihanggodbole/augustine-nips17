@@ -18,6 +18,9 @@ PSL_MOSEK_JAR_URL='https://linqs-data.soe.ucsc.edu/maven/repositories/psl-releas
 PSL2_JAR_PATH="${LIB_DIR}/psl-cli-2.0.0-NIPS17.jar"
 PSL2_JAR_URL='https://linqs-data.soe.ucsc.edu/public/augustine-nips17-data/psl-cli-2.0.0-NIPS17.jar'
 
+PSL121_JAR_PATH="${LIB_DIR}/psl121-1.2.1.jar"
+PSL121_JAR_URL='https://linqs-data.soe.ucsc.edu/public/augustine-nips17-data/psl121-1.2.1.jar'
+
 TUFFY_JAR_PATH="${LIB_DIR}/tuffy-modified.jar"
 TUFFY_CONFIG_PATH="${THIS_DIR}/tuffy.conf"
 TUFFY_JAR_URL='https://linqs-data.soe.ucsc.edu/public/augustine-nips17-data/tuffy-modified.jar'
@@ -142,6 +145,7 @@ function requirements::fetch_all_jars() {
    requirements::fetch_file "${PSL_CANARY_JAR_URL}" "${PSL_CANARY_JAR_PATH}" 'PSL_CANARY'
    requirements::fetch_file "${PSL_MOSEK_JAR_URL}" "${PSL_MOSEK_JAR_PATH}" 'PSL_MOSEK'
    requirements::fetch_file "${PSL2_JAR_URL}" "${PSL2_JAR_PATH}" 'PSL2'
+   requirements::fetch_file "${PSL121_JAR_URL}" "${PSL121_JAR_PATH}" 'PSL121'
    requirements::fetch_file "${TUFFY_JAR_URL}" "${TUFFY_JAR_PATH}" 'Tuffy'
 }
 

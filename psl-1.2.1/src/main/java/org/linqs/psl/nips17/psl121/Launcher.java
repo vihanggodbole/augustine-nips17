@@ -67,13 +67,22 @@ public class Launcher {
       initDB();
       dataPath = discoverDataPath(dataFilePath);
 
-      // TODO(eriq)
       if (modelName.equals("friendship")) {
          experiment = new Friendship(config, dataStore);
       } else if (modelName.equals("collective-classification")) {
          experiment = new CollectiveClassification(config, dataStore);
       } else if (modelName.equals("epinions")) {
          experiment = new Epinions(config, dataStore);
+      } else if (modelName.equals("image-reconstruction")) {
+         experiment = new ImageReconstruction(config, dataStore);
+      } else if (modelName.equals("jester")) {
+         experiment = new Jester(config, dataStore);
+      } else if (modelName.equals("nell-kgi")) {
+         experiment = new NellKGI(config, dataStore);
+      } else if (modelName.equals("party-affiliation")) {
+         experiment = new PartyAffiliation(config, dataStore);
+      } else if (modelName.equals("party-affiliation-scaling")) {
+         experiment = new PartyAffiliation(config, dataStore);
       } else {
          throw new IllegalArgumentException("Unknown model: " + modelName);
       }
