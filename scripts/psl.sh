@@ -18,7 +18,7 @@ function psl::mosekOptions() {
 }
 
 function psl::cvxpxOptions() {
-   echo "-D mpeinference.reasoner=org.linqs.psl.experimental.reasoner.general.CVXPYReasoner -D mpeinference.termstore=org.linqs.psl.experimental.reasoner.general.JSONSerialTermStore -D mpeinference.termgenerator=org.linqs.psl.experimental.reasoner.general.JSONSerialTermGenerator -D executablereasoner.executablepath=${THIS_DIR}/lib/cvxpy_reasoner.py"
+   echo "-D mpeinference.reasoner=org.linqs.psl.experimental.reasoner.general.CVXPYReasoner -D mpeinference.termstore=org.linqs.psl.experimental.reasoner.general.JSONSerialTermStore -D mpeinference.termgenerator=org.linqs.psl.experimental.reasoner.general.JSONSerialTermGenerator -D executablereasoner.executablepath=${LIB_DIR}/cvxpy_reasoner.py"
 }
 
 PSL_METHODS=('psl-admm-h2' 'psl-admm-postgres' 'psl-maxwalksat-h2' 'psl-maxwalksat-postgres' 'psl-mcsat-h2' 'psl-mcsat-postgres' 'psl-2.0' 'psl-mosek-h2' 'psl-mosek-postgres' 'psl-1.2.1' 'psl-cvxpy-h2' 'psl-cvxpy-postgres')
