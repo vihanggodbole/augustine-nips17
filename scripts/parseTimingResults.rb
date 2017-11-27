@@ -1,5 +1,8 @@
 require 'fileutils'
 
+# Go through all the run output and grab all the timing results.
+# Also give aggregated data over different folds in the same dataset.
+
 EVAL_OUTPUT_FILENAME = 'out-eval.txt'
 
 HEADERS = [
@@ -17,7 +20,7 @@ INFERENCE_INDEX = 3
 COMITTING_RESULTS_INDEX = 4
 TOTAL_INDEX = 5
 
-# We know we are in a run's output directry when we see this file.
+# We know we are in a run's output directory when we see this file.
 SIGNAL_FILE = EVAL_OUTPUT_FILENAME
 
 # Take in an array of arrays of values and mean all the columns.
@@ -218,7 +221,7 @@ def parseTuffyRun(path, runId)
    return stats
 end
 
-# Recursivley descend until we see SIGNAL_FILE.
+# Recursively descend until we see SIGNAL_FILE.
 # Every directory we descend past on the way becomes part of the experiment run identifier.
 def parseDir(path, runId = [])
    if (!File.exists?(File.join(path, SIGNAL_FILE)))
