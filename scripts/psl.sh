@@ -21,14 +21,9 @@ function psl::cvxpxOptions() {
    echo "-D mpeinference.reasoner=org.linqs.psl.experimental.reasoner.general.CVXPYReasoner -D mpeinference.termstore=org.linqs.psl.experimental.reasoner.general.JSONSerialTermStore -D mpeinference.termgenerator=org.linqs.psl.experimental.reasoner.general.JSONSerialTermGenerator -D executablereasoner.executablepath=${THIS_DIR}/lib/cvxpy_reasoner.py"
 }
 
-# TEST
-# PSL_METHODS=('psl-admm-h2' 'psl-admm-postgres' 'psl-maxwalksat-h2' 'psl-maxwalksat-postgres' 'psl-mcsat-h2' 'psl-mcsat-postgres' 'psl-2.0' 'psl-mosek-h2' 'psl-mosek-postgres' 'psl-1.2.1' 'psl-cvxpy-h2' 'psl-cvxpy-postgres')
-# PSL_METHODS_CLI_OPTIONS=('' '--postgres psl' "`psl::maxwalksatOptions`" "`psl::maxwalksatOptions` --postgres psl" "`psl::mcsatOptions`" "`psl::mcsatOptions` --postgres psl" '' "`psl::mosekOptions`" "`psl::mosekOptions` --postgres psl" '' "`psl::cvxpxOptions`" "`psl::cvxpxOptions` --postgres psl")
-# PSL_METHODS_JARS=("${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL2_JAR_PATH}" "${PSL_JAR_PATH}:${PSL_MOSEK_JAR_PATH}" "${PSL_JAR_PATH}:${PSL_MOSEK_JAR_PATH}" "${PSL121_JAR_PATH}" "${PSL_JAR_PATH}:${PSL_CVXPY_JAR_PATH}" "${PSL_JAR_PATH}:${PSL_CVXPY_JAR_PATH}")
-
-PSL_METHODS=('psl-maxwalksat-h2' 'psl-mcsat-h2')
-PSL_METHODS_CLI_OPTIONS=("`psl::maxwalksatOptions`" "`psl::mcsatOptions`")
-PSL_METHODS_JARS=("${PSL_JAR_PATH}" "${PSL_JAR_PATH}")
+PSL_METHODS=('psl-admm-h2' 'psl-admm-postgres' 'psl-maxwalksat-h2' 'psl-maxwalksat-postgres' 'psl-mcsat-h2' 'psl-mcsat-postgres' 'psl-2.0' 'psl-mosek-h2' 'psl-mosek-postgres' 'psl-1.2.1' 'psl-cvxpy-h2' 'psl-cvxpy-postgres')
+PSL_METHODS_CLI_OPTIONS=('' '--postgres psl' "`psl::maxwalksatOptions`" "`psl::maxwalksatOptions` --postgres psl" "`psl::mcsatOptions`" "`psl::mcsatOptions` --postgres psl" '' "`psl::mosekOptions`" "`psl::mosekOptions` --postgres psl" '' "`psl::cvxpxOptions`" "`psl::cvxpxOptions` --postgres psl")
+PSL_METHODS_JARS=("${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL2_JAR_PATH}" "${PSL_JAR_PATH}:${PSL_MOSEK_JAR_PATH}" "${PSL_JAR_PATH}:${PSL_MOSEK_JAR_PATH}" "${PSL121_JAR_PATH}" "${PSL_JAR_PATH}:${PSL_CVXPY_JAR_PATH}" "${PSL_JAR_PATH}:${PSL_CVXPY_JAR_PATH}")
 
 function psl::runSuite() {
    local modelName=$1
