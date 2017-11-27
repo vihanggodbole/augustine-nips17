@@ -11,6 +11,12 @@ PSL_METHODS=('psl-admm-h2' 'psl-admm-postgres' 'psl-maxwalksat-h2' 'psl-maxwalks
 PSL_METHODS_CLI_OPTIONS=('' '--postgres psl' "`psl::maxwalksatOptions`" "`psl::maxwalksatOptions` --postgres psl" "`psl::mcsatOptions`" "`psl::mcsatOptions` --postgres psl")
 PSL_METHODS_JARS=("${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL_JAR_PATH}")
 
+# Limit to 300G
+ulimit -d 314572800
+
+# Limit to 10 mins
+ulimit -t 600
+
 function run() {
    local outBaseDir="${THIS_DIR}/out"
    local datasets='citeseer cora'
