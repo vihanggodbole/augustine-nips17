@@ -22,28 +22,24 @@ DATA_TRUTH_FILENAME = 'hasCat_truth.txt'
 module CollectiveClassificationEvaluation
    # Get the positive class precision.
    def CollectiveClassificationEvaluation.parseTuffyResults(path, dataset, fold)
-      predicatedAtoms = Parse.tuffyAtoms(File.join(path, TUFFY_RESULTS_FILENAME))
+      inferredAtoms = Parse.tuffyAtoms(File.join(path, TUFFY_RESULTS_FILENAME))
       truthAtoms = Parse.truthAtoms(File.join(DATA_BASEDIR, dataset, fold, 'eval', DATA_TRUTH_FILENAME))
       targets = Parse.targetAtoms(File.join(DATA_BASEDIR, dataset, fold, 'eval', DATA_TARGETS_FILENAME))
 
-      tp, fn, tn, fp = Evaluation.computeAccuracyCounts(targets, predicatedAtoms, truthAtoms)
-
-      return tp.to_f() / (tp + fp)
+      return Evaluation.precision(targets, inferredAtoms, truthAtoms)
    end
 
    # Get the positive class precision.
    def CollectiveClassificationEvaluation.calcPSLResults(path, dataset, fold)
-      predicatedAtoms = Parse.pslAtoms(File.join(path, PSL_RESULTS_FILENAME))
+      inferredAtoms = Parse.pslAtoms(File.join(path, PSL_RESULTS_FILENAME))
       truthAtoms = Parse.truthAtoms(File.join(DATA_BASEDIR, dataset, fold, 'eval', DATA_TRUTH_FILENAME))
       targets = Parse.targetAtoms(File.join(DATA_BASEDIR, dataset, fold, 'eval', DATA_TARGETS_FILENAME))
 
-      if (predicatedAtoms.size() == 0)
+      if (inferredAtoms.size() == 0)
          return nil
       end
 
-      tp, fn, tn, fp = Evaluation.computeAccuracyCounts(targets, predicatedAtoms, truthAtoms)
-
-      return tp.to_f() / (tp + fp)
+      return Evaluation.precision(targets, inferredAtoms, truthAtoms)
    end
 
    def CollectiveClassificationEvaluation.parseResults(path, method, dataset, fold)
