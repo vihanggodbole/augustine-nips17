@@ -4,6 +4,8 @@ require 'set'
 # Go through all the run output and grab all the accuracy measures.
 # Since each experiment may have different metrics, each dataset will
 # be handled independently.
+# This is a very general version.
+# More specific scripts can be found in each experiment's script directory.
 
 EVAL_OUTPUT_FILENAME = 'out-eval.txt'
 
