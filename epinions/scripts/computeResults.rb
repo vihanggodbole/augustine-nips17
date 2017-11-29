@@ -10,7 +10,7 @@ require_relative '../../scripts/util'
 FOLDS = (0...8).to_a()
 TARGET_METHODS = ['psl-admm-h2', 'psl-maxwalksat-h2', 'psl-mcsat-h2', 'tuffy']
 
-DATA_BASEDIR = File.join('data', 'splits')
+DATA_RELPATH = File.join('data', 'splits')
 RESULTS_BASEDIR = 'out'
 TUFFY_RESULTS_FILENAME = 'results.txt'
 PSL_RESULTS_FILENAME = 'TRUSTS.txt'
@@ -20,10 +20,10 @@ DATA_TRUTH_FILENAME = 'trusts_truth.txt'
 
 module EpinionsEvaluation
    # Get the positive class precision.
-   def EpinionsEvaluation.parseTuffyResults(path, fold)
+   def EpinionsEvaluation.parseTuffyResults(dataDir, path, fold)
       inferredAtoms = Parse.tuffyAtoms(File.join(path, TUFFY_RESULTS_FILENAME))
-      truthAtoms = Parse.truthAtoms(File.join(DATA_BASEDIR, fold, 'eval', DATA_TRUTH_FILENAME))
-      targets = Parse.targetAtoms(File.join(DATA_BASEDIR, fold, 'eval', DATA_TARGETS_FILENAME))
+      truthAtoms = Parse.truthAtoms(File.join(dataDir, DATA_TRUTH_FILENAME))
+      targets = Parse.targetAtoms(File.join(dataDir, DATA_TARGETS_FILENAME))
 
       return [
          Evaluation.computeAUROC(targets, inferredAtoms, truthAtoms),
@@ -33,10 +33,10 @@ module EpinionsEvaluation
    end
 
    # Get the positive class precision.
-   def EpinionsEvaluation.calcPSLResults(path, fold)
+   def EpinionsEvaluation.calcPSLResults(dataDir, path, fold)
       inferredAtoms = Parse.pslAtoms(File.join(path, PSL_RESULTS_FILENAME))
-      truthAtoms = Parse.truthAtoms(File.join(DATA_BASEDIR, fold, 'eval', DATA_TRUTH_FILENAME))
-      targets = Parse.targetAtoms(File.join(DATA_BASEDIR, fold, 'eval', DATA_TARGETS_FILENAME))
+      truthAtoms = Parse.truthAtoms(File.join(dataDir, DATA_TRUTH_FILENAME))
+      targets = Parse.targetAtoms(File.join(dataDir, DATA_TARGETS_FILENAME))
 
       if (inferredAtoms.size() == 0)
          return nil
@@ -49,11 +49,11 @@ module EpinionsEvaluation
       ]
    end
 
-   def EpinionsEvaluation.parseResults(path, method, fold)
+   def EpinionsEvaluation.parseResults(dataDir, path, method, fold)
       if (method.match(/^psl-\w+-(h2|postgres)$/))
-         return calcPSLResults(path, fold)
+         return calcPSLResults(dataDir, path, fold)
       elsif (method == 'tuffy')
-         return parseTuffyResults(path, fold)
+         return parseTuffyResults(dataDir, path, fold)
       else
          raise("ERROR: Unsupported method: '#{method}'.")
       end
@@ -69,7 +69,9 @@ module EpinionsEvaluation
          end
 
          Util.listDir(methodPath){|fold, foldPath|
-            auroc, auprc, nauprc = parseResults(foldPath, method, fold)
+            dataDir = File.join(baseDir, DATA_RELPATH, fold, 'eval')
+
+            auroc, auprc, nauprc = parseResults(dataDir, foldPath, method, fold)
             stats[method][:auroc] << auroc
             stats[method][:auprc] << auprc
             stats[method][:nauprc] << nauprc

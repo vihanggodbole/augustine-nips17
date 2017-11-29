@@ -7,30 +7,32 @@ require_relative '../../scripts/eval'
 require_relative '../../scripts/parse'
 require_relative '../../scripts/util'
 
-DATASETS = ['citeseer', 'cora']
-FOLDS = (0...20).to_a()
+FOLDS = (0...10).to_a()
 TARGET_METHODS = ['psl-admm-h2', 'psl-maxwalksat-h2', 'psl-mcsat-h2', 'tuffy']
 
 DATA_RELPATH = File.join('data', 'splits')
 RESULTS_BASEDIR = 'out'
 TUFFY_RESULTS_FILENAME = 'results.txt'
-PSL_RESULTS_FILENAME = 'HASCAT.txt'
+PSL_RESULTS_FILENAME = 'RATING.txt'
 
-DATA_TARGETS_FILENAME = 'hasCat_targets.txt'
-DATA_TRUTH_FILENAME = 'hasCat_truth.txt'
+DATA_TARGETS_FILENAME = 'rating_targets.txt'
+DATA_TRUTH_FILENAME = 'rating_truth.txt'
 
-module CollectiveClassificationEval
+module JesterEval
    # Get the positive class precision.
-   def CollectiveClassificationEval.parseTuffyResults(dataDir, path, dataset, fold)
+   def JesterEval.parseTuffyResults(dataDir, path, fold)
       inferredAtoms = Parse.tuffyAtoms(File.join(path, TUFFY_RESULTS_FILENAME))
       truthAtoms = Parse.truthAtoms(File.join(dataDir, DATA_TRUTH_FILENAME))
       targets = Parse.targetAtoms(File.join(dataDir, DATA_TARGETS_FILENAME))
 
-      return Evaluation.precision(targets, inferredAtoms, truthAtoms)
+      return [
+         Evaluation.computeMAE(targets, inferredAtoms, truthAtoms),
+         Evaluation.computeMSE(targets, inferredAtoms, truthAtoms)
+      ]
    end
 
    # Get the positive class precision.
-   def CollectiveClassificationEval.calcPSLResults(dataDir, path, dataset, fold)
+   def JesterEval.calcPSLResults(dataDir, path, fold)
       inferredAtoms = Parse.pslAtoms(File.join(path, PSL_RESULTS_FILENAME))
       truthAtoms = Parse.truthAtoms(File.join(dataDir, DATA_TRUTH_FILENAME))
       targets = Parse.targetAtoms(File.join(dataDir, DATA_TARGETS_FILENAME))
@@ -39,21 +41,24 @@ module CollectiveClassificationEval
          return nil
       end
 
-      return Evaluation.precision(targets, inferredAtoms, truthAtoms)
+      return [
+         Evaluation.computeMAE(targets, inferredAtoms, truthAtoms),
+         Evaluation.computeMSE(targets, inferredAtoms, truthAtoms)
+      ]
    end
 
-   def CollectiveClassificationEval.parseResults(dataDir, path, method, dataset, fold)
+   def JesterEval.parseResults(dataDir, path, method, fold)
       if (method.match(/^psl-\w+-(h2|postgres)$/))
-         return calcPSLResults(dataDir, path, dataset, fold)
+         return calcPSLResults(dataDir, path, fold)
       elsif (method == 'tuffy')
-         return parseTuffyResults(dataDir, path, dataset, fold)
+         return parseTuffyResults(dataDir, path, fold)
       else
          raise("ERROR: Unsupported method: '#{method}'.")
       end
    end
 
-   def CollectiveClassificationEval.eval(baseDir)
-      # {method => {dataset => [foldPrecision, ...], ...}, ...}
+   def JesterEval.eval(baseDir)
+      # {method => {:stat => [value, ...], ...}, ...}
       stats = Hash.new{|hash, key| hash[key] = Hash.new{|innerHash, innerKey| innerHash[innerKey] = []}}
 
       Util.listDir(File.join(baseDir, RESULTS_BASEDIR)){|method, methodPath|
@@ -61,30 +66,29 @@ module CollectiveClassificationEval
             next
          end
 
-         Util.listDir(methodPath){|dataset, datasetPath|
-            Util.listDir(datasetPath){|fold, foldPath|
-               dataDir = File.join(baseDir, DATA_RELPATH, dataset, fold, 'eval')
-               stats[method][dataset] << parseResults(dataDir, foldPath, method, dataset, fold)
-            }
+         Util.listDir(methodPath){|fold, foldPath|
+            dataDir = File.join(baseDir, DATA_RELPATH, fold, 'eval')
 
-            if (stats[method][dataset].size() != FOLDS.size())
-               raise "Incorrect number of folds for #{datasetPath}. Expected #{FOLDS.size()}, Found: #{stats[method][dataset].size()}."
-            end
+            mae, mse = parseResults(foldPath, method, fold)
+            stats[method][:mae] << mae
+            stats[method][:mse] << mse
          }
 
-         if (stats[method].size() != DATASETS.size())
-            raise "Incorrect number of datasets for #{methodPath}. Expected #{DATASETS.size()}, Found: #{stats[method].size()}."
+         if (stats[method][:auroc].size() != FOLDS.size())
+            raise "Incorrect number of folds for #{methodPath}. Expected #{FOLDS.size()}, Found: #{stats[method].size()}."
          end
       }
 
+      puts ['method', 'mse', 'mae'].join("\t")
       stats.keys().sort().each{|method|
-         stats[method].keys().sort().each{|dataset|
-            if (stats[method][dataset] == ([nil] * FOLDS.size()))
-               next
-            end
+         if (stats[method] == ([nil] * FOLDS.size()))
+            next
+         end
 
-            puts [method, dataset, Util.mean(stats[method][dataset])].join("\t")
-         }
+         mae = Util.mean(stats[method][:mae])
+         mse = Util.mean(stats[method][:mse])
+
+         puts [method, mae, mse].join("\t")
       }
    end
 end
@@ -104,5 +108,5 @@ if ($0 == __FILE__)
       baseDir = args.shift()
    end
 
-   CollectiveClassificationEval.eval(baseDir)
+   JesterEval.eval(baseDir)
 end

@@ -41,6 +41,50 @@ module Evaluation
       return tp.to_f() / (tp + fp)
    end
 
+   # Mean Squared Error
+   def Evaluation.computeMAE(targets, inferredAtoms, truthAtoms)
+      mse = 0.0
+      count = 0
+
+      targets.each{|target|
+         if (!inferredAtoms.include?(target))
+            next
+         end
+
+         truthValue = 0.0
+         if (truthAtoms.include?(target))
+            truthValue = truthAtoms[target]
+         end
+
+         mse += (truthValue - inferredAtoms[target]) ** 2
+         count += 1
+      }
+
+      return mse / count
+   end
+
+   # Mean Absolute Error
+   def Evaluation.computeMAE(targets, inferredAtoms, truthAtoms)
+      mae = 0.0
+      count = 0
+
+      targets.each{|target|
+         if (!inferredAtoms.include?(target))
+            next
+         end
+
+         truthValue = 0.0
+         if (truthAtoms.include?(target))
+            truthValue = truthAtoms[target]
+         end
+
+         mae += (truthValue - inferredAtoms[target]).abs()
+         count += 1
+      }
+
+      return mae / count
+   end
+
    def Evaluation.computeNegativeClassAUPRC(targets, inferredAtoms, truthAtoms)
       tn = 0
       fn = 0

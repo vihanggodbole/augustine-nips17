@@ -5,28 +5,35 @@ module Parse
 
    @@cache = {}
 
-   # Will check to see if the atoms are marginal or not.
+   # Tuffy puts all the atoms in a single file (even if there are multiple open predicates).
+   # Each predicate will be passed back as its own map (in lexicographic order).
+   # Will also check to see if the atoms are marginal or not.
    # Non-marginal atoms get a 1.0 truth value.
    def Parse.tuffyAtoms(path)
-      # {[arg0, arg1, ...] => value, ...}
-      atoms = {}
+      # {predicate => {[arg0, arg1, ...] => value, ...}, ...}
+      atoms = Hash.new{|hash, key| hash[key] = {}}
 
       File.open(path, 'r'){|file|
          file.each{|line|
             line.strip!()
 
-            if (line.match(/^#{NUM_REGEX}\t/))
-               parts = line.sub(/\s+\/\/ .*$/, '').split("\t")
-               args = parts[1].sub(/^\w+\(/, '').sub(/\)$/, '').split(', ')
-               atoms[args] = parts[0].to_f()
+            if (match = line.match(/^(#{NUM_REGEX})\t(\w+)\(([^)]+)\)\s+\/\//))
+               predicate = match[2]
+               args = match[3].split(", ")
+               value = match[1].to_f()
+            elsif (match = line.match(/^(\w+)\(([^)]+)\)/))
+               predicate = match[1]
+               args = match[2].split(", ")
+               value = 1.0
             else
-               args = line.sub(/^\w+\(/, '').sub(/\)$/, '').split(', ')
-               atoms[args] = 1.0
+               raise "Unrecognized line (#{file.lineno}) in #{path}: #{line}"
             end
+
+            atoms[predicate][args] = value
          }
       }
 
-      return atoms
+      return atoms.to_a().sort().map{|predicate, values| values}
    end
 
    def Parse.pslAtoms(path)
