@@ -15,12 +15,13 @@ PSL_METHODS_JARS=("${PSL_JAR_PATH}" "${PSL_JAR_PATH}:${PSL_MOSEK_JAR_PATH}" "${P
 # Limit to 300G
 ulimit -d 314572800
 
-# Limit to 4 hours
-ulimit -t 14400
+# Limit to 8 hours
+ulimit -t 28800
 
 function run() {
    local outBaseDir="${THIS_DIR}/out"
-   local folds=`seq -w -s ' ' 100 100 1000`
+   local folds="$(seq -w -s ' ' 30 10 0100)"
+   # local folds="$(seq -w -s ' ' 30 10 0100) $(seq -w -s ' ' 100 100 1000)"
 
    for fold in $folds; do
       # Generate the data.
