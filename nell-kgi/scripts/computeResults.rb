@@ -7,49 +7,49 @@ require_relative '../../scripts/eval'
 require_relative '../../scripts/parse'
 require_relative '../../scripts/util'
 
-TARGET_METHODS = ['psl-admm-h2', 'psl-maxwalksat-h2', 'psl-mcsat-h2', 'tuffy']
-
-DATA_RELPATH = File.join('data', 'processed', 'eval')
-RESULTS_BASEDIR = 'out'
-TUFFY_RESULTS_FILENAME = 'results.txt'
-PSL_CAT_RESULTS_FILENAME = 'CAT.txt'
-PSL_REL_RESULTS_FILENAME = 'REL.txt'
-
-DATA_CAT_TARGETS_FILENAME = 'cat_targets.txt'
-DATA_CAT_TRUTH_FILENAME = 'cat_truth.txt'
-DATA_REL_TARGETS_FILENAME = 'rel_targets.txt'
-DATA_REL_TRUTH_FILENAME = 'rel_truth.txt'
-
 module NellKGIEval
+   TARGET_METHODS = ['psl-admm-postgres', 'psl-maxwalksat-postgres', 'psl-mcsat-postgres', 'tuffy']
+
+   DATA_RELPATH = File.join('data', 'processed', 'eval')
+   RESULTS_BASEDIR = 'out'
+   TUFFY_RESULTS_FILENAME = 'results.txt'
+   PSL_CAT_RESULTS_FILENAME = 'CAT.txt'
+   PSL_REL_RESULTS_FILENAME = 'REL.txt'
+
+   DATA_CAT_TARGETS_FILENAME = 'CAT_targets.txt'
+   DATA_CAT_TRUTH_FILENAME = 'CAT_truth.txt'
+   DATA_REL_TARGETS_FILENAME = 'REL_targets.txt'
+   DATA_REL_TRUTH_FILENAME = 'REL_truth.txt'
+
    # Get the positive class precision.
    def NellKGIEval.parseTuffyResults(dataDir, path)
       catInferredAtoms, relInferredAtoms = Parse.tuffyAtoms(File.join(path, PSL_CAT_RESULTS_FILENAME))
 
-      catTruthAtoms = Parse.truthAtoms(File.join(dataPath, DATA_CAT_TRUTH_FILENAME))
-      catTargets = Parse.targetAtoms(File.join(dataPath, DATA_CAT_TARGETS_FILENAME))
+      catTruthAtoms = Parse.truthAtoms(File.join(dataDir, DATA_CAT_TRUTH_FILENAME))
+      catTargets = Parse.targetAtoms(File.join(dataDir, DATA_CAT_TARGETS_FILENAME))
 
-      relTruthAtoms = Parse.truthAtoms(File.join(dataPath, DATA_REL_TRUTH_FILENAME))
-      relTargets = Parse.targetAtoms(File.join(dataPath, DATA_REL_TARGETS_FILENAME))
+      relTruthAtoms = Parse.truthAtoms(File.join(dataDir, DATA_REL_TRUTH_FILENAME))
+      relTargets = Parse.targetAtoms(File.join(dataDir, DATA_REL_TARGETS_FILENAME))
 
       return [
-         Evaluation.computeAUPRC(catTargets, catInferredAtoms, catTruthAtoms),
-         Evaluation.computeAUPRC(relTargets, relInferredAtoms, relTruthAtoms),
+         Evaluation.computeAUPRC(catTargets, catInferredAtoms, catTruthAtoms, 0.55),
+         Evaluation.computeAUPRC(relTargets, relInferredAtoms, relTruthAtoms, 0.55),
       ]
    end
 
    # Get the positive class precision.
    def NellKGIEval.calcPSLResults(dataDir, path)
       catInferredAtoms = Parse.pslAtoms(File.join(path, PSL_CAT_RESULTS_FILENAME))
-      catTruthAtoms = Parse.truthAtoms(File.join(dataPath, DATA_CAT_TRUTH_FILENAME))
-      catTargets = Parse.targetAtoms(File.join(dataPath, DATA_CAT_TARGETS_FILENAME))
+      catTruthAtoms = Parse.truthAtoms(File.join(dataDir, DATA_CAT_TRUTH_FILENAME))
+      catTargets = Parse.targetAtoms(File.join(dataDir, DATA_CAT_TARGETS_FILENAME))
 
       relInferredAtoms = Parse.pslAtoms(File.join(path, PSL_REL_RESULTS_FILENAME))
-      relTruthAtoms = Parse.truthAtoms(File.join(dataPath, DATA_REL_TRUTH_FILENAME))
-      relTargets = Parse.targetAtoms(File.join(dataPath, DATA_REL_TARGETS_FILENAME))
+      relTruthAtoms = Parse.truthAtoms(File.join(dataDir, DATA_REL_TRUTH_FILENAME))
+      relTargets = Parse.targetAtoms(File.join(dataDir, DATA_REL_TARGETS_FILENAME))
 
       return [
-         Evaluation.computeAUPRC(catTargets, catInferredAtoms, catTruthAtoms),
-         Evaluation.computeAUPRC(relTargets, relInferredAtoms, relTruthAtoms),
+         Evaluation.computeAUPRC(catTargets, catInferredAtoms, catTruthAtoms, 0.55),
+         Evaluation.computeAUPRC(relTargets, relInferredAtoms, relTruthAtoms, 0.55),
       ]
    end
 
@@ -73,7 +73,7 @@ module NellKGIEval
          end
 
          dataDir = File.join(baseDir, DATA_RELPATH)
-         catAUPRC, relAUPRC = parseResults(methodPath, method)
+         catAUPRC, relAUPRC = parseResults(dataDir, methodPath, method)
 
          if (catAUPRC != nil)
             stats[method][:cat] = catAUPRC
@@ -84,10 +84,23 @@ module NellKGIEval
          end
       }
 
-      puts ['method', 'Cat AUPRC', 'Rel AUPRC'].join("\t")
+      rows = []
       stats.keys().sort().each{|method|
-         puts [method, stats[:cat], stats[:rel]].join("\t")
+         rows << [method, stats[method][:cat], stats[method][:rel]]
       }
+
+      return rows
+   end
+
+   def NellKGIEval.getHeader()
+      return ['method', 'Cat AUPRC', 'Rel AUPRC']
+   end
+
+   def NellKGIEval.printEval(baseDir)
+      rows = NellKGIEval.eval(baseDir)
+
+      puts getHeader().join("\t")
+      puts rows.map{|row| row.join("\t")}.join("\n")
    end
 end
 
@@ -106,5 +119,5 @@ if ($0 == __FILE__)
       baseDir = args.shift()
    end
 
-   NellKGIEval.eval(baseDir)
+   NellKGIEval.printEval(baseDir)
 end

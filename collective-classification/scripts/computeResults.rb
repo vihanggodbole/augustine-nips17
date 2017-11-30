@@ -7,19 +7,19 @@ require_relative '../../scripts/eval'
 require_relative '../../scripts/parse'
 require_relative '../../scripts/util'
 
-DATASETS = ['citeseer', 'cora']
-FOLDS = (0...20).to_a()
-TARGET_METHODS = ['psl-admm-h2', 'psl-maxwalksat-h2', 'psl-mcsat-h2', 'tuffy']
-
-DATA_RELPATH = File.join('data', 'splits')
-RESULTS_BASEDIR = 'out'
-TUFFY_RESULTS_FILENAME = 'results.txt'
-PSL_RESULTS_FILENAME = 'HASCAT.txt'
-
-DATA_TARGETS_FILENAME = 'hasCat_targets.txt'
-DATA_TRUTH_FILENAME = 'hasCat_truth.txt'
-
 module CollectiveClassificationEval
+   DATASETS = ['citeseer', 'cora']
+   FOLDS = (0...20).to_a()
+   TARGET_METHODS = ['psl-admm-postgres', 'psl-maxwalksat-postgres', 'psl-mcsat-postgres', 'tuffy']
+
+   DATA_RELPATH = File.join('data', 'splits')
+   RESULTS_BASEDIR = 'out'
+   TUFFY_RESULTS_FILENAME = 'results.txt'
+   PSL_RESULTS_FILENAME = 'HASCAT.txt'
+
+   DATA_TARGETS_FILENAME = 'hasCat_targets.txt'
+   DATA_TRUTH_FILENAME = 'hasCat_truth.txt'
+
    # Get the positive class precision.
    def CollectiveClassificationEval.parseTuffyResults(dataDir, path)
       inferredAtoms = Parse.tuffyAtoms(File.join(path, TUFFY_RESULTS_FILENAME))
@@ -83,7 +83,7 @@ module CollectiveClassificationEval
          end
       }
 
-      puts ['method', 'dataset', 'precision'].join("\t")
+      rows = []
       stats.keys().sort().each{|method|
          stats[method].keys().sort().each{|dataset|
             if (stats[method][dataset].size() == 0)
@@ -92,9 +92,22 @@ module CollectiveClassificationEval
 
             precision = Util.mean(stats[method][dataset][:precision])
 
-            puts [method, dataset, precision].join("\t")
+            rows << [method, dataset, precision]
          }
       }
+
+      return rows
+   end
+
+   def CollectiveClassificationEval.getHeader()
+      return ['method', 'dataset', 'precision']
+   end
+
+   def CollectiveClassificationEval.printEval(baseDir)
+      rows = CollectiveClassificationEval.eval(baseDir)
+
+      puts getHeader().join("\t")
+      puts rows.map{|row| row.join("\t")}.join("\n")
    end
 end
 
@@ -113,5 +126,5 @@ if ($0 == __FILE__)
       baseDir = args.shift()
    end
 
-   CollectiveClassificationEval.eval(baseDir)
+   CollectiveClassificationEval.printEval(baseDir)
 end

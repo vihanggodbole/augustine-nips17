@@ -2,9 +2,9 @@
 # If a stat cannot be computed, we will always return nil or raise an exception.
 
 module Evaluation
-   TRUTH_THREHSOLD = 0.5
+   TRUTH_THRESHOLD = 0.5
 
-   def Evaluation.computeAccuracyCounts(targets, inferredAtoms, truthAtoms)
+   def Evaluation.computeAccuracyCounts(targets, inferredAtoms, truthAtoms, truthThreshold = TRUTH_THRESHOLD)
       tp = 0
       fn = 0
       tn = 0
@@ -14,10 +14,10 @@ module Evaluation
          if (!inferredAtoms.include?(args))
             next
          end
-         predicated = inferredAtoms[args] >= TRUTH_THREHSOLD
+         predicated = inferredAtoms[args] >= truthThreshold
 
          if (truthAtoms.include?(args))
-            expected = truthAtoms[args] >= TRUTH_THREHSOLD
+            expected = truthAtoms[args] >= truthThreshold
          else
             expected = false
          end
@@ -36,8 +36,8 @@ module Evaluation
       return tp, fn, tn, fp
    end
 
-   def Evaluation.precision(targets, inferredAtoms, truthAtoms)
-      tp, fn, tn, fp = computeAccuracyCounts(targets, inferredAtoms, truthAtoms)
+   def Evaluation.precision(targets, inferredAtoms, truthAtoms, truthThreshold = TRUTH_THRESHOLD)
+      tp, fn, tn, fp = computeAccuracyCounts(targets, inferredAtoms, truthAtoms, truthThreshold)
 
       if (tp + fp == 0)
          return nil
@@ -47,7 +47,7 @@ module Evaluation
    end
 
    # Mean Squared Error
-   def Evaluation.computeMAE(targets, inferredAtoms, truthAtoms)
+   def Evaluation.computeMSE(targets, inferredAtoms, truthAtoms)
       mse = 0.0
       count = 0
 
@@ -98,7 +98,7 @@ module Evaluation
       return mae / count
    end
 
-   def Evaluation.computeNegativeClassAUPRC(targets, inferredAtoms, truthAtoms)
+   def Evaluation.computeNegativeClassAUPRC(targets, inferredAtoms, truthAtoms, truthThreshold = TRUTH_THRESHOLD)
       tn = 0
       fn = 0
 
@@ -107,11 +107,11 @@ module Evaluation
       previousRecall = 0.0
 
       targets = sortTargets(targets, inferredAtoms)
-      positiveCount, negativeCount = positiveNegativeCounts(targets, truthAtoms)
+      positiveCount, negativeCount = positiveNegativeCounts(targets, truthAtoms, truthThreshold)
 
       targets.reverse_each{|target|
          # Pretend we predict false for all targets.
-         if (truthAtoms.include?(target) && truthAtoms[target] >= TRUTH_THREHSOLD)
+         if (truthAtoms.include?(target) && truthAtoms[target] >= truthThreshold)
             fn += 1
          else
             tn += 1
@@ -132,7 +132,7 @@ module Evaluation
       return auc
    end
 
-   def Evaluation.computeAUPRC(targets, inferredAtoms, truthAtoms)
+   def Evaluation.computeAUPRC(targets, inferredAtoms, truthAtoms, truthThreshold = TRUTH_THRESHOLD)
       tp = 0
       fp = 0
 
@@ -141,11 +141,11 @@ module Evaluation
       previousRecall = 0.0
 
       targets = sortTargets(targets, inferredAtoms)
-      positiveCount, negativeCount = positiveNegativeCounts(targets, truthAtoms)
+      positiveCount, negativeCount = positiveNegativeCounts(targets, truthAtoms, truthThreshold)
 
       targets.each{|target|
          # Pretend we predict true for all targets.
-         if (truthAtoms.include?(target) && truthAtoms[target] >= TRUTH_THREHSOLD)
+         if (truthAtoms.include?(target) && truthAtoms[target] >= truthThreshold)
             tp += 1
          else
             fp += 1
@@ -166,7 +166,7 @@ module Evaluation
       return auc
    end
 
-   def Evaluation.computeAUROC(targets, inferredAtoms, truthAtoms)
+   def Evaluation.computeAUROC(targets, inferredAtoms, truthAtoms, truthThreshold = TRUTH_THRESHOLD)
       tp = 0
       fp = 0
 
@@ -175,11 +175,11 @@ module Evaluation
       previousFPR = 0.0
 
       targets = sortTargets(targets, inferredAtoms)
-      positiveCount, negativeCount = positiveNegativeCounts(targets, truthAtoms)
+      positiveCount, negativeCount = positiveNegativeCounts(targets, truthAtoms, truthThreshold)
 
       targets.each{|target|
          # Pretend we predict true for all targets.
-         if (truthAtoms.include?(target) && truthAtoms[target] >= TRUTH_THREHSOLD)
+         if (truthAtoms.include?(target) && truthAtoms[target] >= truthThreshold)
             tp += 1
          else
             fp += 1
@@ -216,11 +216,11 @@ module Evaluation
 
    # Note that we observe the closed world assumption, so we only look for
    # positive examples and then compute the negative count.
-   def Evaluation.positiveNegativeCounts(targets, truthAtoms)
+   def Evaluation.positiveNegativeCounts(targets, truthAtoms, truthThreshold = TRUTH_THRESHOLD)
       positiveCount = 0
 
       targets.each{|target|
-         if (truthAtoms.include?(target) && truthAtoms[target] >= TRUTH_THREHSOLD)
+         if (truthAtoms.include?(target) && truthAtoms[target] >= truthThreshold)
             positiveCount += 1
          end
       }
