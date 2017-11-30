@@ -7,18 +7,18 @@ require_relative '../../scripts/eval'
 require_relative '../../scripts/parse'
 require_relative '../../scripts/util'
 
-FOLDS = (0...10).to_a()
-TARGET_METHODS = ['psl-admm-h2', 'psl-maxwalksat-h2', 'psl-mcsat-h2', 'tuffy']
-
-DATA_RELPATH = File.join('data', 'splits')
-RESULTS_BASEDIR = 'out'
-TUFFY_RESULTS_FILENAME = 'results.txt'
-PSL_RESULTS_FILENAME = 'RATING.txt'
-
-DATA_TARGETS_FILENAME = 'rating_targets.txt'
-DATA_TRUTH_FILENAME = 'rating_truth.txt'
-
 module JesterEval
+   FOLDS = (0...10).to_a()
+   TARGET_METHODS = ['psl-admm-postgres', 'psl-maxwalksat-postgres', 'psl-mcsat-postgres', 'tuffy']
+
+   DATA_RELPATH = File.join('data', 'splits')
+   RESULTS_BASEDIR = 'out'
+   TUFFY_RESULTS_FILENAME = 'results.txt'
+   PSL_RESULTS_FILENAME = 'RATING.txt'
+
+   DATA_TARGETS_FILENAME = 'rating_targets.txt'
+   DATA_TRUTH_FILENAME = 'rating_truth.txt'
+
    # Get the positive class precision.
    def JesterEval.parseTuffyResults(dataDir, path)
       inferredAtoms = Parse.tuffyAtoms(File.join(path, TUFFY_RESULTS_FILENAME))
@@ -64,7 +64,7 @@ module JesterEval
 
          Util.listDir(methodPath){|fold, foldPath|
             dataDir = File.join(baseDir, DATA_RELPATH, fold, 'eval')
-            mae, mse = parseResults(foldPath, method)
+            mae, mse = parseResults(dataDir, foldPath, method)
 
             if (mae != nil)
                stats[method][:mae] << mae
@@ -82,7 +82,7 @@ module JesterEval
          }
       }
 
-      puts ['method', 'mse', 'mae'].join("\t")
+      rows = []
       stats.keys().sort().each{|method|
          if (stats[method].size() == 0)
             next
@@ -91,8 +91,21 @@ module JesterEval
          mae = Util.mean(stats[method][:mae])
          mse = Util.mean(stats[method][:mse])
 
-         puts [method, mae, mse].join("\t")
+         rows << [method, mae, mse]
       }
+
+      return rows
+   end
+
+   def JesterEval.getHeader()
+      return ['method', 'MAE', 'MSE']
+   end
+
+   def JesterEval.printEval(baseDir)
+      rows = JesterEval.eval(baseDir)
+
+      puts getHeader().join("\t")
+      puts rows.map{|row| row.join("\t")}.join("\n")
    end
 end
 
@@ -111,5 +124,5 @@ if ($0 == __FILE__)
       baseDir = args.shift()
    end
 
-   JesterEval.eval(baseDir)
+   JesterEval.printEval(baseDir)
 end

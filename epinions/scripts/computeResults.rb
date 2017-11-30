@@ -7,18 +7,18 @@ require_relative '../../scripts/eval'
 require_relative '../../scripts/parse'
 require_relative '../../scripts/util'
 
-FOLDS = (0...8).to_a()
-TARGET_METHODS = ['psl-admm-h2', 'psl-maxwalksat-h2', 'psl-mcsat-h2', 'tuffy']
-
-DATA_RELPATH = File.join('data', 'splits')
-RESULTS_BASEDIR = 'out'
-TUFFY_RESULTS_FILENAME = 'results.txt'
-PSL_RESULTS_FILENAME = 'TRUSTS.txt'
-
-DATA_TARGETS_FILENAME = 'trusts_target.txt'
-DATA_TRUTH_FILENAME = 'trusts_truth.txt'
-
 module EpinionsEvaluation
+   FOLDS = (0...8).to_a()
+   TARGET_METHODS = ['psl-admm-postgres', 'psl-maxwalksat-postgres', 'psl-mcsat-postgres', 'tuffy']
+
+   DATA_RELPATH = File.join('data', 'splits')
+   RESULTS_BASEDIR = 'out'
+   TUFFY_RESULTS_FILENAME = 'results.txt'
+   PSL_RESULTS_FILENAME = 'TRUSTS.txt'
+
+   DATA_TARGETS_FILENAME = 'trusts_target.txt'
+   DATA_TRUTH_FILENAME = 'trusts_truth.txt'
+
    # Get the positive class precision.
    def EpinionsEvaluation.parseTuffyResults(dataDir, path, fold)
       inferredAtoms = Parse.tuffyAtoms(File.join(path, TUFFY_RESULTS_FILENAME))
@@ -88,7 +88,7 @@ module EpinionsEvaluation
          }
       }
 
-      puts ['method', 'AUROC', 'AUPRC', 'Negative Class AUPRC'].join("\t")
+      rows = []
       stats.keys().sort().each{|method|
          if (stats[method].size() == 0)
             next
@@ -98,8 +98,21 @@ module EpinionsEvaluation
          auprc = Util.mean(stats[method][:auprc])
          nauprc = Util.mean(stats[method][:nauprc])
 
-         puts [method, auroc, auprc, nauprc].join("\t")
+         rows << [method, auroc, auprc, nauprc]
       }
+
+      return rows
+   end
+
+   def EpinionsEvaluation.getHeader()
+      return ['method', 'AUROC', 'AUPRC', 'Negative Class AUPRC']
+   end
+
+   def EpinionsEvaluation.printEval(baseDir)
+      rows = EpinionsEvaluation.eval(baseDir)
+
+      puts getHeader().join("\t")
+      puts rows.map{|row| row.join("\t")}.join("\n")
    end
 end
 
@@ -118,5 +131,5 @@ if ($0 == __FILE__)
       baseDir = args.shift()
    end
 
-   EpinionsEvaluation.eval(baseDir)
+   EpinionsEvaluation.printEval(baseDir)
 end
