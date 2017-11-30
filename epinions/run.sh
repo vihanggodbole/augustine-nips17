@@ -22,15 +22,15 @@ function run() {
    local folds=`seq -s ' ' 0 7`
 
    for fold in $folds; do
-      # PSL
-      psl::runSuite \
-         'epinions' \
-         "${THIS_DIR}" \
-         "${fold}" \
-         "${fold} learn" \
-         "${fold} eval" \
-         '-ec' \
-         true
+#      # PSL
+#      psl::runSuite \
+#         'epinions' \
+#         "${THIS_DIR}" \
+#         "${fold}" \
+#         "${fold} learn" \
+#         "${fold} eval" \
+#         '-ec' \
+#         true
 
       # Tuffy
       tuffy::runLearn \
