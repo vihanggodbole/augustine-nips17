@@ -9,13 +9,7 @@ THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 DATA_GEN_SCRIPT="${THIS_DIR}/scripts/generateGraphData.rb"
 
 # Redefine for experiment specifics.
-# PSL_METHODS=('psl-admm-postgres' 'psl-mosek-postgres' 'psl-cvxpy-postgres')
-# PSL_METHODS_CLI_OPTIONS=('--postgres psl' "`psl::mosekOptions` --postgres psl" "`psl::cvxpxOptions` --postgres psl")
-# PSL_METHODS_JARS=("${PSL_JAR_PATH}" "${PSL_JAR_PATH}:${PSL_MOSEK_JAR_PATH}" "${PSL_JAR_PATH}:${PSL_CVXPY_JAR_PATH}")
 
-PSL_METHODS=('psl-admm-postgres' 'psl-mosek-postgres')
-PSL_METHODS_CLI_OPTIONS=('--postgres psl' "`psl::mosekOptions` --postgres psl")
-PSL_METHODS_JARS=("${PSL_JAR_PATH}" "${PSL_JAR_PATH}:${PSL_MOSEK_JAR_PATH}")
 
 # Limit to 300G
 ulimit -d 314572800
@@ -25,7 +19,33 @@ ulimit -t 14400
 
 function run() {
    local outBaseDir="${THIS_DIR}/out"
+
+   local folds=`seq -w -s ' '0010000 10000 0020000`
+   PSL_METHODS=('psl-admm-postgres' 'psl-mosek-postgres' 'psl-cvxpy-postgres')
+   PSL_METHODS_CLI_OPTIONS=('--postgres psl' "`psl::mosekOptions` --postgres psl" "`psl::cvxpxOptions` --postgres psl")
+   PSL_METHODS_JARS=("${PSL_JAR_PATH}" "${PSL_JAR_PATH}:${PSL_MOSEK_JAR_PATH}" "${PSL_JAR_PATH}:${PSL_CVXPY_JAR_PATH}")
+
+   for fold in $folds; do
+      # Generate the data.
+      echo "Generating data for ${fold} nodes."
+      local dataDir="${THIS_DIR}/data/processed/${fold}"
+      ruby $DATA_GEN_SCRIPT $fold "${dataDir}"
+
+      # PSL
+      psl::runSuite \
+         'party-affiliation' \
+         "${THIS_DIR}" \
+         "${fold}" \
+         '' \
+         "${fold}" \
+         '' \
+         false
+   done
+
    local folds=`seq -w -s ' ' 100000 100000 1000000`
+   PSL_METHODS=('psl-admm-postgres' 'psl-mosek-postgres')
+   PSL_METHODS_CLI_OPTIONS=('--postgres psl' "`psl::mosekOptions` --postgres psl")
+   PSL_METHODS_JARS=("${PSL_JAR_PATH}" "${PSL_JAR_PATH}:${PSL_MOSEK_JAR_PATH}")
 
    for fold in $folds; do
       # Generate the data.
