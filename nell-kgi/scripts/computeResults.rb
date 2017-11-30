@@ -31,10 +31,6 @@ module NellKGIEval
       relTruthAtoms = Parse.truthAtoms(File.join(dataPath, DATA_REL_TRUTH_FILENAME))
       relTargets = Parse.targetAtoms(File.join(dataPath, DATA_REL_TARGETS_FILENAME))
 
-      if (catInferredAtoms.size() == 0 || relInferredAtoms.size() == 0)
-         return nil, nil
-      end
-
       return [
          Evaluation.computeAUPRC(catTargets, catInferredAtoms, catTruthAtoms),
          Evaluation.computeAUPRC(relTargets, relInferredAtoms, relTruthAtoms),
@@ -50,10 +46,6 @@ module NellKGIEval
       relInferredAtoms = Parse.pslAtoms(File.join(path, PSL_REL_RESULTS_FILENAME))
       relTruthAtoms = Parse.truthAtoms(File.join(dataPath, DATA_REL_TRUTH_FILENAME))
       relTargets = Parse.targetAtoms(File.join(dataPath, DATA_REL_TARGETS_FILENAME))
-
-      if (catInferredAtoms.size() == 0 || relInferredAtoms.size() == 0)
-         return nil, nil
-      end
 
       return [
          Evaluation.computeAUPRC(catTargets, catInferredAtoms, catTruthAtoms),
@@ -81,10 +73,15 @@ module NellKGIEval
          end
 
          dataDir = File.join(baseDir, DATA_RELPATH)
-
          catAUPRC, relAUPRC = parseResults(methodPath, method)
-         stats[method][:cat] = catAUPRC
-         stats[method][:rel] = relAUPRC
+
+         if (catAUPRC != nil)
+            stats[method][:cat] = catAUPRC
+         end
+
+         if (relAUPRC != nil)
+            stats[method][:rel] = relAUPRC
+         end
       }
 
       puts ['method', 'Cat AUPRC', 'Rel AUPRC'].join("\t")
@@ -100,11 +97,11 @@ if ($0 == __FILE__)
 
    if (args.size() > 1 || args.map{|arg| arg.gsub('-', '').downcase()}.include?('help'))
       puts "USAGE: ruby #{$0} [base experiment dir]"
-      puts "   Will use this directory if one it not provided."
+      puts "   Will use the parent of the directory where this script lives if one it not provided."
       exit(1)
    end
 
-   baseDir = '.'
+   baseDir = File.dirname(File.dirname(File.absolute_path($0)))
    if (args.size() > 0)
       baseDir = args.shift()
    end

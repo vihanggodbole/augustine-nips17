@@ -20,7 +20,7 @@ DATA_TRUTH_FILENAME = 'rating_truth.txt'
 
 module JesterEval
    # Get the positive class precision.
-   def JesterEval.parseTuffyResults(dataDir, path, fold)
+   def JesterEval.parseTuffyResults(dataDir, path)
       inferredAtoms = Parse.tuffyAtoms(File.join(path, TUFFY_RESULTS_FILENAME))
       truthAtoms = Parse.truthAtoms(File.join(dataDir, DATA_TRUTH_FILENAME))
       targets = Parse.targetAtoms(File.join(dataDir, DATA_TARGETS_FILENAME))
@@ -32,14 +32,10 @@ module JesterEval
    end
 
    # Get the positive class precision.
-   def JesterEval.calcPSLResults(dataDir, path, fold)
+   def JesterEval.calcPSLResults(dataDir, path)
       inferredAtoms = Parse.pslAtoms(File.join(path, PSL_RESULTS_FILENAME))
       truthAtoms = Parse.truthAtoms(File.join(dataDir, DATA_TRUTH_FILENAME))
       targets = Parse.targetAtoms(File.join(dataDir, DATA_TARGETS_FILENAME))
-
-      if (inferredAtoms.size() == 0)
-         return nil
-      end
 
       return [
          Evaluation.computeMAE(targets, inferredAtoms, truthAtoms),
@@ -47,11 +43,11 @@ module JesterEval
       ]
    end
 
-   def JesterEval.parseResults(dataDir, path, method, fold)
+   def JesterEval.parseResults(dataDir, path, method)
       if (method.match(/^psl-\w+-(h2|postgres)$/))
-         return calcPSLResults(dataDir, path, fold)
+         return calcPSLResults(dataDir, path)
       elsif (method == 'tuffy')
-         return parseTuffyResults(dataDir, path, fold)
+         return parseTuffyResults(dataDir, path)
       else
          raise("ERROR: Unsupported method: '#{method}'.")
       end
@@ -68,20 +64,27 @@ module JesterEval
 
          Util.listDir(methodPath){|fold, foldPath|
             dataDir = File.join(baseDir, DATA_RELPATH, fold, 'eval')
+            mae, mse = parseResults(foldPath, method)
 
-            mae, mse = parseResults(foldPath, method, fold)
-            stats[method][:mae] << mae
-            stats[method][:mse] << mse
+            if (mae != nil)
+               stats[method][:mae] << mae
+            end
+
+            if (mse != nil)
+               stats[method][:mse] << mse
+            end
          }
 
-         if (stats[method][:auroc].size() != FOLDS.size())
-            raise "Incorrect number of folds for #{methodPath}. Expected #{FOLDS.size()}, Found: #{stats[method].size()}."
-         end
+         stats[method].each{|key, values|
+            if (stats[method][key].size() != FOLDS.size())
+               puts "WARNING: Incorrect number of folds for #{methodPath}[#{key}]. Expected #{FOLDS.size()}, Found: #{stats[method][key].size()}."
+            end
+         }
       }
 
       puts ['method', 'mse', 'mae'].join("\t")
       stats.keys().sort().each{|method|
-         if (stats[method] == ([nil] * FOLDS.size()))
+         if (stats[method].size() == 0)
             next
          end
 
@@ -99,11 +102,11 @@ if ($0 == __FILE__)
 
    if (args.size() > 1 || args.map{|arg| arg.gsub('-', '').downcase()}.include?('help'))
       puts "USAGE: ruby #{$0} [base experiment dir]"
-      puts "   Will use this directory if one it not provided."
+      puts "   Will use the parent of the directory where this script lives if one it not provided."
       exit(1)
    end
 
-   baseDir = '.'
+   baseDir = File.dirname(File.dirname(File.absolute_path($0)))
    if (args.size() > 0)
       baseDir = args.shift()
    end

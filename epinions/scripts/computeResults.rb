@@ -38,10 +38,6 @@ module EpinionsEvaluation
       truthAtoms = Parse.truthAtoms(File.join(dataDir, DATA_TRUTH_FILENAME))
       targets = Parse.targetAtoms(File.join(dataDir, DATA_TARGETS_FILENAME))
 
-      if (inferredAtoms.size() == 0)
-         return nil
-      end
-
       return [
          Evaluation.computeAUROC(targets, inferredAtoms, truthAtoms),
          Evaluation.computeAUPRC(targets, inferredAtoms, truthAtoms),
@@ -70,20 +66,31 @@ module EpinionsEvaluation
 
          Util.listDir(methodPath){|fold, foldPath|
             dataDir = File.join(baseDir, DATA_RELPATH, fold, 'eval')
-
             auroc, auprc, nauprc = parseResults(dataDir, foldPath, method, fold)
-            stats[method][:auroc] << auroc
-            stats[method][:auprc] << auprc
-            stats[method][:nauprc] << nauprc
+
+            if (auroc != nil)
+               stats[method][:auroc] << auroc
+            end
+
+            if (auprc != nil)
+               stats[method][:auprc] << auprc
+            end
+
+            if (nauprc)
+               stats[method][:nauprc] << nauprc
+            end
          }
 
-         if (stats[method][:auroc].size() != FOLDS.size())
-            raise "Incorrect number of folds for #{methodPath}. Expected #{FOLDS.size()}, Found: #{stats[method].size()}."
-         end
+         stats[method].each{|key, values|
+            if (stats[method][key].size() != FOLDS.size())
+               puts "WARNING: Incorrect number of folds for #{methodPath}[#{key}]. Expected #{FOLDS.size()}, Found: #{stats[method][key].size()}."
+            end
+         }
       }
 
+      puts ['method', 'AUROC', 'AUPRC', 'Negative Class AUPRC'].join("\t")
       stats.keys().sort().each{|method|
-         if (stats[method] == ([nil] * FOLDS.size()))
+         if (stats[method].size() == 0)
             next
          end
 
@@ -102,11 +109,11 @@ if ($0 == __FILE__)
 
    if (args.size() > 1 || args.map{|arg| arg.gsub('-', '').downcase()}.include?('help'))
       puts "USAGE: ruby #{$0} [base experiment dir]"
-      puts "   Will use this directory if one it not provided."
+      puts "   Will use the parent of the directory where this script lives if one it not provided."
       exit(1)
    end
 
-   baseDir = '.'
+   baseDir = File.dirname(File.dirname(File.absolute_path($0)))
    if (args.size() > 0)
       baseDir = args.shift()
    end

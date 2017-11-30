@@ -1,4 +1,5 @@
 # Evaluation utilities.
+# If a stat cannot be computed, we will always return nil or raise an exception.
 
 module Evaluation
    TRUTH_THREHSOLD = 0.5
@@ -38,6 +39,10 @@ module Evaluation
    def Evaluation.precision(targets, inferredAtoms, truthAtoms)
       tp, fn, tn, fp = computeAccuracyCounts(targets, inferredAtoms, truthAtoms)
 
+      if (tp + fp == 0)
+         return nil
+      end
+
       return tp.to_f() / (tp + fp)
    end
 
@@ -60,6 +65,10 @@ module Evaluation
          count += 1
       }
 
+      if (count == 0)
+         return nil
+      end
+
       return mse / count
    end
 
@@ -81,6 +90,10 @@ module Evaluation
          mae += (truthValue - inferredAtoms[target]).abs()
          count += 1
       }
+
+      if (count == 0)
+         return nil
+      end
 
       return mae / count
    end
