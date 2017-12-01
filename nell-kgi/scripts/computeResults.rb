@@ -26,12 +26,17 @@ module NellKGIEval
       catInferredAtoms, relInferredAtoms = Parse.tuffyAtoms(File.join(path, TUFFY_RESULTS_FILENAME))
 
       catTruthAtoms = Parse.truthAtoms(File.join(dataDir, DATA_CAT_TRUTH_FILENAME))
-      catTargets = Parse.targetAtoms(File.join(dataDir, DATA_CAT_TARGETS_FILENAME))
+      catTargets = catTruthAtoms.keys()
 
       relTruthAtoms = Parse.truthAtoms(File.join(dataDir, DATA_REL_TRUTH_FILENAME))
-      relTargets = Parse.targetAtoms(File.join(dataDir, DATA_REL_TARGETS_FILENAME))
+      relTargets = relTruthAtoms.keys()
 
       return [
+         Evaluation.computeAUPRC(
+               catTargets + relTargets,
+               catInferredAtoms.merge(relInferredAtoms),
+               catTruthAtoms.merge(relTruthAtoms),
+               0.55),
          Evaluation.computeAUPRC(catTargets, catInferredAtoms, catTruthAtoms, 0.55),
          Evaluation.computeAUPRC(relTargets, relInferredAtoms, relTruthAtoms, 0.55),
       ]
@@ -41,13 +46,18 @@ module NellKGIEval
    def NellKGIEval.calcPSLResults(dataDir, path)
       catInferredAtoms = Parse.pslAtoms(File.join(path, PSL_CAT_RESULTS_FILENAME))
       catTruthAtoms = Parse.truthAtoms(File.join(dataDir, DATA_CAT_TRUTH_FILENAME))
-      catTargets = Parse.targetAtoms(File.join(dataDir, DATA_CAT_TARGETS_FILENAME))
+      catTargets = catTruthAtoms.keys()
 
       relInferredAtoms = Parse.pslAtoms(File.join(path, PSL_REL_RESULTS_FILENAME))
       relTruthAtoms = Parse.truthAtoms(File.join(dataDir, DATA_REL_TRUTH_FILENAME))
-      relTargets = Parse.targetAtoms(File.join(dataDir, DATA_REL_TARGETS_FILENAME))
+      relTargets = relTruthAtoms.keys()
 
       return [
+         Evaluation.computeAUPRC(
+               catTargets + relTargets,
+               catInferredAtoms.merge(relInferredAtoms),
+               catTruthAtoms.merge(relTruthAtoms),
+               0.55),
          Evaluation.computeAUPRC(catTargets, catInferredAtoms, catTruthAtoms, 0.55),
          Evaluation.computeAUPRC(relTargets, relInferredAtoms, relTruthAtoms, 0.55),
       ]
@@ -73,7 +83,11 @@ module NellKGIEval
          end
 
          dataDir = File.join(baseDir, DATA_RELPATH)
-         catAUPRC, relAUPRC = parseResults(dataDir, methodPath, method)
+         auprc, catAUPRC, relAUPRC = parseResults(dataDir, methodPath, method)
+
+         if (auprc != nil)
+            stats[method][:auprc] = auprc
+         end
 
          if (catAUPRC != nil)
             stats[method][:cat] = catAUPRC
@@ -86,14 +100,14 @@ module NellKGIEval
 
       rows = []
       stats.keys().sort().each{|method|
-         rows << [method, stats[method][:cat], stats[method][:rel]]
+         rows << [method, stats[method][:auprc], stats[method][:cat], stats[method][:rel]]
       }
 
       return rows
    end
 
    def NellKGIEval.getHeader()
-      return ['method', 'Cat AUPRC', 'Rel AUPRC']
+      return ['method', 'AUPRC', 'Cat AUPRC', 'Rel AUPRC']
    end
 
    def NellKGIEval.printEval(baseDir)

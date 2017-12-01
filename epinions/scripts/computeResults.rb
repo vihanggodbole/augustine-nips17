@@ -23,7 +23,7 @@ module EpinionsEvaluation
    def EpinionsEvaluation.parseTuffyResults(dataDir, path, fold)
       inferredAtoms = Parse.tuffyAtoms(File.join(path, TUFFY_RESULTS_FILENAME))[0]
       truthAtoms = Parse.truthAtoms(File.join(dataDir, DATA_TRUTH_FILENAME))
-      targets = Parse.targetAtoms(File.join(dataDir, DATA_TARGETS_FILENAME))
+      targets = truthAtoms.keys()
 
       return [
          Evaluation.computeAUROC(targets, inferredAtoms, truthAtoms),
@@ -36,7 +36,7 @@ module EpinionsEvaluation
    def EpinionsEvaluation.calcPSLResults(dataDir, path, fold)
       inferredAtoms = Parse.pslAtoms(File.join(path, PSL_RESULTS_FILENAME))
       truthAtoms = Parse.truthAtoms(File.join(dataDir, DATA_TRUTH_FILENAME))
-      targets = Parse.targetAtoms(File.join(dataDir, DATA_TARGETS_FILENAME))
+      targets = truthAtoms.keys()
 
       return [
          Evaluation.computeAUROC(targets, inferredAtoms, truthAtoms),
@@ -105,7 +105,7 @@ module EpinionsEvaluation
    end
 
    def EpinionsEvaluation.getHeader()
-      return ['method', 'AUROC', 'AUPRC', 'Negative Class AUPRC']
+      return ['method', 'AUROC', 'Positive Class AUPRC', 'Negative Class AUPRC']
    end
 
    def EpinionsEvaluation.printEval(baseDir)
