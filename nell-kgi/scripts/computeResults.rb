@@ -23,7 +23,7 @@ module NellKGIEval
 
    # Get the positive class precision.
    def NellKGIEval.parseTuffyResults(dataDir, path)
-      catInferredAtoms, relInferredAtoms = Parse.tuffyAtoms(File.join(path, PSL_CAT_RESULTS_FILENAME))
+      catInferredAtoms, relInferredAtoms = Parse.tuffyAtoms(File.join(path, TUFFY_RESULTS_FILENAME))
 
       catTruthAtoms = Parse.truthAtoms(File.join(dataDir, DATA_CAT_TRUTH_FILENAME))
       catTargets = Parse.targetAtoms(File.join(dataDir, DATA_CAT_TARGETS_FILENAME))
