@@ -30,8 +30,8 @@ FILE_INFO = [
    {:name => 'VALCAT_obs.txt', :predicate => 'ValCat', :hasTruth => true, :defaultTruth => 1.0},
    {:name => 'VALREL_obs.txt', :predicate => 'ValRel', :hasTruth => true, :defaultTruth => 1.0},
 
-   {:name => 'CAT_targets.txt', :predicate => 'Cat', :hasTruth => false, :defaultTruth => 0.00027},
-   {:name => 'REL_targets.txt', :predicate => 'Rel', :hasTruth => false, :defaultTruth => 0.00027},
+   {:name => 'CAT_targets.txt', :predicate => 'Cat', :hasTruth => false, :defaultTruth => 0.012},
+   {:name => 'REL_targets.txt', :predicate => 'Rel', :hasTruth => false, :defaultTruth => 0.012},
 
    # {:name => 'CAT_truth.txt', :predicate => 'Cat', :hasTruth => true, :defaultTruth => 1.0},
    # {:name => 'REL_truth.txt', :predicate => 'Rel', :hasTruth => true, :defaultTruth => 1.0},
