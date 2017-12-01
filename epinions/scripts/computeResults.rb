@@ -21,7 +21,7 @@ module EpinionsEvaluation
 
    # Get the positive class precision.
    def EpinionsEvaluation.parseTuffyResults(dataDir, path, fold)
-      inferredAtoms = Parse.tuffyAtoms(File.join(path, TUFFY_RESULTS_FILENAME))
+      inferredAtoms = Parse.tuffyAtoms(File.join(path, TUFFY_RESULTS_FILENAME))[0]
       truthAtoms = Parse.truthAtoms(File.join(dataDir, DATA_TRUTH_FILENAME))
       targets = Parse.targetAtoms(File.join(dataDir, DATA_TARGETS_FILENAME))
 

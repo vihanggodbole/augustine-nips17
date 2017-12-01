@@ -35,7 +35,7 @@ module Parse
          file.each{|line|
             line.strip!()
 
-            if (match = line.match(/^(#{NUM_REGEX})\t(\w+)\(([^)]+)\)\s+\/\//))
+            if (match = line.match(/^(#{NUM_REGEX})\t(\w+)\(([^)]+)\)/))
                predicate = match[2]
                args = match[3].split(", ")
                value = match[1].to_f()
