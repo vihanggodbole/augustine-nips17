@@ -19,7 +19,7 @@ EVAL_FILE_INFO = [
    {:name => 'ratingPrior_obs.txt', :predicate => 'RatingPrior', :hasTruth => true, :defaultTruth => 1.0},
    {:name => 'simObsRating_obs.txt', :predicate => 'SimObsRating', :hasTruth => true, :defaultTruth => 1.0},
    {:name => 'user_obs.txt', :predicate => 'User', :hasTruth => true, :defaultTruth => 1.0},
-   {:name => 'rating_targets.txt', :predicate => 'Rating', :hasTruth => false, :defaultTruth => 1.0},
+   {:name => 'rating_targets.txt', :predicate => 'Rating', :hasTruth => false, :defaultTruth => 0.5},
 ]
 
 def parseFile(path, predicate, hasTruth, defaultTruth, outFile)
