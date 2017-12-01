@@ -69,6 +69,7 @@ def main(baseDir)
 
       puts (['experiment'] + header).join("\t")
       puts rows.map{|row| ([experiment[:id]] + row).join("\t")}.join("\n")
+      puts ''
    }
 end
 
