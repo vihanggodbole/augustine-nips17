@@ -1,4 +1,4 @@
-require 'fileutils'
+require_relative '../../scripts/mln'
 
 FILE_INFO = [
    {:name => 'bias_obs.txt', :predicate => 'Bias', :hasTruth => true, :defaultTruth => 1.0},
@@ -12,29 +12,8 @@ FILE_INFO = [
    {:name => 'votes_targets.txt', :predicate => 'Votes', :hasTruth => false, :defaultTruth => 0.01},
 ]
 
-def parseFile(path, predicate, hasTruth, defaultTruth, outFile)
-   File.open(path, 'r'){|inFile|
-      inFile.each{|line|
-         parts = line.split().map{|part| part.strip()}
-
-         truth = defaultTruth
-         if (hasTruth)
-            truth = parts.pop()
-         end
-
-         outFile.puts("#{truth} #{predicate}(#{parts.join(', ')})")
-      }
-   }
-end
-
 def main(dataDir, outPath)
-   FileUtils.mkdir_p(File.dirname(outPath))
-
-   File.open(outPath, 'w'){|outFile|
-      FILE_INFO.each{|fileInfo|
-         parseFile(File.join(dataDir, fileInfo[:name]), fileInfo[:predicate], fileInfo[:hasTruth], fileInfo[:defaultTruth], outFile)
-      }
-   }
+   MLN.generateDataFile(dataDir, outPath, FILE_INFO)
 end
 
 def loadArgs(args)
