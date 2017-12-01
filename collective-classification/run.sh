@@ -15,7 +15,7 @@ PSL_METHODS_JARS=("${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL_J
 ulimit -d 314572800
 
 # Limit to 10 mins
-ulimit -t 600
+# ulimit -t 600
 
 function run() {
    local outBaseDir="${THIS_DIR}/out"

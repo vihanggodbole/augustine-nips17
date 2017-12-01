@@ -19,7 +19,7 @@ PSL_METHODS_JARS=("${PSL_JAR_PATH}" "${PSL_JAR_PATH}:${PSL_MOSEK_JAR_PATH}")
 ulimit -d 314572800
 
 # Limit to 4 hours
-ulimit -t 14400
+# ulimit -t 14400
 
 function run() {
    local outBaseDir="${THIS_DIR}/out"

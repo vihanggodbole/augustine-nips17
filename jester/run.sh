@@ -14,8 +14,8 @@ PSL_METHODS_JARS=("${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL_J
 # Limit to 300G
 ulimit -d 314572800
 
-# Limit to 20 mins
-ulimit -t 1200
+# Limit to 4 hours
+# ulimit -t 14400
 
 function run() {
    local outBaseDir="${THIS_DIR}/out"

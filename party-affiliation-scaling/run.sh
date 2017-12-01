@@ -14,7 +14,7 @@ DATA_GEN_SCRIPT="${THIS_DIR}/scripts/generateGraphData.rb"
 ulimit -d 314572800
 
 # Limit to 4 hours
-ulimit -t 14400
+# ulimit -t 14400
 
 function run() {
    local outBaseDir="${THIS_DIR}/out"
