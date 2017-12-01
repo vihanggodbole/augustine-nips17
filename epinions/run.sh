@@ -33,7 +33,7 @@ function run() {
          "${fold}" \
          "${fold} learn" \
          "${fold} eval" \
-         '-ec' \
+         '-ec -D booleanmcsat.numsamples=5000' \
          true
 
       # Weight learning needs a modified query that contians all the targets.
