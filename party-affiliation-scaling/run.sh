@@ -41,6 +41,28 @@ function run() {
          false
    done
 
+   local folds=`seq -w -s ' ' 0020000 5000 0100000`
+   PSL_METHODS=('psl-admm-postgres' 'psl-mosek-postgres')
+   PSL_METHODS_CLI_OPTIONS=('--postgres psl' "`psl::mosekOptions` --postgres psl")
+   PSL_METHODS_JARS=("${PSL_JAR_PATH}" "${PSL_JAR_PATH}:${PSL_MOSEK_JAR_PATH}")
+
+   for fold in $folds; do
+      # Generate the data.
+      echo "Generating data for ${fold} nodes."
+      local dataDir="${THIS_DIR}/data/processed/${fold}"
+      ruby $DATA_GEN_SCRIPT $fold "${dataDir}"
+
+      # PSL
+      psl::runSuite \
+         'party-affiliation' \
+         "${THIS_DIR}" \
+         "${fold}" \
+         '' \
+         "${fold}" \
+         '' \
+         false
+   done
+
    local folds=`seq -w -s ' ' 100000 100000 1000000`
    PSL_METHODS=('psl-admm-postgres' 'psl-mosek-postgres')
    PSL_METHODS_CLI_OPTIONS=('--postgres psl' "`psl::mosekOptions` --postgres psl")
