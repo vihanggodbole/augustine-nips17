@@ -10,6 +10,17 @@ QUERY_FILE="${THIS_DIR}/mln/query.db"
 BASE_QUERY_FILE="${THIS_DIR}/mln/query-base.db"
 GEN_QUERY_SCRIPT="${THIS_DIR}/scripts/generateMLNQuery.rb"
 
+# Redefine for experiment specifics.
+PSL_METHODS=('psl-admm-h2' 'psl-admm-postgres' 'psl-maxwalksat-h2' 'psl-maxwalksat-postgres' 'psl-mcsat-h2' 'psl-mcsat-postgres')
+PSL_METHODS_CLI_OPTIONS=('' '--postgres psl' "`psl::maxwalksatOptions`" "`psl::maxwalksatOptions` --postgres psl" "`psl::mcsatOptions`" "`psl::mcsatOptions` --postgres psl")
+PSL_METHODS_JARS=("${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL_JAR_PATH}")
+
+# Limit to 300G
+ulimit -d 314572800
+
+# Limit to 1 hour
+# ulimit -t 3600
+
 function run() {
    local outBaseDir="${THIS_DIR}/out"
    local folds=`seq -s ' ' 0 7`
