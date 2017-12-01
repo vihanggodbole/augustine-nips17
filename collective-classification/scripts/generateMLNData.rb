@@ -1,4 +1,4 @@
-require 'fileutils'
+require_relative '../../scripts/mln'
 
 LEARN_FILE_INFO = [
    {:name => 'hasCat_obs.txt', :predicate => 'HasCat', :hasTruth => true, :defaultTruth => 1.0},
@@ -12,29 +12,8 @@ EVAL_FILE_INFO = [
    {:name => 'link_obs.txt', :predicate => 'Link', :hasTruth => true, :defaultTruth => 1.0},
 ]
 
-def parseFile(path, predicate, hasTruth, defaultTruth, outFile)
-   File.open(path, 'r'){|inFile|
-      inFile.each{|line|
-         parts = line.split().map{|part| part.strip()}
-
-         truth = defaultTruth
-         if (hasTruth)
-            truth = parts.pop()
-         end
-
-         outFile.puts("#{truth} #{predicate}(#{parts.join(', ')})")
-      }
-   }
-end
-
 def main(dataDir, outPath, fileInfo)
-   FileUtils.mkdir_p(File.dirname(outPath))
-
-   File.open(outPath, 'w'){|outFile|
-      fileInfo.each{|fileInfo|
-         parseFile(File.join(dataDir, fileInfo[:name]), fileInfo[:predicate], fileInfo[:hasTruth], fileInfo[:defaultTruth], outFile)
-      }
-   }
+   MLN.generateDataFile(dataDir, outPath, fileInfo)
 end
 
 def loadArgs(args)

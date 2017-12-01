@@ -1,4 +1,4 @@
-require 'fileutils'
+require_relative '../../scripts/mln'
 
 FILE_INFO = [
    # {:name => 'friends_targets.txt', :predicate => 'Friends', :hasTruth => true, :defaultTruth => 1.0},
@@ -6,33 +6,8 @@ FILE_INFO = [
    {:name => 'similar_obs.txt', :predicate => 'Similar', :hasTruth => true, :defaultTruth => 1.0},
 ]
 
-def parseFile(path, predicate, hasTruth, defaultTruth, outFile)
-   File.open(path, 'r'){|inFile|
-      inFile.each{|line|
-         parts = line.split().map{|part| part.strip()}
-
-         truth = defaultTruth
-         if (hasTruth)
-            truth = parts.pop()
-
-            # if (truth == '0' || truth == '0.0')
-            #    truth = '!'
-            # end
-         end
-
-         outFile.puts("#{truth} #{predicate}(#{parts.join(', ')})")
-      }
-   }
-end
-
 def main(dataDir, outPath)
-   FileUtils.mkdir_p(File.dirname(outPath))
-
-   File.open(outPath, 'w'){|outFile|
-      FILE_INFO.each{|fileInfo|
-         parseFile(File.join(dataDir, fileInfo[:name]), fileInfo[:predicate], fileInfo[:hasTruth], fileInfo[:defaultTruth], outFile)
-      }
-   }
+   MLN.generateDataFile(dataDir, outPath, FILE_INFO)
 end
 
 def loadArgs(args)
