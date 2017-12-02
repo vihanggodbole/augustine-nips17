@@ -26,7 +26,7 @@ module CollectiveClassificationEval
       truthAtoms = Parse.truthAtoms(File.join(dataDir, DATA_TRUTH_FILENAME))
       targets = Parse.targetAtoms(File.join(dataDir, DATA_TARGETS_FILENAME))
 
-      return Evaluation.precision(targets, inferredAtoms, truthAtoms)
+      return Evaluation.categoricalPrecision(targets, inferredAtoms, truthAtoms)
    end
 
    # Get the positive class precision.
@@ -35,7 +35,7 @@ module CollectiveClassificationEval
       truthAtoms = Parse.truthAtoms(File.join(dataDir, DATA_TRUTH_FILENAME))
       targets = Parse.targetAtoms(File.join(dataDir, DATA_TARGETS_FILENAME))
 
-      return Evaluation.precision(targets, inferredAtoms, truthAtoms)
+      return Evaluation.categoricalPrecision(targets, inferredAtoms, truthAtoms)
    end
 
    def CollectiveClassificationEval.parseResults(dataDir, path, method)
