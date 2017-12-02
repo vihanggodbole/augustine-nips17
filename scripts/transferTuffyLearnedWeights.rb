@@ -8,24 +8,26 @@ class String
    end
 end
 
-# Returns: {ruleIndex: weight, ...}
-# Note that MLN 1-indexes, and this will correct back to a zero-index.
+# Returns: [weight, ...]
+# Note that Tuffy 1-indexes, and this will correct back to a zero-index.
+# Tuffy will also group some rules togther and differentiate them with the floating-point portion of the number.
+# So, we will just sort all the weights by their commented number.
 def parseWeights(learningOutputPath)
    weights = {}
 
    File.open(learningOutputPath, 'r'){|file|
       file.each{|line|
-         if (match = line.match(/^(-?\d+\.?\d*)\s.*\s\/\/(\d+).?\d*$/))
+         if (match = line.match(/^(-?\d+\.?\d*)\s.*\s\/\/(\d+\.\d+)?$/))
             if (!match[1].numeric?)
                raise("Found non-float rule: #{learningOutputPath}.")
             end
 
-            weights[match[2].to_i() - 1] = match[1]
+            weights[match[2].to_f()] = match[1]
          end
       }
    }
 
-   return weights
+   return weights.to_a().sort().map{|id, weight| weight}
 end
 
 def main(mlnProgramPath, learningOutputPath, outPath)
