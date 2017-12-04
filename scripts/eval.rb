@@ -243,7 +243,7 @@ module Evaluation
       }
 
       # Add the final rectangle.
-      auc += (1.0 - previousFPR) * ((1.0 + previousTPR) / 2.0)
+      # auc += (1.0 - previousFPR) * ((1.0 + previousTPR) / 2.0)
 
       return auc
    end

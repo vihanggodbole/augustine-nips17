@@ -17,7 +17,7 @@ EVAL_FILE_INFO = [
    {:name => 'picture_obs.txt', :predicate => 'Picture', :hasTruth => true, :defaultTruth => 1.0},
    {:name => 'pixelBrightness_obs.txt', :predicate => 'PixelBrightness', :hasTruth => true, :defaultTruth => 1.0},
    {:name => 'verticalMirror_obs.txt', :predicate => 'VerticalMirror', :hasTruth => true, :defaultTruth => 1.0},
-   {:name => 'pixelBrightness_targets.txt', :predicate => 'PixelBrightness', :hasTruth => false, :defaultTruth => 1.0},
+   # {:name => 'pixelBrightness_targets.txt', :predicate => 'PixelBrightness', :hasTruth => false, :defaultTruth => 1.0},
 ]
 
 def main(dataDir, outPath, fileInfo)

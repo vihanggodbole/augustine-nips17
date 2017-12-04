@@ -2,11 +2,12 @@
 # This assumes that all supplied files are output from reasoners inspected by the same inspector
 # (ie they all have the same stats).
 
-MAX_ITERATIONS = 5000
-NUM_COLUMNS = 4
-TARGET_PREDICATE = 'HASCAT'
+# TODO(eriq): This needs an enture rewrite to be more robust.
+#   Predicates and number of columns should be automatically parsed.
 
-def parseFile(path)
+DEFAULT_MAX_ITERATIONS = 5000
+
+def parseFile(path, predicateName, numColumns, maxIterations)
    headers = []
    data = []
 
@@ -14,7 +15,7 @@ def parseFile(path)
       row = []
 
       file.each{|line|
-         if (match = line.match(/ - (?:Reasoner inspection update|#{TARGET_PREDICATE}) -- (.+)$/))
+         if (match = line.match(/ - (?:Reasoner inspection update|#{predicateName}) -- (.+)$/))
             stats = match[1].strip().split(', ').map{|stat| stat.split(': ')}
 
             if (stats[0][0] == 'Iteration')
@@ -26,7 +27,7 @@ def parseFile(path)
                header = stat[0]
                value = stat[1]
 
-               if (headers.size() < NUM_COLUMNS)
+               if (headers.size() < numColumns)
                   headers << header
                elsif (headers[row.size()] != header)
                   raise "Inconsistent header found on line #{file.lineno} (#{row.size()}). Expected: '#{headers[row.size()]}', Found: '#{header}'"
@@ -35,12 +36,12 @@ def parseFile(path)
                row << value
             }
 
-            if (row.size() == NUM_COLUMNS)
+            if (row.size() == numColumns)
                data << row
                row = []
             end
 
-            if (data.size() == MAX_ITERATIONS)
+            if (data.size() == maxIterations)
                break
             end
          end
@@ -99,7 +100,7 @@ def computeFileIds(inputFiles)
    return cleanParts.map{|parts| parts.join(File::SEPARATOR)}
 end
 
-def main(inputFiles)
+def main(predicateName, numColumns, maxIterations, inputFiles)
    fileIds = computeFileIds(inputFiles)
 
    headers = ['iteration']
@@ -109,7 +110,7 @@ def main(inputFiles)
 
    inputFiles.each_with_index{|inputFile, fileIndex|
       fileId = fileIds[fileIndex]
-      columns, data = parseFile(inputFile)
+      columns, data = parseFile(inputFile, predicateName, numColumns, maxIterations)
 
       # Once we get the first set of columns, we can calculate the width.
       # Don't include the iteration.
@@ -141,17 +142,27 @@ def main(inputFiles)
 end
 
 def loadArgs(args)
-   if (args.size() == 0 || args.map{|arg| arg.gsub('-', '').downcase()}.include?('help'))
-      puts "USAGE: ruby #{$0} <evalaution output file> ..."
+   if (args.size() < 3 || args.map{|arg| arg.gsub('-', '').downcase()}.include?('help'))
+      puts "USAGE: ruby #{$0} <target predicate> <number of stat columns> [-m maxIteration] <evalaution output file> ..."
       puts "   Parse all supplied evaluation output files and parse out the reasoner inspection."
       puts "   This assumes that all supplied files are output from reasoners inspected by the same inspector"
       puts "   (ie they all have the same stats)."
+      puts "   The number of stat columns is the actual number of statistics we are looking to parse."
       exit(1)
    end
 
-   return args
+   predicateName = args.shift().upcase()
+   numColumns = args.shift().to_i()
+
+   maxIterations = DEFAULT_MAX_ITERATIONS
+   if (args[0] == '-m')
+      args.shift()
+      maxIterations = args.shift().to_i()
+   end
+
+   return predicateName, numColumns, maxIterations, args
 end
 
 if ($0 == __FILE__)
-   main(loadArgs(ARGV))
+   main(*loadArgs(ARGV))
 end

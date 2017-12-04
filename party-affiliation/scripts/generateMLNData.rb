@@ -9,7 +9,7 @@ FILE_INFO = [
    {:name => 'mentor_obs.txt', :predicate => 'Mentor', :hasTruth => false, :defaultTruth => 1.0},
    {:name => 'olderRelative_obs.txt', :predicate => 'OlderRelative', :hasTruth => false, :defaultTruth => 1.0},
    {:name => 'party_obs.txt', :predicate => 'Party', :hasTruth => false, :defaultTruth => 1.0},
-   {:name => 'votes_targets.txt', :predicate => 'Votes', :hasTruth => false, :defaultTruth => 0.01},
+   # {:name => 'votes_targets.txt', :predicate => 'Votes', :hasTruth => false, :defaultTruth => 0.01},
 ]
 
 def main(dataDir, outPath)
