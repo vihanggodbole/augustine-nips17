@@ -3,6 +3,9 @@
 THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" && source "${THIS_DIR}/../scripts/requirements.sh"
 THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+# STANDARD_TUFFY_OPTIONS='-marginal -maxFlips 2500'
+STANDARD_TUFFY_OPTIONS='-maxFlips 100000 -randomStep 0.01'
+
 LEARNED_MLN_MODEL_FILENAME='learned-model.mln'
 RAW_LEARNED_MLN_MODEL_FILENAME='raw-learned-model.mln'
 TRANSFER_WEIGHTS_SCRIPT="${THIS_DIR}/transferTuffyLearnedWeights.rb"
@@ -33,7 +36,7 @@ function tuffy::runLearn() {
    ruby "${generateDataScript}" "${sourceDataDir}" "${evidencePath}" 'learn'
 
    echo "Running Tuffy (learn). Output redirected to ${outputLearnPath}."
-   `requirements::time` `requirements::java` -jar "${TUFFY_JAR_PATH}" -learnwt -dMaxIter 25 -conf "${TUFFY_CONFIG_PATH}" -i "${programPath}" -e "${evidencePath}" -queryFile "${queryPath}" -r "${rawResultsLearnPath}" -marginal > ${outputLearnPath} 2> ${outputTimePath}
+   `requirements::time` `requirements::java` -jar "${TUFFY_JAR_PATH}" -learnwt -dMaxIter 25 -conf "${TUFFY_CONFIG_PATH}" -i "${programPath}" -e "${evidencePath}" -queryFile "${queryPath}" -r "${rawResultsLearnPath}" ${STANDARD_TUFFY_OPTIONS} > ${outputLearnPath} 2> ${outputTimePath}
 
    # Transcribe the learned weights into the model.
    # We need to do this since Tuffy will lose constraints in the learned model.
@@ -68,7 +71,7 @@ function tuffy::runEval() {
    ruby "${generateDataScript}" "${sourceDataDir}" "${evidencePath}" 'eval'
 
    echo "Running Tuffy (eval). Output redirected to ${outputEvalPath}."
-   `requirements::time` java -jar "${TUFFY_JAR_PATH}" -conf "${TUFFY_CONFIG_PATH}" -i "${programPath}" -e "${evidencePath}" -queryFile "${queryPath}" -r "${resultsEvalPath}" -marginal > ${outputEvalPath} 2> ${outputTimePath}
+   `requirements::time` java -jar "${TUFFY_JAR_PATH}" -conf "${TUFFY_CONFIG_PATH}" -i "${programPath}" -e "${evidencePath}" -queryFile "${queryPath}" -r "${resultsEvalPath}" ${STANDARD_TUFFY_OPTIONS} > ${outputEvalPath} 2> ${outputTimePath}
 
    rm -f "${evidencePath}"
 }
