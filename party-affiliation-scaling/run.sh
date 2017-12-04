@@ -41,7 +41,7 @@ function run() {
          false
    done
 
-   local folds=`seq -w -s ' ' 0020000 5000 0100000`
+   local folds=`seq -w -s ' ' 0020000 5000 0090000`
    PSL_METHODS=('psl-admm-postgres' 'psl-mosek-postgres')
    PSL_METHODS_CLI_OPTIONS=('--postgres psl' "`psl::mosekOptions` --postgres psl")
    PSL_METHODS_JARS=("${PSL_JAR_PATH}" "${PSL_JAR_PATH}:${PSL_MOSEK_JAR_PATH}")
@@ -64,9 +64,9 @@ function run() {
    done
 
    local folds=`seq -w -s ' ' 100000 100000 1000000`
-   PSL_METHODS=('psl-admm-postgres' 'psl-mosek-postgres')
-   PSL_METHODS_CLI_OPTIONS=('--postgres psl' "`psl::mosekOptions` --postgres psl")
-   PSL_METHODS_JARS=("${PSL_JAR_PATH}" "${PSL_JAR_PATH}:${PSL_MOSEK_JAR_PATH}")
+   PSL_METHODS=('psl-admm-postgres')
+   PSL_METHODS_CLI_OPTIONS=('--postgres psl')
+   PSL_METHODS_JARS=("${PSL_JAR_PATH}")
 
    for fold in $folds; do
       # Generate the data.

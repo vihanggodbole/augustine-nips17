@@ -31,7 +31,7 @@ function run() {
             "${dataset}/${fold}" \
             "${dataset} ${fold} learn" \
             "${dataset} ${fold} eval" \
-            '-ed 0.5' \
+            '' \
             true
 
          # Tuffy

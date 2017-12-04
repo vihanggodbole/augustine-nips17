@@ -6,11 +6,11 @@ THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 CLI_MAIN_CLASS='org.linqs.psl.cli.Launcher'
 
 function psl::maxwalksatOptions() {
-   echo '-D mpeinference.reasoner=org.linqs.psl.reasoner.bool.BooleanMaxWalkSat -D mpeinference.groundrulestore=org.linqs.psl.application.groundrulestore.AtomRegisterGroundRuleStore -D mpeinference.termstore=org.linqs.psl.reasoner.term.ConstraintBlockerTermStore -D mpeinference.termgenerator=org.linqs.psl.reasoner.term.ConstraintBlockerTermGenerator -D booleanmaxwalksat.maxflips=100000'
+   echo '-D mpeinference.reasoner=org.linqs.psl.reasoner.bool.BooleanMaxWalkSat -D mpeinference.groundrulestore=org.linqs.psl.application.groundrulestore.AtomRegisterGroundRuleStore -D mpeinference.termstore=org.linqs.psl.reasoner.term.ConstraintBlockerTermStore -D mpeinference.termgenerator=org.linqs.psl.reasoner.term.ConstraintBlockerTermGenerator -D weightlearning.reasoner=org.linqs.psl.reasoner.bool.BooleanMaxWalkSat -D weightlearning.groundrulestore=org.linqs.psl.application.groundrulestore.AtomRegisterGroundRuleStore -D weightlearning.termstore=org.linqs.psl.reasoner.term.ConstraintBlockerTermStore -D weightlearning.termgenerator=org.linqs.psl.reasoner.term.ConstraintBlockerTermGenerator -D booleanmaxwalksat.maxflips=100000'
 }
 
 function psl::mcsatOptions() {
-   echo '-D mpeinference.reasoner=org.linqs.psl.reasoner.bool.BooleanMCSat -D mpeinference.groundrulestore=org.linqs.psl.application.groundrulestore.AtomRegisterGroundRuleStore -D mpeinference.termstore=org.linqs.psl.reasoner.term.ConstraintBlockerTermStore -D mpeinference.termgenerator=org.linqs.psl.reasoner.term.ConstraintBlockerTermGenerator'
+   echo '-D mpeinference.reasoner=org.linqs.psl.reasoner.bool.BooleanMCSat -D mpeinference.groundrulestore=org.linqs.psl.application.groundrulestore.AtomRegisterGroundRuleStore -D mpeinference.termstore=org.linqs.psl.reasoner.term.ConstraintBlockerTermStore -D mpeinference.termgenerator=org.linqs.psl.reasoner.term.ConstraintBlockerTermGenerator -D weightlearning.reasoner=org.linqs.psl.reasoner.bool.BooleanMCSat -D weightlearning.groundrulestore=org.linqs.psl.application.groundrulestore.AtomRegisterGroundRuleStore -D weightlearning.termstore=org.linqs.psl.reasoner.term.ConstraintBlockerTermStore -D weightlearning.termgenerator=org.linqs.psl.reasoner.term.ConstraintBlockerTermGenerator'
 }
 
 function psl::mosekOptions() {
