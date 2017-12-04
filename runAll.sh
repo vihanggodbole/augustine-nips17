@@ -1,6 +1,6 @@
 #!/bin/bash
 
-EXPERIMENTS='jester nell-kgi party-affiliation-scaling party-affiliation friendship epinions collective-classification'
+EXPERIMENTS='collective-classification party-affiliation-scaling epinions jester nell-kgi friendship party-affiliation'
 
 trap exit SIGINT
 
