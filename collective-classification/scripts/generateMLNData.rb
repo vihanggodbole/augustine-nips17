@@ -8,7 +8,7 @@ LEARN_FILE_INFO = [
 
 EVAL_FILE_INFO = [
    {:name => 'hasCat_obs.txt', :predicate => 'HasCat', :hasTruth => true, :defaultTruth => 1.0},
-   {:name => 'hasCat_targets.txt', :predicate => 'HasCat', :hasTruth => false, :defaultTruth => 0.001},
+   # {:name => 'hasCat_targets.txt', :predicate => 'HasCat', :hasTruth => false, :defaultTruth => 0.001},
    {:name => 'link_obs.txt', :predicate => 'Link', :hasTruth => true, :defaultTruth => 1.0},
 ]
 
