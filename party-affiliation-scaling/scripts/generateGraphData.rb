@@ -94,6 +94,10 @@ def samplePoliticalAffiliation(rand)
    return rand.rand() * 2.0 - 1.0
 end
 
+def timeMills()
+   return (Time.now.to_f * 1000).to_i()
+end
+
 def main(size, outDir, seed)
    if (File.exists?(outDir))
       puts "Data (#{outDir}) already exists, skipping generation."
@@ -136,7 +140,6 @@ def main(size, outDir, seed)
       }
    end
 
-   # TEST
    # Get some rough counts for each edge type.
    # {edgeType => {:in => count, :out => count}, ...}
    edgeCounts = Hash.new{|hash, key| hash[key] = {:in => 0, :out => 0}}
@@ -151,44 +154,47 @@ def main(size, outDir, seed)
       }
    }
 
-   # TEST
-   # edgeCounts.to_a().sort().each{|edgeType, counts|
-   #    puts "Edge: #{edgeType}, Count: #{counts.values().min()}"
-   # }
-
    # Now connect nodes with avaible in/out edges.
    EDGE_TYPES.each_key{|edgeType|
       edgeIn = inDegrees[edgeType]
       edgeOut = outDegrees[edgeType]
 
+      # Trasform the edge maps for better sampling.
+      # [[nodeId, count], ...]
+      edgeIn = inDegrees[edgeType].to_a()
+      edgeOut = outDegrees[edgeType].to_a()
+
       while (true)
          # Stop if there are no more in/out edges left,
          # or if there is one in both but it is the same node.
          if (edgeIn.size() == 0 || edgeOut.size() == 0 ||
-               (edgeIn.size() == 1 && edgeOut.size() == 1 && edgeIn.keys() == edgeOut.keys()))
+               (edgeIn.size() == 1 && edgeOut.size() == 1 &&
+                  edgeIn.map{|nodeId, count| nodeId} == edgeOut.map{|nodeId, count| nodeId}))
             break
          end
 
          # Randomly choose two nodes and link them up (unless they are the same node).
-         # Note that this is not a very efficient sampling.
-         sourceId = edgeOut.keys().sample(1)[0]
-         destId = edgeIn.keys().sample(1)[0]
+         sourceIndex = rand.rand(edgeOut.size())
+         destIndex = rand.rand(edgeIn.size())
+
+         sourceId = edgeOut[sourceIndex][0]
+         destId = edgeIn[destIndex][0]
 
          if (sourceId == destId)
             next
          end
 
          # Do bookkeeping on the degree counts.
-         if (edgeOut[sourceId] == 1)
-            edgeOut.delete(sourceId)
+         if (edgeOut[sourceIndex][1] == 1)
+            edgeOut.delete_at(sourceIndex)
          else
-            edgeOut[sourceId] -= 1
+            edgeOut[sourceIndex][1] -= 1
          end
 
-         if (edgeIn[destId] == 1)
-            edgeIn.delete(destId)
+         if (edgeIn[destIndex][1] == 1)
+            edgeIn.delete_at(destIndex)
          else
-            edgeIn[destId] -= 1
+            edgeIn[destIndex][1] -= 1
          end
 
          # Link up the nodes.

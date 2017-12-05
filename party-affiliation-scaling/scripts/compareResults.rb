@@ -33,7 +33,7 @@ def main(path1, path2)
       end
 
       diff = value1 - atoms2[atom]
-      
+
       absError += diff.abs()
       squaredError += diff ** 2
    }
