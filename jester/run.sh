@@ -29,7 +29,7 @@ function run() {
          "${fold}" \
          "${fold} learn" \
          "${fold} eval" \
-         '-ec' \
+         '-ed 0.5' \
          true
 
       # Tuffy
