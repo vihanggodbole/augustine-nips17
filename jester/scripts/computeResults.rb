@@ -27,7 +27,9 @@ module JesterEval
 
       return [
          Evaluation.computeMAE(targets, inferredAtoms, truthAtoms),
-         Evaluation.computeMSE(targets, inferredAtoms, truthAtoms)
+         Evaluation.computeMSE(targets, inferredAtoms, truthAtoms),
+         Evaluation.computeAUROC(targets, inferredAtoms, truthAtoms),
+         Evaluation.computeAUPRC(targets, inferredAtoms, truthAtoms),
       ]
    end
 
@@ -39,7 +41,9 @@ module JesterEval
 
       return [
          Evaluation.computeMAE(targets, inferredAtoms, truthAtoms),
-         Evaluation.computeMSE(targets, inferredAtoms, truthAtoms)
+         Evaluation.computeMSE(targets, inferredAtoms, truthAtoms),
+         Evaluation.computeAUROC(targets, inferredAtoms, truthAtoms),
+         Evaluation.computeAUPRC(targets, inferredAtoms, truthAtoms),
       ]
    end
 
@@ -64,7 +68,7 @@ module JesterEval
 
          Util.listDir(methodPath){|fold, foldPath|
             dataDir = File.join(baseDir, DATA_RELPATH, fold, 'eval')
-            mae, mse = parseResults(dataDir, foldPath, method)
+            mae, mse, auroc, auprc = parseResults(dataDir, foldPath, method)
 
             if (mae != nil)
                stats[method][:mae] << mae
@@ -72,6 +76,14 @@ module JesterEval
 
             if (mse != nil)
                stats[method][:mse] << mse
+            end
+
+            if (auroc != nil)
+               stats[method][:auroc] << auroc
+            end
+
+            if (auprc != nil)
+               stats[method][:auprc] << auprc
             end
          }
 
@@ -90,15 +102,17 @@ module JesterEval
 
          mae = Util.mean(stats[method][:mae])
          mse = Util.mean(stats[method][:mse])
+         auroc = Util.mean(stats[method][:auroc])
+         auprc = Util.mean(stats[method][:auprc])
 
-         rows << [method, mae, mse]
+         rows << [method, mae, mse, auroc, auprc]
       }
 
       return rows
    end
 
    def JesterEval.getHeader()
-      return ['method', 'MAE', 'MSE']
+      return ['method', 'MAE', 'MSE', 'AUROC', 'AUPRC']
    end
 
    def JesterEval.printEval(baseDir)
