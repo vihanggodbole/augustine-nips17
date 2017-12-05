@@ -7,6 +7,8 @@ DEFAULT_SEED = 4
 POSITIVE_BIAS_ID = 0
 NEGATIVE_BIAS_ID = 1
 
+MISS_TOLERENCE = 1000
+
 POSITIVE_BIAS_NAME = 'Republican'
 NEGATIVE_BIAS_NAME = 'Democratic'
 
@@ -164,12 +166,19 @@ def main(size, outDir, seed)
       edgeIn = inDegrees[edgeType].to_a()
       edgeOut = outDegrees[edgeType].to_a()
 
+      # The sum of all counts.
+      totalEdgeInCount = edgeIn.map{|nodeId, count| count}.sum()
+      totalEdgeOutCount = edgeOut.map{|nodeId, count| count}.sum()
+
+      # Keep track of how many times we select bad edges.
+      # When it gets too high, compact the list.
+      missCount = 0
+
       while (true)
          # Stop if there are no more in/out edges left,
          # or if there is one in both but it is the same node.
-         if (edgeIn.size() == 0 || edgeOut.size() == 0 ||
-               (edgeIn.size() == 1 && edgeOut.size() == 1 &&
-                  edgeIn.map{|nodeId, count| nodeId} == edgeOut.map{|nodeId, count| nodeId}))
+         # (For efficiency, we are actually not going to see if they are actually the same).
+         if (totalEdgeInCount == 0 || totalEdgeOutCount == 0 || (totalEdgeInCount == 1 && totalEdgeOutCount == 1))
             break
          end
 
@@ -184,18 +193,27 @@ def main(size, outDir, seed)
             next
          end
 
-         # Do bookkeeping on the degree counts.
-         if (edgeOut[sourceIndex][1] == 1)
-            edgeOut.delete_at(sourceIndex)
-         else
-            edgeOut[sourceIndex][1] -= 1
+         # We do not delete edges every time.
+         if (edgeOut[sourceIndex][1] == 0 || edgeIn[destIndex][1] == 0)
+            missCount += 1
+
+            # If we have missed too much, compact the lists.
+            if (missCount >= MISS_TOLERENCE)
+               edgeIn = edgeIn.delete_if{|nodeId, count| count == 0}
+               edgeOut = edgeOut.delete_if{|nodeId, count| count == 0}
+
+               missCount = 0
+            end
+
+            next
          end
 
-         if (edgeIn[destIndex][1] == 1)
-            edgeIn.delete_at(destIndex)
-         else
-            edgeIn[destIndex][1] -= 1
-         end
+         # Do bookkeeping on the degree counts.
+         totalEdgeOutCount -= 1
+         edgeOut[sourceIndex][1] -= 1
+
+         totalEdgeInCount -= 1
+         edgeIn[destIndex][1] -= 1
 
          # Link up the nodes.
          edges[edgeType] << [sourceId, destId]
