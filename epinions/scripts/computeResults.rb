@@ -25,6 +25,13 @@ module EpinionsEvaluation
       truthAtoms = Parse.truthAtoms(File.join(dataDir, DATA_TRUTH_FILENAME))
       targets = truthAtoms.keys()
 
+      # Since Tuffy doesn't write out false atoms, fill in the false spots.
+      targets.each{|target|
+         if (!inferredAtoms.include?(target))
+            inferredAtoms[target] = 0.0
+         end
+      }
+
       return [
          Evaluation.computeAUROC(targets, inferredAtoms, truthAtoms),
          Evaluation.computeAUPRC(targets, inferredAtoms, truthAtoms),
