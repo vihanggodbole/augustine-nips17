@@ -31,6 +31,18 @@ module NellKGIEval
       relTruthAtoms = Parse.truthAtoms(File.join(dataDir, DATA_REL_TRUTH_FILENAME))
       relTargets = relTruthAtoms.keys()
 
+      # Since Tuffy doesn't write out false atoms, fill in the false spots.
+      catTargets.each{|cat|
+         if (!catInferredAtoms.include?(cat))
+            catInferredAtoms[cat] = 0.0
+         end
+      }
+      relTargets.each{|rel|
+         if (!relInferredAtoms.include?(rel))
+            relInferredAtoms[rel] = 0.0
+         end
+      }
+
       return [
          Evaluation.computeAUPRC(
                catTargets + relTargets,

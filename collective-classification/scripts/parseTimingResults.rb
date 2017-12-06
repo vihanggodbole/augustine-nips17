@@ -5,7 +5,7 @@ require_relative '../../scripts/timings'
 
 DATASETS = ['citeseer', 'cora']
 FOLDS = (0...20).to_a()
-TARGET_METHODS = ['psl-admm-h2', 'psl-maxwalksat-h2', 'psl-mcsat-h2', 'tuffy']
+TARGET_METHODS = ['psl-admm-postgres', 'psl-maxwalksat-postgres', 'psl-mcsat-postgres', 'tuffy']
 
 if ($0 == __FILE__)
    # Parse args
