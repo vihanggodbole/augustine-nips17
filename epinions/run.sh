@@ -11,9 +11,10 @@ BASE_QUERY_FILE="${THIS_DIR}/mln/query-base.db"
 GEN_QUERY_SCRIPT="${THIS_DIR}/scripts/generateMLNQuery.rb"
 
 # Redefine for experiment specifics.
-PSL_METHODS=('psl-admm-h2' 'psl-admm-postgres' 'psl-maxwalksat-h2' 'psl-maxwalksat-postgres' 'psl-mcsat-h2' 'psl-mcsat-postgres')
-PSL_METHODS_CLI_OPTIONS=('' '--postgres psl' "`psl::maxwalksatOptions`" "`psl::maxwalksatOptions` --postgres psl" "`psl::mcsatOptions`" "`psl::mcsatOptions` --postgres psl")
-PSL_METHODS_JARS=("${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL_JAR_PATH}")
+# We have extra weight learning params.
+PSL_METHODS=('psl-admm-postgres' 'psl-maxwalksat-postgres' 'psl-mcsat-postgres')
+PSL_METHODS_CLI_OPTIONS=('--postgres psl -D votedperceptron.stepsize=5.0 -D votedperceptron.numsteps=100' "`psl::maxwalksatOptions` --postgres psl -D votedperceptron.stepsize=5.0 -D votedperceptron.numsteps=100" "`psl::mcsatOptions` --postgres psl -D votedperceptron.stepsize=5.0 -D votedperceptron.numsteps=100")
+PSL_METHODS_JARS=("${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL_JAR_PATH}")
 
 # Limit to 300G
 ulimit -d 314572800
