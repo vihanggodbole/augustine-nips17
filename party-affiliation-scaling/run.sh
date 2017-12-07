@@ -41,7 +41,7 @@ function run() {
          false
    done
 
-   local folds=`seq -w -s ' ' 000020000 5000 000090000`
+   local folds=`seq -w -s ' ' 000020000 5000 000095000`
    PSL_METHODS=('psl-admm-postgres' 'psl-mosek-postgres' 'psl-2.0' 'psl-1.2.1')
    PSL_METHODS_CLI_OPTIONS=('--postgres psl' "`psl::mosekOptions` --postgres psl" '' '')
    PSL_METHODS_JARS=("${PSL_JAR_PATH}" "${PSL_JAR_PATH}:${PSL_MOSEK_JAR_PATH}" "${PSL2_JAR_PATH}" "${PSL121_JAR_PATH}")
