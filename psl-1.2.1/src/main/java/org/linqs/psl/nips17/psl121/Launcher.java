@@ -54,12 +54,6 @@ public class Launcher {
       // Ensure out list is mutable (supports remove()).
       args = new ArrayList<String>(args);
 
-      try {
-      config = ConfigManager.getManager().getBundle(modelName);
-      } catch (Exception ex) {
-         throw new RuntimeException("Failed to get configuration", ex);
-      }
-
       evalContinuous = false;
       evalDiscrete = false;
 
@@ -136,6 +130,10 @@ public class Launcher {
       // Make sure we have seen -learn/-infer
       boolean gotMethod = false;
 
+      // Collect the arbitrary config options because we cannot add them until we get the config bundle.
+      // But we cannot do that until we know the model's name (which is an argument).
+      List<String[]> miscOptions = new ArrayList<String[]>();
+
       Stack<Integer> toRemove = new Stack<Integer>();
       for (int i = 0; i < args.size(); i++) {
          if (args.get(i).equals("-help") || args.get(i).equals("--help") || args.get(i).equals("-h")) {
@@ -176,7 +174,7 @@ public class Launcher {
                System.exit(1);
             }
 
-            config.setProperty(parts[0], parts[1]);
+            miscOptions.add(new String[]{parts[0], parts[1]});
          }
       }
 
@@ -206,6 +204,17 @@ public class Launcher {
          log.error("'-output' required with '-infer'");
          printUsage();
          System.exit(1);
+      }
+
+      // Now we have a model and we can get the config bundle.
+      try {
+         config = ConfigManager.getManager().getBundle(modelName);
+      } catch (Exception ex) {
+         throw new RuntimeException("Failed to get configuration", ex);
+      }
+
+      for (String[] option : miscOptions) {
+         config.setProperty(option[0], option[1]);
       }
    }
 
