@@ -167,8 +167,8 @@ def main(size, outDir, seed)
       edgeOut = outDegrees[edgeType].to_a()
 
       # The sum of all counts.
-      totalEdgeInCount = edgeIn.map{|nodeId, count| count}.sum()
-      totalEdgeOutCount = edgeOut.map{|nodeId, count| count}.sum()
+      totalEdgeInCount = edgeIn.map{|nodeId, count| count}.inject(0, :+)
+      totalEdgeOutCount = edgeOut.map{|nodeId, count| count}.inject(0, :+)
 
       # Keep track of how many times we select bad edges.
       # When it gets too high, compact the list.
