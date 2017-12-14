@@ -37,27 +37,37 @@ function run() {
          '-ec -D booleanmcsat.numsamples=5000' \
          true
 
-      # Weight learning needs a modified query that contians all the targets.
-      ruby "${GEN_QUERY_SCRIPT}" "${THIS_DIR}/data/splits/${fold}/learn" "${QUERY_FILE}"
+      # TODO(eriq): Don't run Tuffy until this is resolved with the new infrastructure.
+      echo "TODO(eriq): Resolve with new infrastructure."
+      exit
+
+#      # Weight learning needs a modified query that contians all the targets.
+#      ruby "${GEN_QUERY_SCRIPT}" "${THIS_DIR}/data/splits/${fold}/learn" "${QUERY_FILE}"
+#
+#      # Tuffy
+#      tuffy::runLearn \
+#         "${outBaseDir}/tuffy/${fold}" \
+#         "${THIS_DIR}/mln" \
+#         "${THIS_DIR}/scripts" \
+#         "${THIS_DIR}/data/splits/${fold}/learn"
+#
+#      # Evaluation can use the default query.
+#      cp "${BASE_QUERY_FILE}" "${QUERY_FILE}"
+#
+#      tuffy::runEval \
+#         "${outBaseDir}/tuffy/${fold}" \
+#         "${THIS_DIR}/mln" \
+#         "${THIS_DIR}/scripts" \
+#         "${THIS_DIR}/data/splits/${fold}/eval" \
+#         "${outBaseDir}/tuffy/${fold}/${LEARNED_MLN_MODEL_FILENAME}"
+#
+#      rm "${QUERY_FILE}"
 
       # Tuffy
-      tuffy::runLearn \
-         "${outBaseDir}/tuffy/${fold}" \
-         "${THIS_DIR}/mln" \
-         "${THIS_DIR}/scripts" \
-         "${THIS_DIR}/data/splits/${fold}/learn"
-
-      # Evaluation can use the default query.
-      cp "${BASE_QUERY_FILE}" "${QUERY_FILE}"
-
-      tuffy::runEval \
-         "${outBaseDir}/tuffy/${fold}" \
-         "${THIS_DIR}/mln" \
-         "${THIS_DIR}/scripts" \
-         "${THIS_DIR}/data/splits/${fold}/eval" \
-         "${outBaseDir}/tuffy/${fold}/${LEARNED_MLN_MODEL_FILENAME}"
-
-      rm "${QUERY_FILE}"
+      tuffy::runSuite \
+         "${THIS_DIR}" \
+         "$THIS_DIR/data/splits" \
+         "${dataset}/${fold}"
    done
 }
 

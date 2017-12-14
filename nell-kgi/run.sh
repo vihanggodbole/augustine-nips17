@@ -19,7 +19,6 @@ ulimit -d 314572800
 
 function run() {
    local outBaseDir="${THIS_DIR}/out"
-   local method=''
 
    # PSL
    psl::runSuite \
@@ -32,19 +31,10 @@ function run() {
       true
 
    # Tuffy
-   method='tuffy'
-   tuffy::runLearn \
-      "${outBaseDir}/${method}" \
-      "${THIS_DIR}/mln" \
-      "${THIS_DIR}/scripts" \
-      "${THIS_DIR}/data/processed/learn"
-
-   tuffy::runEval \
-      "${outBaseDir}/${method}" \
-      "${THIS_DIR}/mln" \
-      "${THIS_DIR}/scripts" \
-      "${THIS_DIR}/data/processed/eval" \
-      "${outBaseDir}/${method}/${LEARNED_MLN_MODEL_FILENAME}"
+   tuffy::runSuite \
+      "${THIS_DIR}" \
+      "$THIS_DIR/data/processed" \
+      ''
 }
 
 function main() {

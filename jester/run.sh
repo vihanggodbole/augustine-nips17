@@ -33,18 +33,10 @@ function run() {
          true
 
       # Tuffy
-      tuffy::runLearn \
-         "${outBaseDir}/tuffy/${fold}" \
-         "${THIS_DIR}/mln" \
-         "${THIS_DIR}/scripts" \
-         "${THIS_DIR}/data/splits/${fold}/learn"
-
-      tuffy::runEval \
-         "${outBaseDir}/tuffy/${fold}" \
-         "${THIS_DIR}/mln" \
-         "${THIS_DIR}/scripts" \
-         "${THIS_DIR}/data/splits/${fold}/eval" \
-         "${outBaseDir}/tuffy/${fold}/${LEARNED_MLN_MODEL_FILENAME}"
+      tuffy::runSuite \
+         "${THIS_DIR}" \
+         "$THIS_DIR/data/splits" \
+         "${fold}"
    done
 }
 

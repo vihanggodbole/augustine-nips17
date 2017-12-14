@@ -10,7 +10,7 @@ require_relative '../../scripts/util'
 module CollectiveClassificationEval
    DATASETS = ['citeseer', 'cora']
    FOLDS = (0...20).to_a()
-   TARGET_METHODS = ['psl-admm-postgres', 'psl-maxwalksat-postgres', 'psl-mcsat-postgres', 'tuffy']
+   TARGET_METHODS = ['psl-admm-postgres', 'psl-maxwalksat-postgres', 'psl-mcsat-postgres', 'tuffy-maxwalksat', 'tuffy-mcsat']
 
    DATA_RELPATH = File.join('data', 'splits')
    RESULTS_BASEDIR = 'out'
@@ -41,7 +41,7 @@ module CollectiveClassificationEval
    def CollectiveClassificationEval.parseResults(dataDir, path, method)
       if (method.match(/^psl-\w+-(h2|postgres)$/))
          return calcPSLResults(dataDir, path)
-      elsif (method == 'tuffy')
+      elsif (method.start_with?('tuffy'))
          return parseTuffyResults(dataDir, path)
       else
          raise("ERROR: Unsupported method: '#{method}'.")

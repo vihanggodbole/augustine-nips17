@@ -9,7 +9,7 @@ require_relative '../../scripts/util'
 
 module EpinionsEvaluation
    FOLDS = (0...8).to_a()
-   TARGET_METHODS = ['psl-admm-postgres', 'psl-maxwalksat-postgres', 'psl-mcsat-postgres', 'tuffy']
+   TARGET_METHODS = ['psl-admm-postgres', 'psl-maxwalksat-postgres', 'psl-mcsat-postgres', 'tuffy-maxwalksat', 'tuffy-mcsat']
 
    DATA_RELPATH = File.join('data', 'splits')
    RESULTS_BASEDIR = 'out'
@@ -55,7 +55,7 @@ module EpinionsEvaluation
    def EpinionsEvaluation.parseResults(dataDir, path, method, fold)
       if (method.match(/^psl-\w+-(h2|postgres)$/))
          return calcPSLResults(dataDir, path, fold)
-      elsif (method == 'tuffy')
+      elsif (method.start_with?('tuffy'))
          return parseTuffyResults(dataDir, path, fold)
       else
          raise("ERROR: Unsupported method: '#{method}'.")

@@ -8,7 +8,7 @@ require_relative '../../scripts/parse'
 require_relative '../../scripts/util'
 
 module NellKGIEval
-   TARGET_METHODS = ['psl-admm-postgres', 'psl-maxwalksat-postgres', 'psl-mcsat-postgres', 'tuffy']
+   TARGET_METHODS = ['psl-admm-postgres', 'psl-maxwalksat-postgres', 'psl-mcsat-postgres', 'tuffy-maxwalksat', 'tuffy-mcsat']
 
    DATA_RELPATH = File.join('data', 'processed', 'eval')
    RESULTS_BASEDIR = 'out'
@@ -78,7 +78,7 @@ module NellKGIEval
    def NellKGIEval.parseResults(dataDir, path, method)
       if (method.match(/^psl-\w+-(h2|postgres)$/))
          return calcPSLResults(dataDir, path)
-      elsif (method == 'tuffy')
+      elsif (method.start_with?('tuffy'))
          return parseTuffyResults(dataDir, path)
       else
          raise("ERROR: Unsupported method: '#{method}'.")
