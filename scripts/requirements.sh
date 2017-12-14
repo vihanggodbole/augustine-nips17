@@ -27,7 +27,20 @@ TUFFY_JAR_URL='https://linqs-data.soe.ucsc.edu/public/augustine-nips17-data/tuff
 
 # Get the java command we want all tests using.
 function requirements::java() {
-   echo 'java -Xmx25G -Xms25G'
+   local memKB=`cat /proc/meminfo | grep 'MemTotal' | sed 's/^[^0-9]\+\([0-9]\+\)[^0-9]\+$/\1/'`
+   local memOption=''
+
+   if [ "$memKB" -gt "26214400" ]; then
+      memOption='-Xmx25G -Xms25G'
+   elif [ "$memKB" -gt "15728640" ]; then
+      memOption='-Xmx15G -Xms15G'
+   elif [ "$memKB" -gt "10485760" ]; then
+      memOption='-Xmx10G -Xms10G'
+   elif [ "$memKB" -gt "5242880" ]; then
+      memOption='-Xmx5G -Xms5G'
+   fi
+
+   echo "java $memOption"
 }
 
 # The time command to use.
