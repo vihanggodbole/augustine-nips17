@@ -25,6 +25,10 @@ PSL_METHODS=('psl-admm-h2' 'psl-admm-postgres' 'psl-maxwalksat-h2' 'psl-maxwalks
 PSL_METHODS_CLI_OPTIONS=('' '--postgres psl' "`psl::maxwalksatOptions`" "`psl::maxwalksatOptions` --postgres psl" "`psl::mcsatOptions`" "`psl::mcsatOptions` --postgres psl" '' "`psl::mosekOptions`" "`psl::mosekOptions` --postgres psl" '' "`psl::cvxpxOptions`" "`psl::cvxpxOptions` --postgres psl")
 PSL_METHODS_JARS=("${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL2_JAR_PATH}" "${PSL_JAR_PATH}:${PSL_MOSEK_JAR_PATH}" "${PSL_JAR_PATH}:${PSL_MOSEK_JAR_PATH}" "${PSL121_JAR_PATH}" "${PSL_JAR_PATH}:${PSL_CVXPY_JAR_PATH}" "${PSL_JAR_PATH}:${PSL_CVXPY_JAR_PATH}")
 
+PSL_DEFAULT_OPTIONS='-D log4j.threshold=DEBUG'
+PSL_DEFAULT_LEARN_OPTIONS=''
+PSL_DEFAULT_EVAL_OPTIONS=''
+
 function psl::runSuite() {
    local modelName=$1
    local baseDir=$2
@@ -100,8 +104,18 @@ function psl::runLearn() {
    echo "Generating PSL (learn) data file to ${learnDataFilePath}."
    ruby $generateDataScript $dataTemplatePath $learnDataFilePath $genDataParams
 
+   # Build the CLI options one at a time for visibility.
+   local cliOptions=''
+   cliOptions="${cliOptions} -learn"
+   cliOptions="${cliOptions} -data ${learnDataFilePath}"
+   cliOptions="${cliOptions} -model ${modelPath}"
+   cliOptions="${cliOptions} ${extraCliOptions}"
+   cliOptions="${cliOptions} -output ${outDir}"
+   cliOptions="${cliOptions} ${PSL_DEFAULT_OPTIONS}"
+   cliOptions="${cliOptions} ${PSL_DEFAULT_LEARN_OPTIONS}"
+
    echo "Running PSL (learn). Output redirected to ${outputLearnPath}."
-   `requirements::time` `requirements::java` -cp "${classpath}" "${CLI_MAIN_CLASS}" -learn -data ${learnDataFilePath} -model ${modelPath} -D log4j.threshold=DEBUG ${extraCliOptions} -output ${outDir} > ${outputLearnPath} 2> ${outputTimePath}
+   `requirements::time` `requirements::java` -cp "${classpath}" $CLI_MAIN_CLASS $cliOptions > $outputLearnPath 2> $outputTimePath
    mv ${defaultLearnedModelPath} ${learnedModelPath}
 }
 
@@ -131,6 +145,16 @@ function psl::runEval() {
    echo "Generating PSL (eval) data file to ${evalDataFilePath}."
    ruby $generateDataScript $dataTemplatePath $evalDataFilePath $genDataParams
 
+   # Build the CLI options one at a time for visibility.
+   local cliOptions=''
+   cliOptions="${cliOptions} -infer"
+   cliOptions="${cliOptions} -data ${evalDataFilePath}"
+   cliOptions="${cliOptions} -model ${modelPath}"
+   cliOptions="${cliOptions} ${extraCliOptions}"
+   cliOptions="${cliOptions} -output ${outDir}"
+   cliOptions="${cliOptions} ${PSL_DEFAULT_OPTIONS}"
+   cliOptions="${cliOptions} ${PSL_DEFAULT_LEARN_OPTIONS}"
+
    echo "Running PSL (eval). Output redirected to ${outputEvalPath}."
-   `requirements::time` `requirements::java` -cp "${classpath}" "${CLI_MAIN_CLASS}" -infer -data ${evalDataFilePath} -model ${modelPath} -D log4j.threshold=DEBUG ${extraCliOptions} -output ${outDir} > ${outputEvalPath} 2> ${outputTimePath}
+   `requirements::time` `requirements::java` -cp "${classpath}" $CLI_MAIN_CLASS $cliOptions > $outputEvalPath 2> $outputTimePath
 }
