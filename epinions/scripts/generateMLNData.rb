@@ -5,6 +5,8 @@ LEARN_FILE_INFO = [
    {:name => 'prior_obs.txt', :predicate => 'Prior', :hasTruth => true, :defaultTruth => 1.0},
    {:name => 'trusts_obs.txt', :predicate => 'Trusts', :hasTruth => true, :defaultTruth => 1.0},
    {:name => 'trusts_truth.txt', :predicate => 'Trusts', :hasTruth => true, :defaultTruth => 1.0},
+   {:name => 'trusts_obs.txt', :predicate => 'ScopeTrusts', :hasTruth => true, :defaultTruth => 1.0, :forceTrue => true},
+   {:name => 'trusts_target.txt', :predicate => 'ScopeTrusts', :hasTruth => false, :defaultTruth => 1.0, :forceTrue => true},
 ]
 
 EVAL_FILE_INFO = [
@@ -12,6 +14,8 @@ EVAL_FILE_INFO = [
    {:name => 'prior_obs.txt', :predicate => 'Prior', :hasTruth => true, :defaultTruth => 1.0},
    {:name => 'trusts_obs.txt', :predicate => 'Trusts', :hasTruth => true, :defaultTruth => 1.0},
    # {:name => 'trusts_target.txt', :predicate => 'Trusts', :hasTruth => false, :defaultTruth => 0.91920013},
+   {:name => 'trusts_obs.txt', :predicate => 'ScopeTrusts', :hasTruth => true, :defaultTruth => 1.0, :forceTrue => true},
+   {:name => 'trusts_target.txt', :predicate => 'ScopeTrusts', :hasTruth => false, :defaultTruth => 1.0, :forceTrue => true},
 ]
 
 def main(dataDir, outPath, fileInfo)
