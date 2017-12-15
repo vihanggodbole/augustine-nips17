@@ -8,6 +8,7 @@ RAW_LEARNED_MLN_MODEL_FILENAME='raw-learned-model.mln'
 TRANSFER_WEIGHTS_SCRIPT="${THIS_DIR}/transferTuffyLearnedWeights.rb"
 
 TUFFY_DEFAULT_OPTIONS=''
+# TUFFY_DEFAULT_OPTIONS='-mcsatSamples 2500'
 TUFFY_DEFAULT_LEARN_OPTIONS='-dMaxIter 25'
 TUFFY_DEFAULT_EVAL_OPTIONS='-maxFlips 100000 -randomStep 0.01'
 
@@ -41,7 +42,8 @@ function tuffy::runSuite() {
       "$cliDir" \
       "$scriptsDir" \
       "$dataDir/eval" \
-      "${outBaseDir}/tuffy-maxwalksat/$foldId/${LEARNED_MLN_MODEL_FILENAME}"
+      "${outBaseDir}/tuffy-maxwalksat/$foldId/${LEARNED_MLN_MODEL_FILENAME}" \
+      ''
 
    # MCSat
    tuffy::runEval \
@@ -49,7 +51,8 @@ function tuffy::runSuite() {
       "$cliDir" \
       "$scriptsDir" \
       "$dataDir/eval" \
-      "${outBaseDir}/tuffy-mcsat/$foldId/${LEARNED_MLN_MODEL_FILENAME}"
+      "${outBaseDir}/tuffy-mcsat/$foldId/${LEARNED_MLN_MODEL_FILENAME}" \
+      '-marginal'
 }
 
 function tuffy::runLearn() {
@@ -105,6 +108,7 @@ function tuffy::runEval() {
    local scriptsDir=$3
    local sourceDataDir=$4
    local programPath=$5
+   local extraCLIOptions=$6
 
    mkdir -p $outDir
 
@@ -130,6 +134,7 @@ function tuffy::runEval() {
    cliOptions="${cliOptions} -e ${evidencePath}"
    cliOptions="${cliOptions} -queryFile ${queryPath}"
    cliOptions="${cliOptions} -r ${resultsEvalPath}"
+   cliOptions="${cliOptions} ${extraCLIOptions}"
    cliOptions="${cliOptions} ${TUFFY_DEFAULT_OPTIONS}"
    cliOptions="${cliOptions} ${TUFFY_DEFAULT_EVAL_OPTIONS}"
 
