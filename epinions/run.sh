@@ -11,10 +11,13 @@ BASE_QUERY_FILE="${THIS_DIR}/mln/query-base.db"
 GEN_QUERY_SCRIPT="${THIS_DIR}/scripts/generateMLNQuery.rb"
 
 # Redefine for experiment specifics.
+PSL_METHODS=("${PSL_ACCURACY_METHODS[@]}")
+PSL_METHODS_CLI_OPTIONS=("${PSL_ACCURACY_METHODS_CLI_OPTIONS[@]}")
+PSL_METHODS_JARS=("${PSL_ACCURACY_METHODS_JARS[@]}")
+
 # We have extra weight learning params.
-PSL_METHODS=('psl-admm-postgres' 'psl-maxwalksat-postgres' 'psl-mcsat-postgres')
-PSL_METHODS_CLI_OPTIONS=('--postgres psl -D votedperceptron.stepsize=5.0 -D votedperceptron.numsteps=100' "`psl::maxwalksatOptions` --postgres psl -D votedperceptron.stepsize=5.0 -D votedperceptron.numsteps=100" "`psl::mcsatOptions` --postgres psl -D votedperceptron.stepsize=5.0 -D votedperceptron.numsteps=100")
-PSL_METHODS_JARS=("${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL_JAR_PATH}")
+PSL_DEFAULT_LEARN_OPTIONS='-D votedperceptron.stepsize=5.0 -D votedperceptron.numsteps=100 -D booleanmcsat.numsamples=5000'
+PSL_DEFAULT_EVAL_OPTIONS='-D booleanmcsat.numsamples=5000'
 
 # Limit to 300G
 ulimit -d 314572800
@@ -34,7 +37,7 @@ function run() {
          "${fold}" \
          "${fold} learn" \
          "${fold} eval" \
-         '-ec -D booleanmcsat.numsamples=5000' \
+         '-ec' \
          true
 
       # Tuffy

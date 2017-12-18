@@ -13,6 +13,11 @@ function psl::mcsatOptions() {
    echo '-D mpeinference.reasoner=org.linqs.psl.reasoner.bool.BooleanMCSat -D mpeinference.groundrulestore=org.linqs.psl.application.groundrulestore.AtomRegisterGroundRuleStore -D mpeinference.termstore=org.linqs.psl.reasoner.term.ConstraintBlockerTermStore -D mpeinference.termgenerator=org.linqs.psl.reasoner.term.ConstraintBlockerTermGenerator -D weightlearning.reasoner=org.linqs.psl.reasoner.bool.BooleanMCSat -D weightlearning.groundrulestore=org.linqs.psl.application.groundrulestore.AtomRegisterGroundRuleStore -D weightlearning.termstore=org.linqs.psl.reasoner.term.ConstraintBlockerTermStore -D weightlearning.termgenerator=org.linqs.psl.reasoner.term.ConstraintBlockerTermGenerator'
 }
 
+# Learn MaxWalkSat, Eval MCSat
+function psl::mixedBooleanOptions() {
+   echo '-D weightlearning.reasoner=org.linqs.psl.reasoner.bool.BooleanMaxWalkSat -D weightlearning.groundrulestore=org.linqs.psl.application.groundrulestore.AtomRegisterGroundRuleStore -D weightlearning.termstore=org.linqs.psl.reasoner.term.ConstraintBlockerTermStore -D weightlearning.termgenerator=org.linqs.psl.reasoner.term.ConstraintBlockerTermGenerator -D booleanmaxwalksat.maxflips=100000 -D mpeinference.reasoner=org.linqs.psl.reasoner.bool.BooleanMCSat -D mpeinference.groundrulestore=org.linqs.psl.application.groundrulestore.AtomRegisterGroundRuleStore -D mpeinference.termstore=org.linqs.psl.reasoner.term.ConstraintBlockerTermStore -D mpeinference.termgenerator=org.linqs.psl.reasoner.term.ConstraintBlockerTermGenerator'
+}
+
 function psl::mosekOptions() {
    echo '-D conictermstore.conicprogramsolver=org.linqs.psl.experimental.optimizer.conic.mosek.Mosek -D mpeinference.reasoner=org.linqs.psl.experimental.reasoner.conic.ConicReasoner -D mpeinference.termstore=org.linqs.psl.experimental.reasoner.conic.ConicTermStore -D mpeinference.termgenerator=org.linqs.psl.experimental.reasoner.conic.ConicTermGenerator'
 }
@@ -21,9 +26,14 @@ function psl::cvxpxOptions() {
    echo "-D mpeinference.reasoner=org.linqs.psl.experimental.reasoner.general.CVXPYReasoner -D mpeinference.termstore=org.linqs.psl.experimental.reasoner.general.JSONSerialTermStore -D mpeinference.termgenerator=org.linqs.psl.experimental.reasoner.general.JSONSerialTermGenerator -D executablereasoner.executablepath=${LIB_DIR}/cvxpy_reasoner.py"
 }
 
-PSL_METHODS=('psl-admm-h2' 'psl-admm-postgres' 'psl-maxwalksat-h2' 'psl-maxwalksat-postgres' 'psl-mcsat-h2' 'psl-mcsat-postgres' 'psl-2.0' 'psl-mosek-h2' 'psl-mosek-postgres' 'psl-1.2.1' 'psl-cvxpy-h2' 'psl-cvxpy-postgres')
-PSL_METHODS_CLI_OPTIONS=('' '--postgres psl' "`psl::maxwalksatOptions`" "`psl::maxwalksatOptions` --postgres psl" "`psl::mcsatOptions`" "`psl::mcsatOptions` --postgres psl" '' "`psl::mosekOptions`" "`psl::mosekOptions` --postgres psl" '' "`psl::cvxpxOptions`" "`psl::cvxpxOptions` --postgres psl")
-PSL_METHODS_JARS=("${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL2_JAR_PATH}" "${PSL_JAR_PATH}:${PSL_MOSEK_JAR_PATH}" "${PSL_JAR_PATH}:${PSL_MOSEK_JAR_PATH}" "${PSL121_JAR_PATH}" "${PSL_JAR_PATH}:${PSL_CVXPY_JAR_PATH}" "${PSL_JAR_PATH}:${PSL_CVXPY_JAR_PATH}")
+PSL_METHODS=('psl-admm-h2' 'psl-admm-postgres' 'psl-maxwalksat-h2' 'psl-maxwalksat-postgres' 'psl-mcsat-h2' 'psl-mcsat-postgres' 'psl-2.0' 'psl-mosek-h2' 'psl-mosek-postgres' 'psl-1.2.1' 'psl-cvxpy-h2' 'psl-cvxpy-postgres' 'psl-mixedboolean-h2' 'psl-mixedboolean-postgres')
+PSL_METHODS_CLI_OPTIONS=('' '--postgres psl' "`psl::maxwalksatOptions`" "`psl::maxwalksatOptions` --postgres psl" "`psl::mcsatOptions`" "`psl::mcsatOptions` --postgres psl" '' "`psl::mosekOptions`" "`psl::mosekOptions` --postgres psl" '' "`psl::cvxpxOptions`" "`psl::cvxpxOptions` --postgres psl" "`psl::mixedBooleanOptions`" "`psl::mixedBooleanOptions` --postgres psl")
+PSL_METHODS_JARS=("${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL2_JAR_PATH}" "${PSL_JAR_PATH}:${PSL_MOSEK_JAR_PATH}" "${PSL_JAR_PATH}:${PSL_MOSEK_JAR_PATH}" "${PSL121_JAR_PATH}" "${PSL_JAR_PATH}:${PSL_CVXPY_JAR_PATH}" "${PSL_JAR_PATH}:${PSL_CVXPY_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL_JAR_PATH}")
+
+# Shortcuts for the standard experiments.
+PSL_ACCURACY_METHODS=('psl-admm-postgres' 'psl-maxwalksat-postgres' 'psl-mcsat-postgres' 'psl-mixedboolean-postgres')
+PSL_ACCURACY_METHODS_CLI_OPTIONS=('--postgres psl' "`psl::maxwalksatOptions` --postgres psl" "`psl::mcsatOptions` --postgres psl" "`psl::mixedBooleanOptions` --postgres psl")
+PSL_ACCURACY_METHODS_JARS=("${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL_JAR_PATH}" "${PSL_JAR_PATH}")
 
 PSL_DEFAULT_OPTIONS='-D log4j.threshold=DEBUG'
 PSL_DEFAULT_LEARN_OPTIONS=''
@@ -153,7 +163,7 @@ function psl::runEval() {
    cliOptions="${cliOptions} ${extraCliOptions}"
    cliOptions="${cliOptions} -output ${outDir}"
    cliOptions="${cliOptions} ${PSL_DEFAULT_OPTIONS}"
-   cliOptions="${cliOptions} ${PSL_DEFAULT_LEARN_OPTIONS}"
+   cliOptions="${cliOptions} ${PSL_DEFAULT_EVAL_OPTIONS}"
 
    echo "Running PSL (eval). Output redirected to ${outputEvalPath}."
    `requirements::time` `requirements::java` -cp "${classpath}" $CLI_MAIN_CLASS $cliOptions > $outputEvalPath 2> $outputTimePath

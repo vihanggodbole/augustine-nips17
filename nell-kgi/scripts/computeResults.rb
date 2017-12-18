@@ -8,7 +8,7 @@ require_relative '../../scripts/parse'
 require_relative '../../scripts/util'
 
 module NellKGIEval
-   TARGET_METHODS = ['psl-admm-postgres', 'psl-maxwalksat-postgres', 'psl-mcsat-postgres', 'tuffy-maxwalksat', 'tuffy-mcsat']
+   TARGET_METHODS = ['psl-admm-postgres', 'psl-maxwalksat-postgres', 'psl-mcsat-postgres', 'psl-mixedboolean-postgres', 'tuffy-maxwalksat', 'tuffy-mcsat']
 
    DATA_RELPATH = File.join('data', 'processed', 'eval')
    RESULTS_BASEDIR = 'out'

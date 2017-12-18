@@ -10,7 +10,7 @@ require_relative '../../scripts/util'
 module CollectiveClassificationEval
    DATASETS = ['citeseer', 'cora']
    FOLDS = (0...20).to_a()
-   TARGET_METHODS = ['psl-admm-postgres', 'psl-maxwalksat-postgres', 'psl-mcsat-postgres', 'tuffy-maxwalksat', 'tuffy-mcsat']
+   TARGET_METHODS = ['psl-admm-postgres', 'psl-maxwalksat-postgres', 'psl-mcsat-postgres', 'psl-mixedboolean-postgres', 'tuffy-maxwalksat', 'tuffy-mcsat']
 
    DATA_RELPATH = File.join('data', 'splits')
    RESULTS_BASEDIR = 'out'
