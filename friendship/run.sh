@@ -21,12 +21,15 @@ ulimit -d 314572800
 function run() {
    local outBaseDir="${THIS_DIR}/out"
    local folds="$(seq -w -s ' ' 30 10 0100)"
-   # local folds="$(seq -w -s ' ' 30 10 0100) $(seq -w -s ' ' 100 100 1000)"
+   local folds="$(seq -w -s ' ' 30 10 0100) $(seq -w -s ' ' 100 100 1000)"
 
    for fold in $folds; do
       # Generate the data.
-      ruby $DATA_GEN_SCRIPT -p $fold -l 10 -fh 0.85 -fl 0.15 -n friendship
-      local dataDir="${THIS_DIR}/data/friendship_${fold}_0010"
+      if [ ! -e "${THIS_DIR}/data/friendship/${fold}" ]; then
+         ruby $DATA_GEN_SCRIPT -p $fold -l 10 -fh 0.85 -fl 0.15 -n friendship
+         mkdir -p "${THIS_DIR}/data/friendship"
+         mv "${THIS_DIR}/data/friendship_${fold}_0010" "${THIS_DIR}/data/friendship/${fold}"
+      fi
 
       # PSL
       psl::runSuite \
