@@ -6,8 +6,8 @@ THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 LIB_DIR="${THIS_DIR}/lib"
 mkdir -p "${LIB_DIR}"
 
-PSL_JAR_PATH="${LIB_DIR}/psl-cli-2.1.0-NIPS17.jar"
-PSL_JAR_URL='https://linqs-data.soe.ucsc.edu/public/augustine-nips17-data/psl-cli-2.1.0-NIPS17.jar'
+PSL_JAR_PATH="${LIB_DIR}/psl-cli-CANARY-2.1.2.jar"
+PSL_JAR_URL='https://linqs-data.soe.ucsc.edu/maven/repositories/psl-releases/org/linqs/psl-cli/CANARY-2.1.2/psl-cli-CANARY-2.1.2.jar'
 
 PSL_MOSEK_JAR_PATH="${LIB_DIR}/psl-mosek-2.1.0-NIPS17.jar"
 PSL_MOSEK_JAR_URL='https://linqs-data.soe.ucsc.edu/public/augustine-nips17-data/psl-mosek-2.1.0-NIPS17.jar'
