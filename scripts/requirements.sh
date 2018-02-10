@@ -30,7 +30,15 @@ function requirements::java() {
    local memKB=`cat /proc/meminfo | grep 'MemTotal' | sed 's/^[^0-9]\+\([0-9]\+\)[^0-9]\+$/\1/'`
    local memOption=''
 
-   if [ "$memKB" -gt "26214400" ]; then
+   if [ "$memKB" -gt "262144000" ]; then
+      memOption='-Xmx250G -Xms250G'
+   elif [ "$memKB" -gt "209715200" ]; then
+      memOption='-Xmx200G -Xms200G'
+   elif [ "$memKB" -gt "104857600" ]; then
+      memOption='-Xmx100G -Xms100G'
+   elif [ "$memKB" -gt "52428800" ]; then
+      memOption='-Xmx50G -Xms50G'
+   elif [ "$memKB" -gt "26214400" ]; then
       memOption='-Xmx25G -Xms25G'
    elif [ "$memKB" -gt "15728640" ]; then
       memOption='-Xmx15G -Xms15G'
