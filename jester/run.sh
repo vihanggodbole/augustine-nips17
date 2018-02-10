@@ -11,12 +11,6 @@ PSL_METHODS=("${PSL_ACCURACY_METHODS[@]}")
 PSL_METHODS_CLI_OPTIONS=("${PSL_ACCURACY_METHODS_CLI_OPTIONS[@]}")
 PSL_METHODS_JARS=("${PSL_ACCURACY_METHODS_JARS[@]}")
 
-# Limit to 300G
-ulimit -d 314572800
-
-# Limit to 4 hours
-# ulimit -t 14400
-
 function run() {
    local outBaseDir="${THIS_DIR}/out"
    local folds=`seq -s ' ' 0 9`

@@ -19,12 +19,6 @@ PSL_METHODS_JARS=("${PSL_ACCURACY_METHODS_JARS[@]}")
 PSL_DEFAULT_LEARN_OPTIONS='-D votedperceptron.stepsize=5.0 -D votedperceptron.numsteps=100 -D booleanmcsat.numsamples=5000'
 PSL_DEFAULT_EVAL_OPTIONS='-D booleanmcsat.numsamples=5000'
 
-# Limit to 300G
-ulimit -d 314572800
-
-# Limit to 1 hour
-# ulimit -t 3600
-
 function run() {
    local outBaseDir="${THIS_DIR}/out"
    local folds=`seq -s ' ' 0 7`

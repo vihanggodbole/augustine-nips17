@@ -7,15 +7,6 @@ THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 DATA_GEN_SCRIPT="${THIS_DIR}/scripts/generateGraphData.rb"
 
-# Redefine for experiment specifics.
-
-
-# Limit to 300G
-ulimit -d 314572800
-
-# Limit to 4 hours
-# ulimit -t 14400
-
 function run() {
    local outBaseDir="${THIS_DIR}/out"
 

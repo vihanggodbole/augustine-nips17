@@ -12,12 +12,6 @@ PSL_METHODS=('psl-admm-postgres' 'psl-mosek-postgres' 'psl-cvxpy-postgres' 'psl-
 PSL_METHODS_CLI_OPTIONS=('--postgres psl' "`psl::mosekOptions` --postgres psl" "`psl::cvxpxOptions` --postgres psl" '' '')
 PSL_METHODS_JARS=("${PSL_JAR_PATH}" "${PSL_JAR_PATH}:${PSL_MOSEK_JAR_PATH}" "${PSL_JAR_PATH}:${PSL_CVXPY_JAR_PATH}" "${PSL2_JAR_PATH}" "${PSL121_JAR_PATH}")
 
-# Limit to 300G
-ulimit -d 314572800
-
-# Limit to 8 hours
-# ulimit -t 28800
-
 function run() {
    local outBaseDir="${THIS_DIR}/out"
    local folds="$(seq -w -s ' ' 30 10 0100)"
