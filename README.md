@@ -1,4 +1,4 @@
-Experiments for a NIPS 2017 workshop paper.
+Weight Learning Experiments on the fork of NIPS 2017 workshop paper at nips17-experiment branch.
 
 All of these experiments originated from a core JMLR paper by Stephen Bach.
 The code can be found here: https://github.com/stephenbach/bach-jmlr17-code
