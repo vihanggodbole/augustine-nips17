@@ -1,0 +1,1040 @@
+Running PSL Weight Learning
+0    [main] DEBUG org.linqs.psl.config.Config  - Configuration stream loaded: project.properties
+3    [main] DEBUG org.linqs.psl.config.Config  - Configuration stream loaded: git.properties
+12   [main] DEBUG org.linqs.psl.config.Config  - Configuration stream loaded: classlist.properties
+12   [main] DEBUG org.linqs.psl.config.Config  - PSL configuration psl.properties file not found. Only default values will be used unless additional properties are specified.
+12   [main] DEBUG org.linqs.psl.config.Config  - Set option gpp.maxiterations to 50.
+13   [main] DEBUG org.linqs.psl.config.Config  - Set option log4j.threshold to DEBUG.
+13   [main] DEBUG org.linqs.psl.config.Config  - Found value 2.2.0-SNAPSHOT for option project.version.
+17   [main] DEBUG org.linqs.psl.config.Config  - Found value b35f97a for option git.commit.id.abbrev.
+18   [main] DEBUG org.linqs.psl.config.Config  - Found value false for option git.dirty.
+18   [main] INFO  org.linqs.psl.cli.Launcher  - Running PSL CLI Version 2.2.0-SNAPSHOT-b35f97a
+24   [main] DEBUG org.linqs.psl.database.rdbms.driver.PostgreSQLDriver  - Connecting to PostgreSQL database: vg_psl_experiments
+25   [main] DEBUG org.linqs.psl.config.Config  - No value found for option postgres.statspercentage. Returning default of 0.25.
+27   [main] DEBUG org.linqs.psl.config.Config  - No value found for option parallel.numthreads. Returning default of 4.
+143  [main] INFO  org.linqs.psl.cli.Launcher  - Loading data
+206  [main] DEBUG org.linqs.psl.cli.DataLoader  - Loading data for Block (observations partition)
+213  [main] DEBUG org.linqs.psl.cli.DataLoader  - Loading data for Similar (observations partition)
+240  [main] DEBUG org.linqs.psl.cli.DataLoader  - Loading data for Friends (targets partition)
+265  [main] DEBUG org.linqs.psl.cli.DataLoader  - Loading data for Friends (truth partition)
+292  [main] INFO  org.linqs.psl.cli.Launcher  - Data loading complete
+292  [main] INFO  org.linqs.psl.cli.Launcher  - Loading model from friendship.psl
+358  [main] DEBUG org.linqs.psl.cli.Launcher  - Model:
+1.0: ( BLOCK(P2, A) & (P1 != P2) & BLOCK(P1, A) & SIMILAR(P1, P2) ) >> FRIENDS(P1, P2) ^2
+1.0: ( BLOCK(P2, A) & BLOCK(P3, A) & (P1 != P2) & (P2 != P3) & (P1 != P3) & FRIENDS(P2, P3) & BLOCK(P1, A) & FRIENDS(P1, P2) ) >> FRIENDS(P1, P3) ^2
+1.0: ( BLOCK(P2, A) & (P1 != P2) & BLOCK(P1, A) & FRIENDS(P1, P2) ) >> FRIENDS(P2, P1) ^2
+1.0: ~( FRIENDS(P1, P2) ) ^2
+358  [main] INFO  org.linqs.psl.cli.Launcher  - Model loading complete
+358  [main] INFO  org.linqs.psl.cli.Launcher  - Starting weight learning with learner: org.linqs.psl.application.learning.weight.search.grid.RandomGridSearch
+359  [main] DEBUG org.linqs.psl.database.rdbms.RDBMSDataStore  - Indexing predicates.
+542  [main] DEBUG org.linqs.psl.database.rdbms.RDBMSDataStore  - Predicate indexing complete.
+544  [main] DEBUG org.linqs.psl.config.Config  - No value found for option rdbmsdatabase.fetchsize. Returning default of 500.
+544  [main] DEBUG org.linqs.psl.config.Config  - No value found for option rdbmsdatabase.fetchsize. Returning default of 500.
+547  [main] DEBUG org.linqs.psl.config.Config  - No value found for option weightlearning.evaluator. Returning default of org.linqs.psl.evaluation.statistics.ContinuousEvaluator.
+547  [main] DEBUG org.linqs.psl.config.Config  - No value found for option continuousevaluator.representative. Returning default of MSE.
+548  [main] DEBUG org.linqs.psl.config.Config  - No value found for option gridsearch.weights. Returning default of 0.001:0.01:0.1:1:10.
+548  [main] DEBUG org.linqs.psl.config.Config  - No value found for option randomgridsearch.maxlocations. Returning default of 150.
+548  [main] DEBUG org.linqs.psl.config.Config  - No value found for option persistedatommanager.throwaccessexception. Returning default of true.
+932  [main] DEBUG org.linqs.psl.config.Config  - No value found for option weightlearning.groundrulestore. Returning default of org.linqs.psl.application.groundrulestore.MemoryGroundRuleStore.
+933  [main] INFO  org.linqs.psl.application.learning.weight.WeightLearningApplication  - Grounding out model.
+933  [main] DEBUG org.linqs.psl.config.Config  - No value found for option grounding.rewritequeries. Returning default of false.
+934  [main] DEBUG org.linqs.psl.application.util.Grounding  - Grounding 1 rules with query: [( BLOCK(P2, A) & BLOCK(P3, A) & (P1 != P2) & (P2 != P3) & (P1 != P3) & FRIENDS(P2, P3) & BLOCK(P1, A) & FRIENDS(P1, P2) )].
+1113 [main] DEBUG org.linqs.psl.application.util.Grounding  - Generated 24330 ground rules with query: [( BLOCK(P2, A) & BLOCK(P3, A) & (P1 != P2) & (P2 != P3) & (P1 != P3) & FRIENDS(P2, P3) & BLOCK(P1, A) & FRIENDS(P1, P2) )].
+1113 [main] DEBUG org.linqs.psl.application.util.Grounding  - Grounding 1 rules with query: [( BLOCK(P2, A) & (P1 != P2) & BLOCK(P1, A) & FRIENDS(P1, P2) )].
+1134 [main] DEBUG org.linqs.psl.application.util.Grounding  - Generated 1596 ground rules with query: [( BLOCK(P2, A) & (P1 != P2) & BLOCK(P1, A) & FRIENDS(P1, P2) )].
+1134 [main] DEBUG org.linqs.psl.application.util.Grounding  - Grounding 1 rules with query: [( BLOCK(P2, A) & (P1 != P2) & BLOCK(P1, A) & SIMILAR(P1, P2) )].
+1146 [main] DEBUG org.linqs.psl.application.util.Grounding  - Generated 1582 ground rules with query: [( BLOCK(P2, A) & (P1 != P2) & BLOCK(P1, A) & SIMILAR(P1, P2) )].
+1146 [main] DEBUG org.linqs.psl.application.util.Grounding  - Grounding 1 rules with query: [FRIENDS(P1, P2)].
+1183 [main] DEBUG org.linqs.psl.application.util.Grounding  - Generated 9900 ground rules with query: [FRIENDS(P1, P2)].
+1183 [main] DEBUG org.linqs.psl.config.Config  - No value found for option weightlearning.termstore. Returning default of org.linqs.psl.reasoner.admm.term.ADMMTermStore.
+1183 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmmemorytermstore.internalstore. Returning default of org.linqs.psl.reasoner.term.MemoryTermStore.
+1184 [main] DEBUG org.linqs.psl.config.Config  - No value found for option memorytermstore.initialsize. Returning default of 5000.
+1184 [main] DEBUG org.linqs.psl.config.Config  - No value found for option weightlearning.termgenerator. Returning default of org.linqs.psl.reasoner.admm.term.ADMMTermGenerator.
+1185 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmtermgenerator.invertnegativeweights. Returning default of false.
+1186 [main] DEBUG org.linqs.psl.application.learning.weight.WeightLearningApplication  - Initializing objective terms for 37408 ground rules.
+1359 [main] DEBUG org.linqs.psl.application.learning.weight.WeightLearningApplication  - Generated 37408 objective terms from 37408 ground rules.
+1988 [main] DEBUG org.linqs.psl.config.Config  - No value found for option weightlearning.reasoner. Returning default of org.linqs.psl.reasoner.admm.ADMMReasoner.
+1989 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.maxiterations. Returning default of 25000.
+1990 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.stepsize. Returning default of 1.0.
+1990 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.computeperiod. Returning default of 50.
+1990 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.objectivebreak. Returning default of true.
+1990 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.epsilonabs. Returning default of 1.0E-5.
+1990 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.epsilonrel. Returning default of 0.001.
+1990 [main] DEBUG org.linqs.psl.config.Config  - No value found for option weightlearning.randomweights. Returning default of false.
+2016 [main] DEBUG org.linqs.psl.config.Config  - No value found for option random.seed. Returning default of 4.
+2016 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 0 / 150 (625) -- Inspecting location 2:2:3:3
+2120 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+2120 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+2131 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+2732 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 143 iterations. Objective: 37318.383, Feasible: true, Primal res.: 0.003207679, Dual res.: 0.010832353
+2752 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 2:2:3:3 -- objective: 0.09318537257557041
+2752 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 1 / 150 (625) -- Inspecting location 1:2:0:0
+2862 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+2862 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+2867 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+7111 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 3300 iterations. Objective: 37407.97, Feasible: true, Primal res.: 1.1955E-4, Dual res.: 0.009061503
+7128 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 1:2:0:0 -- objective: 0.038114159336378385
+7128 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 2 / 150 (625) -- Inspecting location 4:2:1:4
+7241 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+7241 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+7246 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+7419 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 114 iterations. Objective: 32519.738, Feasible: true, Primal res.: 0.11339145, Dual res.: 0.065737024
+7435 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 4:2:1:4 -- objective: 0.052248608279769154
+7435 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 3 / 150 (625) -- Inspecting location 0:2:0:0
+7532 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+7532 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+7537 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+7831 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 200 iterations. Objective: 37408.0, Feasible: true, Primal res.: 7.623007E-4, Dual res.: 0.07124583
+7844 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 0:2:0:0 -- objective: 0.17194467198579233
+7844 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 4 / 150 (625) -- Inspecting location 2:3:1:0
+7941 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+7941 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+7946 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+11118 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 2400 iterations. Objective: 37407.965, Feasible: true, Primal res.: 2.0250985E-4, Dual res.: 0.00908765
+11131 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 2:3:1:0 -- objective: 0.042919549551503094
+11131 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 5 / 150 (625) -- Inspecting location 4:2:2:3
+11229 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+11229 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+11235 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+11341 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 70 iterations. Objective: 36476.99, Feasible: true, Primal res.: 0.14709897, Dual res.: 0.082208954
+11351 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 4:2:2:3 -- objective: 0.042438109627779545
+11351 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 6 / 150 (625) -- Inspecting location 0:2:4:2
+11450 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+11450 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+11455 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+13794 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 1338 iterations. Objective: 37407.523, Feasible: true, Primal res.: 8.269297E-5, Dual res.: 0.0030528656
+13804 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 0:2:4:2 -- objective: 0.10492919365408303
+13804 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 7 / 150 (625) -- Inspecting location 0:3:4:0
+13900 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+13901 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+13905 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+14128 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 150 iterations. Objective: 37408.0, Feasible: true, Primal res.: 0.041538354, Dual res.: 0.07942661
+14135 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 0:3:4:0 -- objective: 0.19371679852859802
+14135 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 8 / 150 (625) -- Inspecting location 1:2:1:0
+14233 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+14233 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+14238 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+19248 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 3400 iterations. Objective: 37407.945, Feasible: true, Primal res.: 1.0244441E-4, Dual res.: 0.008127186
+19256 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 1:2:1:0 -- objective: 0.03752614142800551
+19256 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 9 / 150 (625) -- Inspecting location 4:1:1:0
+19351 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+19351 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+19356 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+21078 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 1200 iterations. Objective: 37407.523, Feasible: true, Primal res.: 2.1086878E-4, Dual res.: 0.013830479
+21086 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 4:1:1:0 -- objective: 0.049442677592326935
+21086 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 10 / 150 (625) -- Inspecting location 1:2:4:4
+21183 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+21183 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+21188 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+21454 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 200 iterations. Objective: 37398.254, Feasible: true, Primal res.: 0.0048002154, Dual res.: 0.001087709
+21461 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 1:2:4:4 -- objective: 0.10680964579472012
+21461 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 11 / 150 (625) -- Inspecting location 3:0:4:0
+21560 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+21560 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+21565 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+22214 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 400 iterations. Objective: 37407.176, Feasible: true, Primal res.: 2.0668031E-4, Dual res.: 0.048047546
+22220 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 3:0:4:0 -- objective: 0.10379804217075651
+22220 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 12 / 150 (625) -- Inspecting location 4:3:1:2
+22318 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+22318 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+22323 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+22507 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 130 iterations. Objective: 37272.93, Feasible: true, Primal res.: 0.03258165, Dual res.: 0.023720464
+22513 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 4:3:1:2 -- objective: 0.044184074876173415
+22513 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 13 / 150 (625) -- Inspecting location 4:3:4:3
+22609 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+22609 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+22614 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+22727 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 70 iterations. Objective: 36348.81, Feasible: true, Primal res.: 0.1510289, Dual res.: 0.11030894
+22733 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 4:3:4:3 -- objective: 0.039038267624823764
+22733 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 14 / 150 (625) -- Inspecting location 4:4:4:2
+22831 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+22831 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+22836 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+23136 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 185 iterations. Objective: 37261.87, Feasible: true, Primal res.: 0.030263372, Dual res.: 0.025610127
+23142 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 4:4:4:2 -- objective: 0.04728972605539753
+23142 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 15 / 150 (625) -- Inspecting location 3:2:1:4
+23238 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+23238 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+23243 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+23408 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 110 iterations. Objective: 36512.812, Feasible: true, Primal res.: 0.022095283, Dual res.: 0.032592732
+23414 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 3:2:1:4 -- objective: 0.09328405885117164
+23414 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 16 / 150 (625) -- Inspecting location 0:4:3:3
+23507 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+23507 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+23512 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+23794 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 186 iterations. Objective: 37407.19, Feasible: true, Primal res.: 8.9050236E-4, Dual res.: 0.0030480525
+23800 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 0:4:3:3 -- objective: 0.10676650288083736
+23801 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 17 / 150 (625) -- Inspecting location 2:4:2:0
+23896 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+23896 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+23901 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+26806 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 2250 iterations. Objective: 37407.973, Feasible: true, Primal res.: 2.719859E-4, Dual res.: 0.009479048
+26812 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 2:4:2:0 -- objective: 0.04427504957167455
+26812 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 18 / 150 (625) -- Inspecting location 4:1:4:3
+26912 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+26912 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+26917 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+27039 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 86 iterations. Objective: 36368.938, Feasible: true, Primal res.: 0.120765, Dual res.: 0.10520594
+27046 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 4:1:4:3 -- objective: 0.040544835488556044
+27046 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 19 / 150 (625) -- Inspecting location 3:3:4:2
+27142 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+27142 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+27147 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+27404 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 198 iterations. Objective: 37297.867, Feasible: true, Primal res.: 0.0039018115, Dual res.: 0.015027454
+27410 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 3:3:4:2 -- objective: 0.038718439521505846
+27410 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 20 / 150 (625) -- Inspecting location 4:2:2:0
+27505 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+27505 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+27510 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+29893 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 1739 iterations. Objective: 37406.797, Feasible: true, Primal res.: 1.1105743E-4, Dual res.: 0.0032939208
+29899 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 4:2:2:0 -- objective: 0.05355611190819816
+29899 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 21 / 150 (625) -- Inspecting location 2:2:4:0
+29995 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+29995 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+30000 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+33063 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 2300 iterations. Objective: 37407.99, Feasible: true, Primal res.: 1.6307375E-4, Dual res.: 0.007982024
+33069 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 2:2:4:0 -- objective: 0.04497361132716527
+33069 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 22 / 150 (625) -- Inspecting location 0:2:1:3
+33167 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+33167 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+33172 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+33429 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 191 iterations. Objective: 37407.188, Feasible: true, Primal res.: 8.867794E-4, Dual res.: 0.003036964
+33435 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 0:2:1:3 -- objective: 0.10677033898673177
+33435 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 23 / 150 (625) -- Inspecting location 2:4:2:3
+33532 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+33532 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+33537 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+33740 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 140 iterations. Objective: 37318.67, Feasible: true, Primal res.: 0.0031503234, Dual res.: 0.010633105
+33746 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 2:4:2:3 -- objective: 0.09318068339072129
+33746 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 24 / 150 (625) -- Inspecting location 0:0:3:4
+33843 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+33843 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+33848 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+34043 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 150 iterations. Objective: 37407.188, Feasible: true, Primal res.: 0.006247321, Dual res.: 7.0719677E-4
+34050 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 0:0:3:4 -- objective: 0.10696808335196915
+34050 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 25 / 150 (625) -- Inspecting location 2:1:1:1
+34146 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+34146 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+34151 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+36291 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 1406 iterations. Objective: 37398.094, Feasible: true, Primal res.: 9.621932E-5, Dual res.: 0.003962215
+36297 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 2:1:1:1 -- objective: 0.03915326610708224
+36297 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 26 / 150 (625) -- Inspecting location 3:4:3:2
+36396 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+36397 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+36401 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+36713 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 212 iterations. Objective: 37299.355, Feasible: true, Primal res.: 0.0036376985, Dual res.: 0.014537201
+36720 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 3:4:3:2 -- objective: 0.03819935919254597
+36720 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 27 / 150 (625) -- Inspecting location 4:0:2:3
+36814 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+36815 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+36819 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+36951 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 89 iterations. Objective: 36506.44, Feasible: true, Primal res.: 0.079396226, Dual res.: 0.080580235
+36958 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 4:0:2:3 -- objective: 0.044104736968156415
+36959 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 28 / 150 (625) -- Inspecting location 0:1:3:0
+37053 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+37053 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+37058 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+37660 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 400 iterations. Objective: 37407.99, Feasible: true, Primal res.: 1.9750671E-4, Dual res.: 0.049773555
+37666 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 0:1:3:0 -- objective: 0.10384726696214511
+37666 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 29 / 150 (625) -- Inspecting location 4:3:2:3
+37762 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+37762 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+37767 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+37866 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 67 iterations. Objective: 36430.18, Feasible: true, Primal res.: 0.105014406, Dual res.: 0.1000356
+37872 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 4:3:2:3 -- objective: 0.03948603984272728
+37872 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 30 / 150 (625) -- Inspecting location 1:1:4:1
+37968 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+37968 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+37973 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+41513 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 2300 iterations. Objective: 37403.16, Feasible: true, Primal res.: 6.4749365E-5, Dual res.: 0.008487106
+41520 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 1:1:4:1 -- objective: 0.04876394267714628
+41520 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 31 / 150 (625) -- Inspecting location 2:1:0:2
+41614 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+41614 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+41619 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+42551 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 650 iterations. Objective: 37358.72, Feasible: true, Primal res.: 2.624268E-4, Dual res.: 0.00737129
+42558 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 2:1:0:2 -- objective: 0.052003424032202684
+42558 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 32 / 150 (625) -- Inspecting location 3:3:0:4
+42653 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+42654 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+42658 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+42824 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 108 iterations. Objective: 36513.0, Feasible: true, Primal res.: 0.022502227, Dual res.: 0.035239745
+42830 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 3:3:0:4 -- objective: 0.09327481834395077
+42830 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 33 / 150 (625) -- Inspecting location 1:4:0:3
+42925 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+42925 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+42930 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+43175 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 179 iterations. Objective: 37398.36, Feasible: true, Primal res.: 0.001114612, Dual res.: 0.003812415
+43182 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 1:4:0:3 -- objective: 0.10534916822025771
+43182 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 34 / 150 (625) -- Inspecting location 2:3:4:2
+43279 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+43279 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+43284 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+44007 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 524 iterations. Objective: 37356.67, Feasible: true, Primal res.: 2.8997427E-4, Dual res.: 0.007613994
+44015 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 2:3:4:2 -- objective: 0.05068290579256547
+44015 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 35 / 150 (625) -- Inspecting location 2:0:1:3
+44112 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+44112 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+44117 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+44347 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 146 iterations. Objective: 37318.875, Feasible: true, Primal res.: 0.0032287415, Dual res.: 0.010907796
+44353 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 2:0:1:3 -- objective: 0.09319923506361039
+44353 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 36 / 150 (625) -- Inspecting location 4:1:4:0
+44449 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+44450 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+44454 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+45445 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 600 iterations. Objective: 37407.18, Feasible: true, Primal res.: 6.858862E-4, Dual res.: 0.03563237
+45451 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 4:1:4:0 -- objective: 0.07567426641497918
+45451 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 37 / 150 (625) -- Inspecting location 3:4:3:0
+45546 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+45546 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+45551 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+46380 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 550 iterations. Objective: 37407.95, Feasible: true, Primal res.: 0.0028637685, Dual res.: 0.04266172
+46386 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 3:4:3:0 -- objective: 0.08235142577163677
+46386 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 38 / 150 (625) -- Inspecting location 1:4:3:3
+46483 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+46483 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+46488 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+46734 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 178 iterations. Objective: 37398.36, Feasible: true, Primal res.: 0.0011251646, Dual res.: 0.0038455874
+46741 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 1:4:3:3 -- objective: 0.10534976995277642
+46741 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 39 / 150 (625) -- Inspecting location 0:4:4:3
+46837 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+46837 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+46843 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+47115 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 200 iterations. Objective: 37407.19, Feasible: true, Primal res.: 0.0037836637, Dual res.: 0.0017953382
+47122 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 0:4:4:3 -- objective: 0.10678562331111793
+47122 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 40 / 150 (625) -- Inspecting location 3:2:2:2
+47220 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+47220 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+47225 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+47503 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 202 iterations. Objective: 37307.86, Feasible: true, Primal res.: 0.0014167661, Dual res.: 0.012847928
+47510 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 3:2:2:2 -- objective: 0.03917283884253553
+47510 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 41 / 150 (625) -- Inspecting location 3:4:4:3
+47606 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+47606 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+47611 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+47700 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 66 iterations. Objective: 36896.113, Feasible: true, Primal res.: 0.08181325, Dual res.: 0.049547575
+47706 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 3:4:4:3 -- objective: 0.05090385790935472
+47706 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 42 / 150 (625) -- Inspecting location 3:1:3:2
+47803 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+47803 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+47808 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+48109 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 221 iterations. Objective: 37303.316, Feasible: true, Primal res.: 0.0026475878, Dual res.: 0.013399881
+48115 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 3:1:3:2 -- objective: 0.040127310598214075
+48115 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 43 / 150 (625) -- Inspecting location 3:1:1:2
+48212 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+48212 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+48217 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+48778 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 372 iterations. Objective: 37315.86, Feasible: true, Primal res.: 6.0511596E-4, Dual res.: 0.011432097
+48785 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 3:1:1:2 -- objective: 0.042335188491085245
+48785 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 44 / 150 (625) -- Inspecting location 0:4:2:3
+48881 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+48881 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+48886 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+49147 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 187 iterations. Objective: 37407.19, Feasible: true, Primal res.: 8.6654985E-4, Dual res.: 0.0029670738
+49154 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 0:4:2:3 -- objective: 0.10676770693105651
+49154 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 45 / 150 (625) -- Inspecting location 0:0:3:0
+49251 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+49251 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+49256 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+49484 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 150 iterations. Objective: 37407.992, Feasible: true, Primal res.: 6.896786E-5, Dual res.: 0.07936483
+49490 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 0:0:3:0 -- objective: 0.20175904944520248
+49490 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 46 / 150 (625) -- Inspecting location 1:0:0:1
+49585 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+49585 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+49590 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+52312 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 2050 iterations. Objective: 37403.074, Feasible: true, Primal res.: 7.7686345E-5, Dual res.: 0.014795734
+52318 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 1:0:0:1 -- objective: 0.049048023221922685
+52318 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 47 / 150 (625) -- Inspecting location 3:1:2:2
+52415 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+52415 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+52420 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+52938 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 317 iterations. Objective: 37311.89, Feasible: true, Primal res.: 7.811548E-4, Dual res.: 0.011809129
+52944 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 3:1:2:2 -- objective: 0.040989088495285965
+52944 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 48 / 150 (625) -- Inspecting location 3:3:2:2
+53039 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+53040 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+53044 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+53337 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 201 iterations. Objective: 37305.164, Feasible: true, Primal res.: 0.0027503965, Dual res.: 0.013649249
+53343 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 3:3:2:2 -- objective: 0.03821423176460868
+53343 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 49 / 150 (625) -- Inspecting location 3:4:2:1
+53438 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+53438 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+53443 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+54568 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 757 iterations. Objective: 37394.05, Feasible: true, Primal res.: 6.519545E-4, Dual res.: 0.0053250566
+54575 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 3:4:2:1 -- objective: 0.045981063211975974
+54575 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 50 / 150 (625) -- Inspecting location 2:2:2:3
+54669 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+54669 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+54674 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+54874 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 144 iterations. Objective: 37318.66, Feasible: true, Primal res.: 0.0032134505, Dual res.: 0.010857874
+54881 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 2:2:2:3 -- objective: 0.09318711492821437
+54881 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 51 / 150 (625) -- Inspecting location 2:2:1:1
+54976 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+54976 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+54981 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+56470 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 1000 iterations. Objective: 37397.746, Feasible: true, Primal res.: 2.2734409E-4, Dual res.: 0.009265415
+56476 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 2:2:1:1 -- objective: 0.03819548431765795
+56476 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 52 / 150 (625) -- Inspecting location 4:1:1:1
+56571 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+56571 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+56576 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+57860 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 800 iterations. Objective: 37395.91, Feasible: true, Primal res.: 1.8564552E-4, Dual res.: 0.0062578158
+57867 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 4:1:1:1 -- objective: 0.04349500447185285
+57867 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 53 / 150 (625) -- Inspecting location 3:4:2:0
+57961 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+57962 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+57967 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+60591 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 1768 iterations. Objective: 37407.355, Feasible: true, Primal res.: 1.7535672E-4, Dual res.: 0.0032963124
+60597 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 3:4:2:0 -- objective: 0.052908103155585105
+60597 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 54 / 150 (625) -- Inspecting location 2:3:4:0
+60692 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+60692 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+60697 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+63581 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 2250 iterations. Objective: 37407.984, Feasible: true, Primal res.: 2.4387802E-4, Dual res.: 0.008648335
+63588 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 2:3:4:0 -- objective: 0.04494931257707996
+63588 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 55 / 150 (625) -- Inspecting location 2:0:4:3
+63685 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+63685 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+63690 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+63922 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 145 iterations. Objective: 37318.168, Feasible: true, Primal res.: 0.022135042, Dual res.: 0.011014748
+63928 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 2:0:4:3 -- objective: 0.09320390995758601
+63928 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 56 / 150 (625) -- Inspecting location 0:2:2:2
+64023 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+64023 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+64028 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+65069 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 650 iterations. Objective: 37408.0, Feasible: true, Primal res.: 0.0011480144, Dual res.: 0.041697208
+65077 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 0:2:2:2 -- objective: 0.09850283872331089
+65077 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 57 / 150 (625) -- Inspecting location 1:4:2:2
+65176 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+65176 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+65181 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+67078 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 1121 iterations. Objective: 37400.062, Feasible: true, Primal res.: 1.0346326E-4, Dual res.: 0.0037794267
+67086 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 1:4:2:2 -- objective: 0.09278330007575186
+67086 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 58 / 150 (625) -- Inspecting location 0:1:1:4
+67183 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+67183 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+67188 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+67384 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 150 iterations. Objective: 37407.188, Feasible: true, Primal res.: 0.0064049945, Dual res.: 8.4321905E-4
+67390 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 0:1:1:4 -- objective: 0.10696595882061655
+67391 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 59 / 150 (625) -- Inspecting location 3:3:3:4
+67486 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+67486 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+67491 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+67630 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 107 iterations. Objective: 36512.426, Feasible: true, Primal res.: 0.021287484, Dual res.: 0.035094634
+67636 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 3:3:3:4 -- objective: 0.09326266827103674
+67636 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 60 / 150 (625) -- Inspecting location 4:4:1:1
+67731 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+67731 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+67736 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+68103 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 270 iterations. Objective: 37392.984, Feasible: true, Primal res.: 0.004336967, Dual res.: 0.0064499644
+68109 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 4:4:1:1 -- objective: 0.0520701176797352
+68109 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 61 / 150 (625) -- Inspecting location 4:3:3:2
+68208 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+68208 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+68213 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+68402 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 124 iterations. Objective: 37269.074, Feasible: true, Primal res.: 0.037034947, Dual res.: 0.02294027
+68409 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 4:3:3:2 -- objective: 0.045052122587155415
+68409 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 62 / 150 (625) -- Inspecting location 4:2:3:4
+68503 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+68503 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+68508 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+68674 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 110 iterations. Objective: 32507.389, Feasible: true, Primal res.: 0.111732565, Dual res.: 0.0807148
+68680 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 4:2:3:4 -- objective: 0.05201220407944925
+68680 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 63 / 150 (625) -- Inspecting location 2:0:2:0
+68776 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+68776 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+68780 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+70969 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 1400 iterations. Objective: 37407.992, Feasible: true, Primal res.: 2.474551E-4, Dual res.: 0.014192864
+70976 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 2:0:2:0 -- objective: 0.045223125972008366
+70976 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 64 / 150 (625) -- Inspecting location 3:4:4:1
+71071 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+71071 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+71076 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+72061 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 643 iterations. Objective: 37393.703, Feasible: true, Primal res.: 8.322329E-4, Dual res.: 0.0054038167
+72067 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 3:4:4:1 -- objective: 0.047513260908503205
+72067 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 65 / 150 (625) -- Inspecting location 1:2:2:0
+72162 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+72162 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+72167 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+77931 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 3900 iterations. Objective: 37407.836, Feasible: true, Primal res.: 1.00219244E-4, Dual res.: 0.0073175994
+77937 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 1:2:2:0 -- objective: 0.037940377884394944
+77937 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 66 / 150 (625) -- Inspecting location 0:1:0:2
+78033 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+78033 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+78038 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+79165 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 700 iterations. Objective: 37408.0, Feasible: true, Primal res.: 0.0010615175, Dual res.: 0.03866661
+79172 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 0:1:0:2 -- objective: 0.09961374841651234
+79173 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 67 / 150 (625) -- Inspecting location 2:0:3:3
+79266 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+79266 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+79271 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+79474 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 144 iterations. Objective: 37318.348, Feasible: true, Primal res.: 0.0032477863, Dual res.: 0.0109732915
+79480 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 2:0:3:3 -- objective: 0.09318450123897118
+79480 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 68 / 150 (625) -- Inspecting location 2:2:4:2
+79576 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+79576 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+79581 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+80502 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 575 iterations. Objective: 37356.71, Feasible: true, Primal res.: 2.8875054E-4, Dual res.: 0.007617352
+80509 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 2:2:4:2 -- objective: 0.05068863501363063
+80509 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 69 / 150 (625) -- Inspecting location 3:1:1:3
+80606 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+80606 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+80611 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+80723 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 74 iterations. Objective: 36915.227, Feasible: true, Primal res.: 0.015738819, Dual res.: 0.045994554
+80729 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 3:1:1:3 -- objective: 0.05209069760591128
+80729 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 70 / 150 (625) -- Inspecting location 0:1:4:1
+80823 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+80823 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+80828 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+85362 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 2950 iterations. Objective: 37408.0, Feasible: true, Primal res.: 5.1343635E-5, Dual res.: 0.015480618
+85368 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 0:1:4:1 -- objective: 0.07357511802554403
+85368 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 71 / 150 (625) -- Inspecting location 1:4:0:2
+85464 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+85464 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+85469 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+87131 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 1100 iterations. Objective: 37400.062, Feasible: true, Primal res.: 1.1859653E-4, Dual res.: 0.0043381876
+87139 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 1:4:0:2 -- objective: 0.09272329531953119
+87139 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 72 / 150 (625) -- Inspecting location 2:3:4:4
+87235 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+87235 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+87240 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+87476 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 182 iterations. Objective: 37311.5, Feasible: true, Primal res.: 0.00509107, Dual res.: 0.0032037029
+87483 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 2:3:4:4 -- objective: 0.10540071060710349
+87483 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 73 / 150 (625) -- Inspecting location 4:4:3:4
+87580 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+87580 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+87585 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+87749 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 109 iterations. Objective: 32509.688, Feasible: true, Primal res.: 0.11345706, Dual res.: 0.054037813
+87755 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 4:4:3:4 -- objective: 0.052007056407365665
+87755 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 74 / 150 (625) -- Inspecting location 1:0:2:2
+87850 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+87850 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+87855 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+89683 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 1193 iterations. Objective: 37400.07, Feasible: true, Primal res.: 1.0303947E-4, Dual res.: 0.0037727288
+89691 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 1:0:2:2 -- objective: 0.09283229791326879
+89691 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 75 / 150 (625) -- Inspecting location 0:0:2:4
+89789 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+89789 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+89794 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+90020 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 150 iterations. Objective: 37407.188, Feasible: true, Primal res.: 0.0063028224, Dual res.: 8.17077E-4
+90026 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 0:0:2:4 -- objective: 0.1069662017771305
+90026 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 76 / 150 (625) -- Inspecting location 4:3:0:2
+90123 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+90123 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+90128 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+90303 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 130 iterations. Objective: 37272.926, Feasible: true, Primal res.: 0.0319167, Dual res.: 0.023402363
+90310 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 4:3:0:2 -- objective: 0.04417516848623934
+90310 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 77 / 150 (625) -- Inspecting location 3:0:1:3
+90404 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+90404 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+90409 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+90505 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 71 iterations. Objective: 36915.297, Feasible: true, Primal res.: 0.01719669, Dual res.: 0.046169784
+90511 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 3:0:1:3 -- objective: 0.052085925596720976
+90511 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 78 / 150 (625) -- Inspecting location 0:0:1:3
+90608 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+90608 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+90613 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+90874 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 193 iterations. Objective: 37407.19, Feasible: true, Primal res.: 8.68824E-4, Dual res.: 0.0029747682
+90880 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 0:0:1:3 -- objective: 0.10677166132571901
+90880 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 79 / 150 (625) -- Inspecting location 0:3:0:3
+90977 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+90977 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+90982 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+91274 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 188 iterations. Objective: 37407.19, Feasible: true, Primal res.: 8.682344E-4, Dual res.: 0.0029727619
+91280 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 0:3:0:3 -- objective: 0.10676853651676232
+91280 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 80 / 150 (625) -- Inspecting location 3:3:4:4
+91376 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+91376 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+91381 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+91554 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 120 iterations. Objective: 36509.36, Feasible: true, Primal res.: 0.022047695, Dual res.: 0.010082359
+91560 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 3:3:4:4 -- objective: 0.09335777048161707
+91561 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 81 / 150 (625) -- Inspecting location 2:4:0:4
+91659 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+91659 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+91664 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+91890 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 170 iterations. Objective: 37311.43, Feasible: true, Primal res.: 0.004917429, Dual res.: 0.0051827757
+91897 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 2:4:0:4 -- objective: 0.10541105604030084
+91897 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 82 / 150 (625) -- Inspecting location 3:1:0:4
+91992 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+91992 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+91997 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+92146 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 111 iterations. Objective: 36512.656, Feasible: true, Primal res.: 0.022687372, Dual res.: 0.031349197
+92152 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 3:1:0:4 -- objective: 0.09329237424306389
+92152 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 83 / 150 (625) -- Inspecting location 2:2:2:1
+92248 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+92248 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+92253 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+94086 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 1250 iterations. Objective: 37397.38, Feasible: true, Primal res.: 1.7358134E-4, Dual res.: 0.006943425
+94092 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 2:2:2:1 -- objective: 0.03825602633819445
+94092 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 84 / 150 (625) -- Inspecting location 3:1:3:1
+94188 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+94188 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+94193 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+94912 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 450 iterations. Objective: 37395.26, Feasible: true, Primal res.: 7.428275E-4, Dual res.: 0.018845985
+94918 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 3:1:3:1 -- objective: 0.045070315189799315
+94918 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 85 / 150 (625) -- Inspecting location 4:1:2:2
+95013 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+95013 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+95018 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+95472 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 287 iterations. Objective: 37299.77, Feasible: true, Primal res.: 0.0015784499, Dual res.: 0.013341516
+95479 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 4:1:2:2 -- objective: 0.043598013216158
+95479 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 86 / 150 (625) -- Inspecting location 3:1:0:2
+95576 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+95576 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+95581 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+96227 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 386 iterations. Objective: 37316.297, Feasible: true, Primal res.: 6.651564E-4, Dual res.: 0.011439141
+96233 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 3:1:0:2 -- objective: 0.04248786994490827
+96233 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 87 / 150 (625) -- Inspecting location 0:2:3:3
+96328 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+96328 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+96333 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+96633 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 190 iterations. Objective: 37407.19, Feasible: true, Primal res.: 8.6721533E-4, Dual res.: 0.002971156
+96639 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 0:2:3:3 -- objective: 0.10676925231568549
+96639 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 88 / 150 (625) -- Inspecting location 4:4:0:2
+96736 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+96736 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+96740 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+97038 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 194 iterations. Objective: 37267.902, Feasible: true, Primal res.: 0.025610693, Dual res.: 0.026265461
+97044 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 4:4:0:2 -- objective: 0.045374816649880835
+97044 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 89 / 150 (625) -- Inspecting location 3:2:4:2
+97140 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+97140 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+97145 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+97420 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 184 iterations. Objective: 37299.375, Feasible: true, Primal res.: 0.004667445, Dual res.: 0.014809989
+97426 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 3:2:4:2 -- objective: 0.0393891275739982
+97426 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 90 / 150 (625) -- Inspecting location 1:2:3:2
+97523 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+97523 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+97528 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+99506 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 1172 iterations. Objective: 37400.03, Feasible: true, Primal res.: 1.029338E-4, Dual res.: 0.0037685335
+99513 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 1:2:3:2 -- objective: 0.09283041919417391
+99513 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 91 / 150 (625) -- Inspecting location 3:4:0:1
+99609 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+99609 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+99614 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+100742 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 753 iterations. Objective: 37394.176, Feasible: true, Primal res.: 8.4818056E-4, Dual res.: 0.005443747
+100749 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 3:4:0:1 -- objective: 0.04536522981594699
+100749 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 92 / 150 (625) -- Inspecting location 0:3:3:1
+100845 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+100845 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+100850 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+103741 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 2200 iterations. Objective: 37407.992, Feasible: true, Primal res.: 5.9988844E-5, Dual res.: 0.018463407
+103748 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 0:3:3:1 -- objective: 0.06992528189258325
+103748 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 93 / 150 (625) -- Inspecting location 0:1:1:1
+103847 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+103847 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+103852 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+107798 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 2800 iterations. Objective: 37408.0, Feasible: true, Primal res.: 5.1803003E-5, Dual res.: 0.015448239
+107804 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 0:1:1:1 -- objective: 0.07358435072774672
+107804 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 94 / 150 (625) -- Inspecting location 1:3:0:3
+107903 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+107903 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+107908 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+108202 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 181 iterations. Objective: 37398.36, Feasible: true, Primal res.: 0.0010858633, Dual res.: 0.003714418
+108208 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 1:3:0:3 -- objective: 0.10535082669293912
+108208 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 95 / 150 (625) -- Inspecting location 2:4:2:4
+108303 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+108303 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+108308 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+108526 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 168 iterations. Objective: 37311.508, Feasible: true, Primal res.: 0.0049537625, Dual res.: 0.0049315733
+108533 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 2:4:2:4 -- objective: 0.10541516359081707
+108533 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 96 / 150 (625) -- Inspecting location 1:1:2:0
+108630 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+108630 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+108635 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+112640 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 3050 iterations. Objective: 37407.742, Feasible: true, Primal res.: 9.4883726E-5, Dual res.: 0.010279879
+112647 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 1:1:2:0 -- objective: 0.03764990328641299
+112647 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 97 / 150 (625) -- Inspecting location 3:3:3:1
+112745 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+112745 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+112750 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+113335 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 450 iterations. Objective: 37393.797, Feasible: true, Primal res.: 0.0024283633, Dual res.: 0.01961196
+113342 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 3:3:3:1 -- objective: 0.04645399629114605
+113342 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 98 / 150 (625) -- Inspecting location 1:0:1:1
+113439 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+113439 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+113444 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+116756 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 2400 iterations. Objective: 37403.4, Feasible: true, Primal res.: 6.500143E-5, Dual res.: 0.009417739
+116763 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 1:0:1:1 -- objective: 0.04888859491932204
+116763 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 99 / 150 (625) -- Inspecting location 1:1:2:1
+116858 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+116858 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+116863 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+118803 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 1500 iterations. Objective: 37403.027, Feasible: true, Primal res.: 7.857956E-5, Dual res.: 0.014831234
+118809 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 1:1:2:1 -- objective: 0.0475543732380983
+118809 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 100 / 150 (625) -- Inspecting location 1:2:1:2
+118905 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+118905 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+118910 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+120890 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 1167 iterations. Objective: 37400.06, Feasible: true, Primal res.: 1.0291804E-4, Dual res.: 0.0037667835
+120897 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 1:2:1:2 -- objective: 0.09281691821991492
+120897 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 101 / 150 (625) -- Inspecting location 2:4:0:2
+120993 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+120993 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+120998 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+121614 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 450 iterations. Objective: 37358.82, Feasible: true, Primal res.: 5.864667E-4, Dual res.: 0.017124576
+121621 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 2:4:0:2 -- objective: 0.05163427562449992
+121621 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 102 / 150 (625) -- Inspecting location 4:3:2:1
+121720 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+121721 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+121725 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+122096 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 279 iterations. Objective: 37393.06, Feasible: true, Primal res.: 7.154546E-4, Dual res.: 0.0062025944
+122102 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 4:3:2:1 -- objective: 0.051585877168642304
+122102 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 103 / 150 (625) -- Inspecting location 1:3:2:4
+122198 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+122198 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+122203 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+122424 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 169 iterations. Objective: 37398.25, Feasible: true, Primal res.: 0.003012467, Dual res.: 0.0029409972
+122430 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 1:3:2:4 -- objective: 0.10681580166565385
+122430 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 104 / 150 (625) -- Inspecting location 4:0:2:2
+122526 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+122526 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+122531 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+123190 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 371 iterations. Objective: 37302.965, Feasible: true, Primal res.: 0.0017557739, Dual res.: 0.012533578
+123196 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 4:0:2:2 -- objective: 0.04440110055583462
+123196 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 105 / 150 (625) -- Inspecting location 0:4:1:3
+123291 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+123291 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+123296 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+123583 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 187 iterations. Objective: 37407.19, Feasible: true, Primal res.: 8.774008E-4, Dual res.: 0.0030042694
+123589 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 0:4:1:3 -- objective: 0.10676811502099977
+123589 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 106 / 150 (625) -- Inspecting location 1:4:3:0
+123685 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+123685 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+123690 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+129384 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 3850 iterations. Objective: 37407.82, Feasible: true, Primal res.: 1.6900127E-4, Dual res.: 0.0076479823
+129390 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 1:4:3:0 -- objective: 0.03777253057759653
+129390 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 107 / 150 (625) -- Inspecting location 3:0:4:2
+129486 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+129486 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+129491 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+129785 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 218 iterations. Objective: 37301.83, Feasible: true, Primal res.: 0.0030078804, Dual res.: 0.013867947
+129792 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 3:0:4:2 -- objective: 0.040929305140507764
+129792 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 108 / 150 (625) -- Inspecting location 1:4:1:4
+129887 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+129887 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+129892 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+130150 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 169 iterations. Objective: 37398.254, Feasible: true, Primal res.: 0.0030818603, Dual res.: 0.0031896767
+130157 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 1:4:1:4 -- objective: 0.10681573778544956
+130157 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 109 / 150 (625) -- Inspecting location 2:0:3:0
+130254 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+130254 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+130259 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+132194 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 1400 iterations. Objective: 37407.992, Feasible: true, Primal res.: 2.4286148E-4, Dual res.: 0.012670306
+132200 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 2:0:3:0 -- objective: 0.045575980959612065
+132201 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 110 / 150 (625) -- Inspecting location 0:3:0:1
+132297 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+132298 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+132302 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+135788 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 2500 iterations. Objective: 37407.992, Feasible: true, Primal res.: 5.4534536E-5, Dual res.: 0.016678736
+135795 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 0:3:0:1 -- objective: 0.07208781285355974
+135796 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 111 / 150 (625) -- Inspecting location 3:3:4:1
+135890 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+135890 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+135895 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+136870 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 650 iterations. Objective: 37393.7, Feasible: true, Primal res.: 6.9998426E-4, Dual res.: 0.005519682
+136876 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 3:3:4:1 -- objective: 0.04737623658128533
+136876 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 112 / 150 (625) -- Inspecting location 3:2:0:3
+136971 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+136972 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+136976 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+137072 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 72 iterations. Objective: 36915.457, Feasible: true, Primal res.: 0.015843056, Dual res.: 0.044969354
+137078 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 3:2:0:3 -- objective: 0.052108035282584064
+137078 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 113 / 150 (625) -- Inspecting location 1:1:3:2
+137175 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+137175 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+137180 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+139217 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 1183 iterations. Objective: 37400.027, Feasible: true, Primal res.: 1.0324224E-4, Dual res.: 0.0037759028
+139224 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 1:1:3:2 -- objective: 0.09283339239158138
+139224 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 114 / 150 (625) -- Inspecting location 3:0:2:2
+139322 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+139322 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+139327 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+139868 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 363 iterations. Objective: 37313.04, Feasible: true, Primal res.: 7.457797E-4, Dual res.: 0.011617014
+139875 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 3:0:2:2 -- objective: 0.04183493170915439
+139875 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 115 / 150 (625) -- Inspecting location 3:4:4:4
+139970 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+139971 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+139975 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+140159 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 120 iterations. Objective: 36509.33, Feasible: true, Primal res.: 0.022127377, Dual res.: 0.009714428
+140165 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 3:4:4:4 -- objective: 0.09336007264893965
+140165 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 116 / 150 (625) -- Inspecting location 3:4:3:3
+140261 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+140261 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+140266 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+140344 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 57 iterations. Objective: 36904.45, Feasible: true, Primal res.: 0.01975691, Dual res.: 0.04789249
+140351 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 3:4:3:3 -- objective: 0.051160904042789904
+140351 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 117 / 150 (625) -- Inspecting location 0:1:1:2
+140446 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+140446 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+140451 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+141598 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 700 iterations. Objective: 37408.0, Feasible: true, Primal res.: 0.0010282762, Dual res.: 0.037394926
+141606 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 0:1:1:2 -- objective: 0.09947017307975754
+141606 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 118 / 150 (625) -- Inspecting location 2:0:4:4
+141703 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+141703 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+141708 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+141982 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 193 iterations. Objective: 37311.47, Feasible: true, Primal res.: 0.0050414554, Dual res.: 0.002294517
+141988 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 2:0:4:4 -- objective: 0.10540085430808217
+141988 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 119 / 150 (625) -- Inspecting location 3:3:1:1
+142086 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+142086 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+142091 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+143087 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 771 iterations. Objective: 37394.234, Feasible: true, Primal res.: 5.844626E-4, Dual res.: 0.0053753518
+143094 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 3:3:1:1 -- objective: 0.045222514501437404
+143094 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 120 / 150 (625) -- Inspecting location 4:2:4:4
+143188 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+143188 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+143193 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+143371 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 118 iterations. Objective: 32407.334, Feasible: true, Primal res.: 0.10767237, Dual res.: 0.03699393
+143378 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 4:2:4:4 -- objective: 0.05130865504928489
+143378 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 121 / 150 (625) -- Inspecting location 2:3:2:4
+143475 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+143475 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+143480 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+143704 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 169 iterations. Objective: 37311.5, Feasible: true, Primal res.: 0.0050361655, Dual res.: 0.0045320042
+143710 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 2:3:2:4 -- objective: 0.10541335100179709
+143710 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 122 / 150 (625) -- Inspecting location 0:1:4:3
+143807 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+143807 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+143812 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+144114 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 228 iterations. Objective: 37407.188, Feasible: true, Primal res.: 0.0031409862, Dual res.: 7.210356E-4
+144121 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 0:1:4:3 -- objective: 0.10680142018307907
+144121 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 123 / 150 (625) -- Inspecting location 1:0:3:4
+144216 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+144216 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+144221 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+144477 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 168 iterations. Objective: 37398.25, Feasible: true, Primal res.: 0.0031206177, Dual res.: 0.0026937386
+144483 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 1:0:3:4 -- objective: 0.10681830152129897
+144483 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 124 / 150 (625) -- Inspecting location 0:4:3:2
+144578 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+144578 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+144583 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+145546 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 600 iterations. Objective: 37408.0, Feasible: true, Primal res.: 0.0012408047, Dual res.: 0.044950265
+145553 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 0:4:3:2 -- objective: 0.09769278729291317
+145553 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 125 / 150 (625) -- Inspecting location 0:4:1:2
+145648 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+145648 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+145654 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+146617 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 600 iterations. Objective: 37408.0, Feasible: true, Primal res.: 0.0012640161, Dual res.: 0.04587446
+146624 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 0:4:1:2 -- objective: 0.0975973393111004
+146624 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 126 / 150 (625) -- Inspecting location 4:1:3:1
+146720 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+146720 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+146725 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+147409 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 400 iterations. Objective: 37394.37, Feasible: true, Primal res.: 5.912664E-4, Dual res.: 0.014982298
+147416 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 4:1:3:1 -- objective: 0.04725909619484255
+147416 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 127 / 150 (625) -- Inspecting location 1:0:2:1
+147511 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+147511 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+147516 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+149811 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 1700 iterations. Objective: 37402.996, Feasible: true, Primal res.: 8.2285726E-5, Dual res.: 0.015545411
+149817 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 1:0:2:1 -- objective: 0.047312107602984474
+149817 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 128 / 150 (625) -- Inspecting location 1:3:1:4
+149914 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+149914 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+149919 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+150179 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 170 iterations. Objective: 37398.254, Feasible: true, Primal res.: 0.003116364, Dual res.: 0.0031682346
+150185 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 1:3:1:4 -- objective: 0.10681620416979722
+150185 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 129 / 150 (625) -- Inspecting location 3:0:3:4
+150280 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+150280 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+150285 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+150430 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 109 iterations. Objective: 36512.367, Feasible: true, Primal res.: 0.02193756, Dual res.: 0.03196045
+150436 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 3:0:3:4 -- objective: 0.09327323353807364
+150436 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 130 / 150 (625) -- Inspecting location 1:4:0:4
+150535 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+150535 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+150540 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+150799 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 169 iterations. Objective: 37398.25, Feasible: true, Primal res.: 0.0030132749, Dual res.: 0.0032242932
+150805 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 1:4:0:4 -- objective: 0.106815377218606
+150805 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 131 / 150 (625) -- Inspecting location 3:2:2:1
+150899 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+150899 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+150904 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+152223 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 846 iterations. Objective: 37394.246, Feasible: true, Primal res.: 3.5317754E-4, Dual res.: 0.0050622653
+152230 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 3:2:2:1 -- objective: 0.04486561377356185
+152230 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 132 / 150 (625) -- Inspecting location 3:3:1:2
+152324 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+152324 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+152329 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+152583 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 198 iterations. Objective: 37306.773, Feasible: true, Primal res.: 0.0028989615, Dual res.: 0.013880192
+152590 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 3:3:1:2 -- objective: 0.03831590473837269
+152590 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 133 / 150 (625) -- Inspecting location 2:4:4:1
+152686 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+152686 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+152691 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+154701 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 1550 iterations. Objective: 37396.797, Feasible: true, Primal res.: 1.8856135E-4, Dual res.: 0.004366194
+154708 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 2:4:4:1 -- objective: 0.038548601533380404
+154708 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 134 / 150 (625) -- Inspecting location 4:4:2:2
+154806 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+154806 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+154811 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+155058 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 188 iterations. Objective: 37267.523, Feasible: true, Primal res.: 0.023525473, Dual res.: 0.026034331
+155065 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 4:4:2:2 -- objective: 0.045425993448343964
+155065 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 135 / 150 (625) -- Inspecting location 4:4:3:3
+155164 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+155164 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+155169 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+155280 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 70 iterations. Objective: 36387.723, Feasible: true, Primal res.: 0.18022534, Dual res.: 0.106511995
+155287 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 4:4:3:3 -- objective: 0.038232138620988856
+155287 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 136 / 150 (625) -- Inspecting location 3:1:2:1
+155381 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+155381 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+155386 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+156105 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 450 iterations. Objective: 37395.555, Feasible: true, Primal res.: 0.0010368503, Dual res.: 0.02468238
+156111 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 3:1:2:1 -- objective: 0.04312511137280606
+156111 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 137 / 150 (625) -- Inspecting location 2:1:3:4
+156209 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+156209 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+156214 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+156469 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 170 iterations. Objective: 37311.54, Feasible: true, Primal res.: 0.0049857115, Dual res.: 0.004295106
+156475 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 2:1:3:4 -- objective: 0.10541312087726666
+156475 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 138 / 150 (625) -- Inspecting location 3:1:2:4
+156570 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+156570 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+156575 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+156742 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 110 iterations. Objective: 36512.812, Feasible: true, Primal res.: 0.021670477, Dual res.: 0.031487998
+156748 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 3:1:2:4 -- objective: 0.09328447248161706
+156748 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 139 / 150 (625) -- Inspecting location 0:0:4:0
+156845 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+156845 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+156850 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+157093 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 150 iterations. Objective: 37407.99, Feasible: true, Primal res.: 0.07067386, Dual res.: 0.08572764
+157099 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 0:0:4:0 -- objective: 0.20006030115634038
+157099 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 140 / 150 (625) -- Inspecting location 0:2:1:2
+157195 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+157195 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+157200 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+158177 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 650 iterations. Objective: 37408.0, Feasible: true, Primal res.: 0.001145231, Dual res.: 0.04159067
+158184 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 0:2:1:2 -- objective: 0.09865251485050293
+158184 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 141 / 150 (625) -- Inspecting location 1:3:1:2
+158279 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+158279 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+158284 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+160019 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 1142 iterations. Objective: 37400.055, Feasible: true, Primal res.: 1.0304708E-4, Dual res.: 0.0037663807
+160027 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 1:3:1:2 -- objective: 0.09280213690374735
+160027 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 142 / 150 (625) -- Inspecting location 0:0:1:1
+160126 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+160126 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+160131 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+164406 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 3100 iterations. Objective: 37407.992, Feasible: true, Primal res.: 5.102874E-5, Dual res.: 0.015267297
+164412 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 0:0:1:1 -- objective: 0.07449854644826509
+164413 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 143 / 150 (625) -- Inspecting location 2:2:4:3
+164509 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+164509 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+164514 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+164713 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 145 iterations. Objective: 37318.152, Feasible: true, Primal res.: 0.019568369, Dual res.: 0.011022245
+164720 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 2:2:4:3 -- objective: 0.09320274938273557
+164720 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 144 / 150 (625) -- Inspecting location 2:1:1:4
+164816 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+164817 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+164821 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+165084 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 174 iterations. Objective: 37311.344, Feasible: true, Primal res.: 0.0051135197, Dual res.: 0.0045912443
+165090 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 2:1:1:4 -- objective: 0.10540925787393673
+165090 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 145 / 150 (625) -- Inspecting location 4:0:2:0
+165186 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+165186 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+165191 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+166164 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 650 iterations. Objective: 37407.527, Feasible: true, Primal res.: 5.333165E-4, Dual res.: 0.03172849
+166171 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 4:0:2:0 -- objective: 0.06830420610467422
+166171 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 146 / 150 (625) -- Inspecting location 4:0:4:3
+166266 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+166266 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+166271 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+166414 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 88 iterations. Objective: 36370.027, Feasible: true, Primal res.: 0.122532606, Dual res.: 0.10271912
+166420 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 4:0:4:3 -- objective: 0.04057908328099764
+166420 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 147 / 150 (625) -- Inspecting location 2:1:0:1
+166516 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+166516 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+166521 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+168455 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 1250 iterations. Objective: 37398.24, Feasible: true, Primal res.: 1.1293661E-4, Dual res.: 0.006308888
+168461 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 2:1:0:1 -- objective: 0.03940820977993595
+168461 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 148 / 150 (625) -- Inspecting location 0:2:4:0
+168556 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+168556 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+168561 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+168862 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 200 iterations. Objective: 37408.0, Feasible: true, Primal res.: 0.011876759, Dual res.: 0.0711126
+168869 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 0:2:4:0 -- objective: 0.17003373740638172
+168869 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Iteration 149 / 150 (625) -- Inspecting location 2:1:2:4
+168966 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+168966 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+168971 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+169229 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 172 iterations. Objective: 37311.42, Feasible: true, Primal res.: 0.0050039496, Dual res.: 0.0043744557
+169235 [main] DEBUG org.linqs.psl.application.learning.weight.search.grid.BaseGridSearch  - Location 2:1:2:4 -- objective: 0.10541080873812986
+169235 [main] INFO  org.linqs.psl.cli.Launcher  - Weight learning complete
+169235 [main] INFO  org.linqs.psl.cli.Launcher  - Writing learned model to friendship-learned.psl
+Running PSL Inference
+0    [main] DEBUG org.linqs.psl.config.Config  - Configuration stream loaded: project.properties
+4    [main] DEBUG org.linqs.psl.config.Config  - Configuration stream loaded: git.properties
+12   [main] DEBUG org.linqs.psl.config.Config  - Configuration stream loaded: classlist.properties
+13   [main] DEBUG org.linqs.psl.config.Config  - PSL configuration psl.properties file not found. Only default values will be used unless additional properties are specified.
+13   [main] DEBUG org.linqs.psl.config.Config  - Set option gpp.maxiterations to 50.
+13   [main] DEBUG org.linqs.psl.config.Config  - Set option log4j.threshold to DEBUG.
+13   [main] DEBUG org.linqs.psl.config.Config  - Found value 2.2.0-SNAPSHOT for option project.version.
+18   [main] DEBUG org.linqs.psl.config.Config  - Found value b35f97a for option git.commit.id.abbrev.
+18   [main] DEBUG org.linqs.psl.config.Config  - Found value false for option git.dirty.
+18   [main] INFO  org.linqs.psl.cli.Launcher  - Running PSL CLI Version 2.2.0-SNAPSHOT-b35f97a
+24   [main] DEBUG org.linqs.psl.database.rdbms.driver.PostgreSQLDriver  - Connecting to PostgreSQL database: vg_psl_experiments
+25   [main] DEBUG org.linqs.psl.config.Config  - No value found for option postgres.statspercentage. Returning default of 0.25.
+27   [main] DEBUG org.linqs.psl.config.Config  - No value found for option parallel.numthreads. Returning default of 4.
+139  [main] INFO  org.linqs.psl.cli.Launcher  - Loading data
+202  [main] DEBUG org.linqs.psl.cli.DataLoader  - Loading data for Block (observations partition)
+208  [main] DEBUG org.linqs.psl.cli.DataLoader  - Loading data for Similar (observations partition)
+272  [main] DEBUG org.linqs.psl.cli.DataLoader  - Loading data for Friends (targets partition)
+331  [main] DEBUG org.linqs.psl.cli.DataLoader  - Loading data for Friends (truth partition)
+395  [main] INFO  org.linqs.psl.cli.Launcher  - Data loading complete
+395  [main] INFO  org.linqs.psl.cli.Launcher  - Loading model from friendship-learned.psl
+464  [main] DEBUG org.linqs.psl.cli.Launcher  - Model:
+0.01: ( BLOCK(P2, A) & (P1 != P2) & BLOCK(P1, A) & SIMILAR(P1, P2) ) >> FRIENDS(P1, P2) ^2
+0.1: ( BLOCK(P2, A) & BLOCK(P3, A) & (P1 != P2) & FRIENDS(P2, P3) & (P2 != P3) & (P1 != P3) & BLOCK(P1, A) & FRIENDS(P1, P2) ) >> FRIENDS(P1, P3) ^2
+0.01: ( BLOCK(P2, A) & (P1 != P2) & BLOCK(P1, A) & FRIENDS(P1, P2) ) >> FRIENDS(P2, P1) ^2
+0.001: ~( FRIENDS(P1, P2) ) ^2
+464  [main] INFO  org.linqs.psl.cli.Launcher  - Model loading complete
+464  [main] INFO  org.linqs.psl.cli.Launcher  - Starting inference with class: org.linqs.psl.application.inference.MPEInference
+465  [main] DEBUG org.linqs.psl.database.rdbms.RDBMSDataStore  - Indexing predicates.
+789  [main] DEBUG org.linqs.psl.database.rdbms.RDBMSDataStore  - Predicate indexing complete.
+791  [main] DEBUG org.linqs.psl.config.Config  - No value found for option rdbmsdatabase.fetchsize. Returning default of 500.
+793  [main] DEBUG org.linqs.psl.config.Config  - No value found for option inference.reasoner. Returning default of org.linqs.psl.reasoner.admm.ADMMReasoner.
+794  [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.maxiterations. Returning default of 25000.
+794  [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.stepsize. Returning default of 1.0.
+794  [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.computeperiod. Returning default of 50.
+795  [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.objectivebreak. Returning default of true.
+795  [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.epsilonabs. Returning default of 1.0E-5.
+795  [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.epsilonrel. Returning default of 0.001.
+795  [main] DEBUG org.linqs.psl.config.Config  - No value found for option inference.termstore. Returning default of org.linqs.psl.reasoner.admm.term.ADMMTermStore.
+795  [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmmemorytermstore.internalstore. Returning default of org.linqs.psl.reasoner.term.MemoryTermStore.
+795  [main] DEBUG org.linqs.psl.config.Config  - No value found for option memorytermstore.initialsize. Returning default of 5000.
+795  [main] DEBUG org.linqs.psl.config.Config  - No value found for option inference.groundrulestore. Returning default of org.linqs.psl.application.groundrulestore.MemoryGroundRuleStore.
+795  [main] DEBUG org.linqs.psl.config.Config  - No value found for option inference.termgenerator. Returning default of org.linqs.psl.reasoner.admm.term.ADMMTermGenerator.
+797  [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmtermgenerator.invertnegativeweights. Returning default of false.
+797  [main] DEBUG org.linqs.psl.application.inference.MPEInference  - Creating persisted atom mannager.
+797  [main] DEBUG org.linqs.psl.config.Config  - No value found for option persistedatommanager.throwaccessexception. Returning default of true.
+931  [main] INFO  org.linqs.psl.application.inference.MPEInference  - Grounding out model.
+931  [main] DEBUG org.linqs.psl.config.Config  - No value found for option grounding.rewritequeries. Returning default of false.
+932  [main] DEBUG org.linqs.psl.application.util.Grounding  - Grounding 1 rules with query: [( BLOCK(P2, A) & (P1 != P2) & BLOCK(P1, A) & FRIENDS(P1, P2) )].
+1004 [main] DEBUG org.linqs.psl.application.util.Grounding  - Generated 3644 ground rules with query: [( BLOCK(P2, A) & (P1 != P2) & BLOCK(P1, A) & FRIENDS(P1, P2) )].
+1005 [main] DEBUG org.linqs.psl.application.util.Grounding  - Grounding 1 rules with query: [( BLOCK(P2, A) & (P1 != P2) & BLOCK(P1, A) & SIMILAR(P1, P2) )].
+1049 [main] DEBUG org.linqs.psl.application.util.Grounding  - Generated 3629 ground rules with query: [( BLOCK(P2, A) & (P1 != P2) & BLOCK(P1, A) & SIMILAR(P1, P2) )].
+1049 [main] DEBUG org.linqs.psl.application.util.Grounding  - Grounding 1 rules with query: [( BLOCK(P2, A) & BLOCK(P3, A) & (P1 != P2) & FRIENDS(P2, P3) & (P2 != P3) & (P1 != P3) & BLOCK(P1, A) & FRIENDS(P1, P2) )].
+1474 [main] DEBUG org.linqs.psl.application.util.Grounding  - Generated 86028 ground rules with query: [( BLOCK(P2, A) & BLOCK(P3, A) & (P1 != P2) & FRIENDS(P2, P3) & (P2 != P3) & (P1 != P3) & BLOCK(P1, A) & FRIENDS(P1, P2) )].
+1474 [main] DEBUG org.linqs.psl.application.util.Grounding  - Grounding 1 rules with query: [FRIENDS(P1, P2)].
+1547 [main] DEBUG org.linqs.psl.application.util.Grounding  - Generated 22350 ground rules with query: [FRIENDS(P1, P2)].
+1547 [main] DEBUG org.linqs.psl.application.inference.MPEInference  - Initializing objective terms for 115651 ground rules.
+1867 [main] DEBUG org.linqs.psl.application.inference.MPEInference  - Generated 115651 objective terms from 115651 ground rules.
+1867 [main] INFO  org.linqs.psl.application.inference.MPEInference  - Beginning inference.
+1868 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+1868 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+1869 [main] DEBUG org.linqs.psl.config.Config  - No value found for option random.seed. Returning default of 4.
+1903 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 22350 variables and 115651 terms.
+25544 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 4900 iterations. Objective: 115649.81, Feasible: true, Primal res.: 2.7491924E-4, Dual res.: 0.010811863
+25551 [main] INFO  org.linqs.psl.application.inference.MPEInference  - Inference complete. Writing results to Database.
+26140 [main] INFO  org.linqs.psl.application.inference.MPEInference  - Results committed to database.
+26140 [main] INFO  org.linqs.psl.cli.Launcher  - Inference Complete
+26397 [main] INFO  org.linqs.psl.cli.Launcher  - Starting evaluation with class: org.linqs.psl.evaluation.statistics.DiscreteEvaluator.
+26399 [main] DEBUG org.linqs.psl.config.Config  - No value found for option rdbmsdatabase.fetchsize. Returning default of 500.
+26400 [main] DEBUG org.linqs.psl.config.Config  - No value found for option discreteevaluator.threshold. Returning default of 0.5.
+26400 [main] DEBUG org.linqs.psl.config.Config  - No value found for option discreteevaluator.representative. Returning default of F1.
+26403 [main] DEBUG org.linqs.psl.config.Config  - No value found for option persistedatommanager.throwaccessexception. Returning default of true.
+27767 [main] INFO  org.linqs.psl.cli.Launcher  - Evaluation results for FRIENDS -- Accuracy: 0.941119, F1: 0.771686, Positive Class Precision: 0.665271, Positive Class Recall: 0.918629, Negative Class Precision: 0.989635, Negative Class Recall: 0.943851
+27767 [main] INFO  org.linqs.psl.cli.Launcher  - Evaluation complete.

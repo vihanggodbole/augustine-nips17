@@ -1,0 +1,401 @@
+Running PSL Weight Learning
+0    [main] DEBUG org.linqs.psl.config.Config  - Configuration stream loaded: project.properties
+4    [main] DEBUG org.linqs.psl.config.Config  - Configuration stream loaded: git.properties
+12   [main] DEBUG org.linqs.psl.config.Config  - Configuration stream loaded: classlist.properties
+13   [main] DEBUG org.linqs.psl.config.Config  - PSL configuration psl.properties file not found. Only default values will be used unless additional properties are specified.
+13   [main] DEBUG org.linqs.psl.config.Config  - Set option gpp.maxiterations to 50.
+13   [main] DEBUG org.linqs.psl.config.Config  - Set option log4j.threshold to DEBUG.
+13   [main] DEBUG org.linqs.psl.config.Config  - Found value 2.2.0-SNAPSHOT for option project.version.
+18   [main] DEBUG org.linqs.psl.config.Config  - Found value b35f97a for option git.commit.id.abbrev.
+18   [main] DEBUG org.linqs.psl.config.Config  - Found value false for option git.dirty.
+18   [main] INFO  org.linqs.psl.cli.Launcher  - Running PSL CLI Version 2.2.0-SNAPSHOT-b35f97a
+24   [main] DEBUG org.linqs.psl.database.rdbms.driver.PostgreSQLDriver  - Connecting to PostgreSQL database: vg_psl_experiments
+25   [main] DEBUG org.linqs.psl.config.Config  - No value found for option postgres.statspercentage. Returning default of 0.25.
+27   [main] DEBUG org.linqs.psl.config.Config  - No value found for option parallel.numthreads. Returning default of 4.
+145  [main] INFO  org.linqs.psl.cli.Launcher  - Loading data
+207  [main] DEBUG org.linqs.psl.cli.DataLoader  - Loading data for Block (observations partition)
+212  [main] DEBUG org.linqs.psl.cli.DataLoader  - Loading data for Similar (observations partition)
+241  [main] DEBUG org.linqs.psl.cli.DataLoader  - Loading data for Friends (targets partition)
+268  [main] DEBUG org.linqs.psl.cli.DataLoader  - Loading data for Friends (truth partition)
+296  [main] INFO  org.linqs.psl.cli.Launcher  - Data loading complete
+296  [main] INFO  org.linqs.psl.cli.Launcher  - Loading model from friendship.psl
+362  [main] DEBUG org.linqs.psl.cli.Launcher  - Model:
+1.0: ( BLOCK(P2, A) & (P1 != P2) & BLOCK(P1, A) & SIMILAR(P1, P2) ) >> FRIENDS(P1, P2) ^2
+1.0: ( BLOCK(P2, A) & BLOCK(P3, A) & (P1 != P2) & (P2 != P3) & (P1 != P3) & FRIENDS(P2, P3) & BLOCK(P1, A) & FRIENDS(P1, P2) ) >> FRIENDS(P1, P3) ^2
+1.0: ( BLOCK(P2, A) & (P1 != P2) & BLOCK(P1, A) & FRIENDS(P1, P2) ) >> FRIENDS(P2, P1) ^2
+1.0: ~( FRIENDS(P1, P2) ) ^2
+362  [main] INFO  org.linqs.psl.cli.Launcher  - Model loading complete
+362  [main] INFO  org.linqs.psl.cli.Launcher  - Starting weight learning with learner: org.linqs.psl.application.learning.weight.bayesian.GaussianProcessPrior
+363  [main] DEBUG org.linqs.psl.database.rdbms.RDBMSDataStore  - Indexing predicates.
+544  [main] DEBUG org.linqs.psl.database.rdbms.RDBMSDataStore  - Predicate indexing complete.
+545  [main] DEBUG org.linqs.psl.config.Config  - No value found for option rdbmsdatabase.fetchsize. Returning default of 500.
+546  [main] DEBUG org.linqs.psl.config.Config  - No value found for option rdbmsdatabase.fetchsize. Returning default of 500.
+549  [main] DEBUG org.linqs.psl.config.Config  - No value found for option weightlearning.evaluator. Returning default of org.linqs.psl.evaluation.statistics.ContinuousEvaluator.
+549  [main] DEBUG org.linqs.psl.config.Config  - No value found for option continuousevaluator.representative. Returning default of MSE.
+549  [main] DEBUG org.linqs.psl.config.Config  - No value found for option gpp.kernel. Returning default of SQUARED_EXP.
+549  [main] DEBUG org.linqs.psl.config.Config  - Found value 50 for option gpp.maxiterations.
+549  [main] DEBUG org.linqs.psl.config.Config  - No value found for option gpp.maxconfigs. Returning default of 1000000.
+549  [main] DEBUG org.linqs.psl.config.Config  - No value found for option gpp.explore. Returning default of 2.0.
+549  [main] DEBUG org.linqs.psl.config.Config  - No value found for option gpp.randomConfigsOnly. Returning default of true.
+549  [main] DEBUG org.linqs.psl.config.Config  - No value found for option gpp.earlyStopping. Returning default of true.
+550  [main] DEBUG org.linqs.psl.config.Config  - No value found for option gppker.space. Returning default of SS.
+550  [main] DEBUG org.linqs.psl.config.Config  - No value found for option persistedatommanager.throwaccessexception. Returning default of true.
+926  [main] DEBUG org.linqs.psl.config.Config  - No value found for option weightlearning.groundrulestore. Returning default of org.linqs.psl.application.groundrulestore.MemoryGroundRuleStore.
+926  [main] INFO  org.linqs.psl.application.learning.weight.WeightLearningApplication  - Grounding out model.
+927  [main] DEBUG org.linqs.psl.config.Config  - No value found for option grounding.rewritequeries. Returning default of false.
+927  [main] DEBUG org.linqs.psl.application.util.Grounding  - Grounding 1 rules with query: [( BLOCK(P2, A) & BLOCK(P3, A) & (P1 != P2) & (P2 != P3) & (P1 != P3) & FRIENDS(P2, P3) & BLOCK(P1, A) & FRIENDS(P1, P2) )].
+1109 [main] DEBUG org.linqs.psl.application.util.Grounding  - Generated 24330 ground rules with query: [( BLOCK(P2, A) & BLOCK(P3, A) & (P1 != P2) & (P2 != P3) & (P1 != P3) & FRIENDS(P2, P3) & BLOCK(P1, A) & FRIENDS(P1, P2) )].
+1109 [main] DEBUG org.linqs.psl.application.util.Grounding  - Grounding 1 rules with query: [( BLOCK(P2, A) & (P1 != P2) & BLOCK(P1, A) & FRIENDS(P1, P2) )].
+1125 [main] DEBUG org.linqs.psl.application.util.Grounding  - Generated 1596 ground rules with query: [( BLOCK(P2, A) & (P1 != P2) & BLOCK(P1, A) & FRIENDS(P1, P2) )].
+1125 [main] DEBUG org.linqs.psl.application.util.Grounding  - Grounding 1 rules with query: [( BLOCK(P2, A) & (P1 != P2) & BLOCK(P1, A) & SIMILAR(P1, P2) )].
+1140 [main] DEBUG org.linqs.psl.application.util.Grounding  - Generated 1582 ground rules with query: [( BLOCK(P2, A) & (P1 != P2) & BLOCK(P1, A) & SIMILAR(P1, P2) )].
+1140 [main] DEBUG org.linqs.psl.application.util.Grounding  - Grounding 1 rules with query: [FRIENDS(P1, P2)].
+1171 [main] DEBUG org.linqs.psl.application.util.Grounding  - Generated 9900 ground rules with query: [FRIENDS(P1, P2)].
+1171 [main] DEBUG org.linqs.psl.config.Config  - No value found for option weightlearning.termstore. Returning default of org.linqs.psl.reasoner.admm.term.ADMMTermStore.
+1171 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmmemorytermstore.internalstore. Returning default of org.linqs.psl.reasoner.term.MemoryTermStore.
+1172 [main] DEBUG org.linqs.psl.config.Config  - No value found for option memorytermstore.initialsize. Returning default of 5000.
+1172 [main] DEBUG org.linqs.psl.config.Config  - No value found for option weightlearning.termgenerator. Returning default of org.linqs.psl.reasoner.admm.term.ADMMTermGenerator.
+1173 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmtermgenerator.invertnegativeweights. Returning default of false.
+1173 [main] DEBUG org.linqs.psl.application.learning.weight.WeightLearningApplication  - Initializing objective terms for 37408 ground rules.
+1348 [main] DEBUG org.linqs.psl.application.learning.weight.WeightLearningApplication  - Generated 37408 objective terms from 37408 ground rules.
+1991 [main] DEBUG org.linqs.psl.config.Config  - No value found for option weightlearning.reasoner. Returning default of org.linqs.psl.reasoner.admm.ADMMReasoner.
+1992 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.maxiterations. Returning default of 25000.
+1992 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.stepsize. Returning default of 1.0.
+1992 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.computeperiod. Returning default of 50.
+1992 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.objectivebreak. Returning default of true.
+1992 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.epsilonabs. Returning default of 1.0E-5.
+1992 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.epsilonrel. Returning default of 0.001.
+1992 [main] DEBUG org.linqs.psl.config.Config  - No value found for option weightlearning.randomweights. Returning default of false.
+1992 [main] DEBUG org.linqs.psl.config.Config  - No value found for option gppker.scale. Returning default of 1.0.
+1992 [main] DEBUG org.linqs.psl.config.Config  - No value found for option gppker.reldep. Returning default of 1.0.
+1992 [main] DEBUG org.linqs.psl.config.Config  - No value found for option gppker.space. Returning default of SS.
+1992 [main] DEBUG org.linqs.psl.application.learning.weight.bayesian.GaussianProcessPrior  - Generating random configs.
+1993 [main] DEBUG org.linqs.psl.config.Config  - No value found for option random.seed. Returning default of 4.
+2471 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+2471 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+2489 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+2961 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 112 iterations. Objective: 37144.246, Feasible: true, Primal res.: 0.0056609553, Dual res.: 0.026711816
+2971 [main] INFO  org.linqs.psl.application.learning.weight.bayesian.GaussianProcessPrior  - Iteration 1 -- Config Picked: (weights: [0.68971866, 0.4899145, 0.729233, 0.4101556], val: -0.044332, std: 0.000000), Curent Best Config: (weights: [0.68971866, 0.4899145, 0.729233, 0.4101556], val: -0.044332, std: 0.000000).
+3970 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+3970 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+3981 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+4314 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 150 iterations. Objective: 37408.0, Feasible: true, Primal res.: 0.004421459, Dual res.: 0.015533554
+4321 [main] INFO  org.linqs.psl.application.learning.weight.bayesian.GaussianProcessPrior  - Iteration 2 -- Config Picked: (weights: [1.68E-6, 0.75208545, 0.93085814, 0.9762458], val: -0.106731, std: 0.000000), Curent Best Config: (weights: [0.68971866, 0.4899145, 0.729233, 0.4101556], val: -0.044332, std: 0.000000).
+5596 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+5596 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+5603 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+5934 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 195 iterations. Objective: 37239.44, Feasible: true, Primal res.: 0.0022521159, Dual res.: 0.017949082
+5941 [main] INFO  org.linqs.psl.application.learning.weight.bayesian.GaussianProcessPrior  - Iteration 3 -- Config Picked: (weights: [0.35529825, 0.71291286, 5.9E-7, 0.33001202], val: -0.050999, std: 0.000000), Curent Best Config: (weights: [0.68971866, 0.4899145, 0.729233, 0.4101556], val: -0.044332, std: 0.000000).
+7586 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+7586 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+7592 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+7950 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 247 iterations. Objective: 37288.855, Feasible: true, Primal res.: 0.0019096524, Dual res.: 0.01435694
+7958 [main] INFO  org.linqs.psl.application.learning.weight.bayesian.GaussianProcessPrior  - Iteration 4 -- Config Picked: (weights: [0.6016239, 1.94E-6, 0.8537643, 0.13316967], val: -0.039453, std: 0.000000), Curent Best Config: (weights: [0.6016239, 1.94E-6, 0.8537643, 0.13316967], val: -0.039453, std: 0.000000).
+9999 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+9999 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+10005 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+11838 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 1400 iterations. Objective: 37407.992, Feasible: true, Primal res.: 5.2691443E-4, Dual res.: 0.017383648
+11845 [main] INFO  org.linqs.psl.application.learning.weight.bayesian.GaussianProcessPrior  - Iteration 5 -- Config Picked: (weights: [0.22277258, 0.9403576, 0.14129919, 8.0E-7], val: -0.329902, std: 0.000000), Curent Best Config: (weights: [0.6016239, 1.94E-6, 0.8537643, 0.13316967], val: -0.039453, std: 0.000000).
+14302 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+14302 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+14307 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+14616 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 200 iterations. Objective: 37408.0, Feasible: true, Primal res.: 0.001960001, Dual res.: 0.008644545
+14621 [main] INFO  org.linqs.psl.application.learning.weight.bayesian.GaussianProcessPrior  - Iteration 6 -- Config Picked: (weights: [3.4707E-4, 0.34312868, 0.00479091, 0.79909897], val: -0.106740, std: 0.000000), Curent Best Config: (weights: [0.6016239, 1.94E-6, 0.8537643, 0.13316967], val: -0.039453, std: 0.000000).
+17500 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+17500 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+17505 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+18266 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 430 iterations. Objective: 37406.92, Feasible: true, Primal res.: 3.3804486E-4, Dual res.: 0.0030747824
+18270 [main] INFO  org.linqs.psl.application.learning.weight.bayesian.GaussianProcessPrior  - Iteration 7 -- Config Picked: (weights: [0.00115652, 2.903E-5, 0.5765244, 0.40280452], val: -0.106401, std: 0.000000), Curent Best Config: (weights: [0.6016239, 1.94E-6, 0.8537643, 0.13316967], val: -0.039453, std: 0.000000).
+21565 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+21565 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+21570 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+21991 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 275 iterations. Objective: 37241.266, Feasible: true, Primal res.: 0.0016482136, Dual res.: 0.017942874
+21995 [main] INFO  org.linqs.psl.application.learning.weight.bayesian.GaussianProcessPrior  - Iteration 8 -- Config Picked: (weights: [0.78271574, 4.9286E-4, 0.00193609, 0.21536776], val: -0.043080, std: 0.000000), Curent Best Config: (weights: [0.6016239, 1.94E-6, 0.8537643, 0.13316967], val: -0.039453, std: 0.000000).
+25717 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+25717 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+25722 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+26099 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 250 iterations. Objective: 37408.0, Feasible: true, Primal res.: 4.0428984E-4, Dual res.: 0.013222367
+26102 [main] INFO  org.linqs.psl.application.learning.weight.bayesian.GaussianProcessPrior  - Iteration 9 -- Config Picked: (weights: [0.00117624, 0.07324125, 0.76347834, 1.0851E-4], val: -0.300206, std: 0.000000), Curent Best Config: (weights: [0.6016239, 1.94E-6, 0.8537643, 0.13316967], val: -0.039453, std: 0.000000).
+30261 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+30261 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+30266 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+30559 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 189 iterations. Objective: 37398.742, Feasible: true, Primal res.: 0.0010691261, Dual res.: 0.0037619444
+30562 [main] INFO  org.linqs.psl.application.learning.weight.bayesian.GaussianProcessPrior  - Iteration 10 -- Config Picked: (weights: [0.0093568, 0.03567933, 2.54E-6, 0.9767047], val: -0.105419, std: 0.000000), Curent Best Config: (weights: [0.6016239, 1.94E-6, 0.8537643, 0.13316967], val: -0.039453, std: 0.000000).
+35185 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+35185 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+35190 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+36807 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 1250 iterations. Objective: 37407.99, Feasible: true, Primal res.: 5.398436E-4, Dual res.: 0.019108066
+36810 [main] INFO  org.linqs.psl.application.learning.weight.bayesian.GaussianProcessPrior  - Iteration 11 -- Config Picked: (weights: [0.6049211, 0.37503096, 5.9265E-4, 3.1619E-4], val: -0.107332, std: 0.000000), Curent Best Config: (weights: [0.6016239, 1.94E-6, 0.8537643, 0.13316967], val: -0.039453, std: 0.000000).
+41892 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+41892 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+41897 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+43111 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 850 iterations. Objective: 37408.0, Feasible: true, Primal res.: 7.019425E-4, Dual res.: 0.041732643
+43114 [main] INFO  org.linqs.psl.application.learning.weight.bayesian.GaussianProcessPrior  - Iteration 12 -- Config Picked: (weights: [3.981E-5, 0.40188897, 0.7667944, 0.06096809], val: -0.095402, std: 0.000000), Curent Best Config: (weights: [0.6016239, 1.94E-6, 0.8537643, 0.13316967], val: -0.039453, std: 0.000000).
+48673 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+48673 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+48678 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+49430 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 450 iterations. Objective: 37406.95, Feasible: true, Primal res.: 0.001164128, Dual res.: 0.047053073
+49432 [main] INFO  org.linqs.psl.application.learning.weight.bayesian.GaussianProcessPrior  - Iteration 13 -- Config Picked: (weights: [0.64159286, 0.00187914, 0.5871106, 0.00118308], val: -0.080588, std: 0.000000), Curent Best Config: (weights: [0.6016239, 1.94E-6, 0.8537643, 0.13316967], val: -0.039453, std: 0.000000).
+55481 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+55481 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+55486 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+55713 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 146 iterations. Objective: 37316.684, Feasible: true, Primal res.: 0.0031259896, Dual res.: 0.0107712215
+55714 [main] INFO  org.linqs.psl.application.learning.weight.bayesian.GaussianProcessPrior  - Iteration 14 -- Config Picked: (weights: [0.10216038, 9.871E-5, 0.47755, 0.98369265], val: -0.092740, std: 0.000000), Curent Best Config: (weights: [0.6016239, 1.94E-6, 0.8537643, 0.13316967], val: -0.039453, std: 0.000000).
+62240 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+62240 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+62245 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+63075 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 462 iterations. Objective: 37402.64, Feasible: true, Primal res.: 3.2652548E-4, Dual res.: 0.003441313
+63077 [main] INFO  org.linqs.psl.application.learning.weight.bayesian.GaussianProcessPrior  - Iteration 15 -- Config Picked: (weights: [0.00541842, 0.846494, 4.2668E-4, 0.34829465], val: -0.104403, std: 0.000000), Curent Best Config: (weights: [0.6016239, 1.94E-6, 0.8537643, 0.13316967], val: -0.039453, std: 0.000000).
+70152 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+70152 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+70157 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+70287 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 92 iterations. Objective: 36992.94, Feasible: true, Primal res.: 0.010334335, Dual res.: 0.03946713
+70288 [main] INFO  org.linqs.psl.application.learning.weight.bayesian.GaussianProcessPrior  - Iteration 16 -- Config Picked: (weights: [0.9700684, 0.00540257, 1.536E-5, 0.7443924], val: -0.048626, std: 0.000000), Curent Best Config: (weights: [0.6016239, 1.94E-6, 0.8537643, 0.13316967], val: -0.039453, std: 0.000000).
+77855 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+77856 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+77861 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+78243 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 250 iterations. Objective: 37408.0, Feasible: true, Primal res.: 0.0036415316, Dual res.: 0.027583428
+78245 [main] INFO  org.linqs.psl.application.learning.weight.bayesian.GaussianProcessPrior  - Iteration 17 -- Config Picked: (weights: [3.5691E-4, 0.00616162, 0.9515299, 0.47860193], val: -0.105944, std: 0.000000), Curent Best Config: (weights: [0.6016239, 1.94E-6, 0.8537643, 0.13316967], val: -0.039453, std: 0.000000).
+86341 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+86341 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+86346 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+87234 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 700 iterations. Objective: 37404.445, Feasible: true, Primal res.: 0.0017261478, Dual res.: 0.03888975
+87236 [main] INFO  org.linqs.psl.application.learning.weight.bayesian.GaussianProcessPrior  - Iteration 18 -- Config Picked: (weights: [0.07720209, 0.9854793, 3.0472E-4, 0.00296032], val: -0.037959, std: 0.000000), Curent Best Config: (weights: [0.07720209, 0.9854793, 3.0472E-4, 0.00296032], val: -0.037959, std: 0.000000).
+95888 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+95888 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+95893 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+96210 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 225 iterations. Objective: 37406.008, Feasible: true, Primal res.: 7.3816197E-4, Dual res.: 0.0030658308
+96211 [main] INFO  org.linqs.psl.application.learning.weight.bayesian.GaussianProcessPrior  - Iteration 19 -- Config Picked: (weights: [0.00206785, 0.00330138, 0.0098575, 0.8455502], val: -0.106533, std: 0.000000), Curent Best Config: (weights: [0.07720209, 0.9854793, 3.0472E-4, 0.00296032], val: -0.037959, std: 0.000000).
+105508 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+105508 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+105513 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+105955 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 288 iterations. Objective: 37384.773, Feasible: true, Primal res.: 7.901937E-4, Dual res.: 0.0050460333
+105957 [main] INFO  org.linqs.psl.application.learning.weight.bayesian.GaussianProcessPrior  - Iteration 20 -- Config Picked: (weights: [0.02489813, 6.447E-5, 4.7028E-4, 0.56581384], val: -0.100323, std: 0.000000), Curent Best Config: (weights: [0.07720209, 0.9854793, 3.0472E-4, 0.00296032], val: -0.037959, std: 0.000000).
+115860 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+115860 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+115865 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+119780 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 2650 iterations. Objective: 37407.973, Feasible: true, Primal res.: 1.624413E-4, Dual res.: 0.015162111
+119782 [main] INFO  org.linqs.psl.application.learning.weight.bayesian.GaussianProcessPrior  - Iteration 21 -- Config Picked: (weights: [0.02526448, 0.73668414, 0.02363123, 1.7162E-4], val: -0.083785, std: 0.000000), Curent Best Config: (weights: [0.07720209, 0.9854793, 3.0472E-4, 0.00296032], val: -0.037959, std: 0.000000).
+130246 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+130246 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+130251 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+131975 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 1150 iterations. Objective: 37407.977, Feasible: true, Primal res.: 5.322081E-5, Dual res.: 0.012812237
+131976 [main] INFO  org.linqs.psl.application.learning.weight.bayesian.GaussianProcessPrior  - Iteration 22 -- Config Picked: (weights: [4.4102E-4, 0.8198691, 0.0733565, 0.00319649], val: -0.049754, std: 0.000000), Curent Best Config: (weights: [0.07720209, 0.9854793, 3.0472E-4, 0.00296032], val: -0.037959, std: 0.000000).
+142840 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+142841 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+142845 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+146171 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 2200 iterations. Objective: 37406.797, Feasible: true, Primal res.: 7.767783E-5, Dual res.: 0.0106289955
+146172 [main] INFO  org.linqs.psl.application.learning.weight.bayesian.GaussianProcessPrior  - Iteration 23 -- Config Picked: (weights: [0.00678957, 2.867E-5, 0.62848747, 0.00252562], val: -0.041121, std: 0.000000), Curent Best Config: (weights: [0.07720209, 0.9854793, 3.0472E-4, 0.00296032], val: -0.037959, std: 0.000000).
+157642 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+157643 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+157648 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+158659 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 600 iterations. Objective: 37403.47, Feasible: true, Primal res.: 4.0867625E-4, Dual res.: 0.009989806
+158660 [main] INFO  org.linqs.psl.application.learning.weight.bayesian.GaussianProcessPrior  - Iteration 24 -- Config Picked: (weights: [0.81298345, 2.007E-5, 0.3387064, 0.00324505], val: -0.047430, std: 0.000000), Curent Best Config: (weights: [0.07720209, 0.9854793, 3.0472E-4, 0.00296032], val: -0.037959, std: 0.000000).
+170721 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+170721 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+170726 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+170862 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 95 iterations. Objective: 37055.5, Feasible: true, Primal res.: 0.008903585, Dual res.: 0.034654226
+170863 [main] INFO  org.linqs.psl.application.learning.weight.bayesian.GaussianProcessPrior  - Iteration 25 -- Config Picked: (weights: [0.84227264, 0.17653188, 0.00103349, 0.62155], val: -0.048065, std: 0.000000), Curent Best Config: (weights: [0.07720209, 0.9854793, 3.0472E-4, 0.00296032], val: -0.037959, std: 0.000000).
+183526 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+183526 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+183531 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+184673 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 850 iterations. Objective: 37407.984, Feasible: true, Primal res.: 9.09497E-4, Dual res.: 0.025213672
+184674 [main] INFO  org.linqs.psl.application.learning.weight.bayesian.GaussianProcessPrior  - Iteration 26 -- Config Picked: (weights: [0.82180536, 0.0470686, 0.02633749, 3.155E-5], val: -0.300407, std: 0.000000), Curent Best Config: (weights: [0.07720209, 0.9854793, 3.0472E-4, 0.00296032], val: -0.037959, std: 0.000000).
+197950 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+197950 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+197955 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+201153 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 2000 iterations. Objective: 37405.516, Feasible: true, Primal res.: 1.0032178E-4, Dual res.: 0.014428176
+201155 [main] INFO  org.linqs.psl.application.learning.weight.bayesian.GaussianProcessPrior  - Iteration 27 -- Config Picked: (weights: [0.00400365, 0.00757924, 0.8248623, 0.02451273], val: -0.079717, std: 0.000000), Curent Best Config: (weights: [0.07720209, 0.9854793, 3.0472E-4, 0.00296032], val: -0.037959, std: 0.000000).
+215067 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+215067 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+215072 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+217914 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 1850 iterations. Objective: 37407.992, Feasible: true, Primal res.: 2.047044E-4, Dual res.: 0.013747287
+217915 [main] INFO  org.linqs.psl.application.learning.weight.bayesian.GaussianProcessPrior  - Iteration 28 -- Config Picked: (weights: [0.12143492, 0.02670418, 0.855602, 5.8978E-4], val: -0.049033, std: 0.000000), Curent Best Config: (weights: [0.07720209, 0.9854793, 3.0472E-4, 0.00296032], val: -0.037959, std: 0.000000).
+232458 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+232458 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+232463 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+233430 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 700 iterations. Objective: 37389.637, Feasible: true, Primal res.: 4.4090004E-4, Dual res.: 0.006102482
+233432 [main] INFO  org.linqs.psl.application.learning.weight.bayesian.GaussianProcessPrior  - Iteration 29 -- Config Picked: (weights: [0.95698845, 0.09635768, 7.276E-5, 0.01453633], val: -0.042449, std: 0.000000), Curent Best Config: (weights: [0.07720209, 0.9854793, 3.0472E-4, 0.00296032], val: -0.037959, std: 0.000000).
+248638 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+248638 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+248643 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+248847 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 131 iterations. Objective: 37140.117, Feasible: true, Primal res.: 0.0051294696, Dual res.: 0.02660537
+248849 [main] INFO  org.linqs.psl.application.learning.weight.bayesian.GaussianProcessPrior  - Iteration 30 -- Config Picked: (weights: [0.50465196, 1.574E-5, 0.01872534, 0.58872426], val: -0.054465, std: 0.000000), Curent Best Config: (weights: [0.07720209, 0.9854793, 3.0472E-4, 0.00296032], val: -0.037959, std: 0.000000).
+264706 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+264706 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+264711 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+264946 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 150 iterations. Objective: 37408.0, Feasible: true, Primal res.: 0.0051852455, Dual res.: 0.019032108
+264948 [main] INFO  org.linqs.psl.application.learning.weight.bayesian.GaussianProcessPrior  - Iteration 31 -- Config Picked: (weights: [3.429E-5, 0.49680316, 0.06909933, 0.9382434], val: -0.106657, std: 0.000000), Curent Best Config: (weights: [0.07720209, 0.9854793, 3.0472E-4, 0.00296032], val: -0.037959, std: 0.000000).
+281456 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+281456 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+281461 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+282668 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 950 iterations. Objective: 37402.703, Feasible: true, Primal res.: 1.0514739E-4, Dual res.: 0.020113504
+282670 [main] INFO  org.linqs.psl.application.learning.weight.bayesian.GaussianProcessPrior  - Iteration 32 -- Config Picked: (weights: [0.01213358, 0.9911244, 0.00457284, 0.00954927], val: -0.046004, std: 0.000000), Curent Best Config: (weights: [0.07720209, 0.9854793, 3.0472E-4, 0.00296032], val: -0.037959, std: 0.000000).
+299976 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+299976 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+299981 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+302056 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 1250 iterations. Objective: 37402.934, Feasible: true, Primal res.: 1.3551385E-4, Dual res.: 0.0079913
+302057 [main] INFO  org.linqs.psl.application.learning.weight.bayesian.GaussianProcessPrior  - Iteration 33 -- Config Picked: (weights: [0.9994752, 0.00236537, 0.00490025, 0.0049617], val: -0.042755, std: 0.000000), Curent Best Config: (weights: [0.07720209, 0.9854793, 3.0472E-4, 0.00296032], val: -0.037959, std: 0.000000).
+319990 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+319990 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+319995 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+320285 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 208 iterations. Objective: 37378.6, Feasible: true, Primal res.: 0.0012727408, Dual res.: 0.005532653
+320287 [main] INFO  org.linqs.psl.application.learning.weight.bayesian.GaussianProcessPrior  - Iteration 34 -- Config Picked: (weights: [0.03151665, 0.02035225, 0.00202408, 0.8096392], val: -0.101055, std: 0.000000), Curent Best Config: (weights: [0.07720209, 0.9854793, 3.0472E-4, 0.00296032], val: -0.037959, std: 0.000000).
+338922 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+338922 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+338927 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+339638 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 550 iterations. Objective: 37407.996, Feasible: true, Primal res.: 1.2825946E-4, Dual res.: 0.036618426
+339639 [main] INFO  org.linqs.psl.application.learning.weight.bayesian.GaussianProcessPrior  - Iteration 35 -- Config Picked: (weights: [6.717E-5, 0.00981086, 0.31563175, 9.3844E-4], val: -0.081111, std: 0.000000), Curent Best Config: (weights: [0.07720209, 0.9854793, 3.0472E-4, 0.00296032], val: -0.037959, std: 0.000000).
+358971 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+358971 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+358976 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+359973 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 650 iterations. Objective: 37385.23, Feasible: true, Primal res.: 4.8375074E-4, Dual res.: 0.009666815
+359974 [main] INFO  org.linqs.psl.application.learning.weight.bayesian.GaussianProcessPrior  - Iteration 36 -- Config Picked: (weights: [0.11837548, 0.85413945, 6.58E-6, 0.02716364], val: -0.039332, std: 0.000000), Curent Best Config: (weights: [0.07720209, 0.9854793, 3.0472E-4, 0.00296032], val: -0.037959, std: 0.000000).
+380013 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+380013 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+380018 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+380390 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 222 iterations. Objective: 37264.312, Feasible: true, Primal res.: 0.0016341617, Dual res.: 0.01597293
+380391 [main] INFO  org.linqs.psl.application.learning.weight.bayesian.GaussianProcessPrior  - Iteration 37 -- Config Picked: (weights: [0.8473117, 0.00751849, 0.21168934, 0.16362298], val: -0.040434, std: 0.000000), Curent Best Config: (weights: [0.07720209, 0.9854793, 3.0472E-4, 0.00296032], val: -0.037959, std: 0.000000).
+401423 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+401423 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+401427 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+401845 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 250 iterations. Objective: 37408.0, Feasible: true, Primal res.: 0.0031963903, Dual res.: 0.023340931
+401847 [main] INFO  org.linqs.psl.application.learning.weight.bayesian.GaussianProcessPrior  - Iteration 38 -- Config Picked: (weights: [1.085E-5, 0.10447228, 0.999652, 0.49620464], val: -0.106212, std: 0.000000), Curent Best Config: (weights: [0.07720209, 0.9854793, 3.0472E-4, 0.00296032], val: -0.037959, std: 0.000000).
+423609 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+423609 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+423614 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+427443 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 3000 iterations. Objective: 37407.984, Feasible: true, Primal res.: 1.710095E-4, Dual res.: 0.013023247
+427445 [main] INFO  org.linqs.psl.application.learning.weight.bayesian.GaussianProcessPrior  - Iteration 39 -- Config Picked: (weights: [0.02432934, 0.6780432, 0.66854006, 5.616E-5], val: -0.183645, std: 0.000000), Curent Best Config: (weights: [0.07720209, 0.9854793, 3.0472E-4, 0.00296032], val: -0.037959, std: 0.000000).
+449974 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+449974 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+449979 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+450964 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 650 iterations. Objective: 37394.96, Feasible: true, Primal res.: 9.669256E-4, Dual res.: 0.0122839315
+450965 [main] INFO  org.linqs.psl.application.learning.weight.bayesian.GaussianProcessPrior  - Iteration 40 -- Config Picked: (weights: [0.8851679, 0.26742807, 0.0506572, 0.00934814], val: -0.044600, std: 0.000000), Curent Best Config: (weights: [0.07720209, 0.9854793, 3.0472E-4, 0.00296032], val: -0.037959, std: 0.000000).
+474497 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+474497 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+474502 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+475552 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 609 iterations. Objective: 37400.69, Feasible: true, Primal res.: 2.3651199E-4, Dual res.: 0.0036193347
+475554 [main] INFO  org.linqs.psl.application.learning.weight.bayesian.GaussianProcessPrior  - Iteration 41 -- Config Picked: (weights: [0.00770632, 0.9343516, 0.0583379, 0.24063905], val: -0.101897, std: 0.000000), Curent Best Config: (weights: [0.07720209, 0.9854793, 3.0472E-4, 0.00296032], val: -0.037959, std: 0.000000).
+499610 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+499610 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+499615 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+500377 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 458 iterations. Objective: 37356.46, Feasible: true, Primal res.: 4.484266E-4, Dual res.: 0.007566771
+500379 [main] INFO  org.linqs.psl.application.learning.weight.bayesian.GaussianProcessPrior  - Iteration 42 -- Config Picked: (weights: [0.07029872, 0.9457385, 3.5271E-4, 0.20771632], val: -0.072772, std: 0.000000), Curent Best Config: (weights: [0.07720209, 0.9854793, 3.0472E-4, 0.00296032], val: -0.037959, std: 0.000000).
+525250 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+525250 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+525255 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+525541 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 181 iterations. Objective: 37367.773, Feasible: true, Primal res.: 0.00167967, Dual res.: 0.006466146
+525542 [main] INFO  org.linqs.psl.application.learning.weight.bayesian.GaussianProcessPrior  - Iteration 43 -- Config Picked: (weights: [0.04368003, 0.00258625, 0.25832784, 0.9007314], val: -0.099727, std: 0.000000), Curent Best Config: (weights: [0.07720209, 0.9854793, 3.0472E-4, 0.00296032], val: -0.037959, std: 0.000000).
+551367 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+551367 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+551372 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+552677 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 842 iterations. Objective: 37383.707, Feasible: true, Primal res.: 2.5969322E-4, Dual res.: 0.0055012503
+552678 [main] INFO  org.linqs.psl.application.learning.weight.bayesian.GaussianProcessPrior  - Iteration 44 -- Config Picked: (weights: [0.24169642, 5.355E-5, 0.407978, 0.02349797], val: -0.040694, std: 0.000000), Curent Best Config: (weights: [0.07720209, 0.9854793, 3.0472E-4, 0.00296032], val: -0.037959, std: 0.000000).
+579173 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+579173 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+579178 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+581710 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 1650 iterations. Objective: 37407.992, Feasible: true, Primal res.: 2.9078563E-4, Dual res.: 0.016174372
+581712 [main] INFO  org.linqs.psl.application.learning.weight.bayesian.GaussianProcessPrior  - Iteration 45 -- Config Picked: (weights: [0.12827706, 0.08345037, 0.46178457, 1.494E-5], val: -0.303740, std: 0.000000), Curent Best Config: (weights: [0.07720209, 0.9854793, 3.0472E-4, 0.00296032], val: -0.037959, std: 0.000000).
+608733 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+608733 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+608739 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+608982 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 150 iterations. Objective: 37408.0, Feasible: true, Primal res.: 0.0062123206, Dual res.: 0.023325881
+608983 [main] INFO  org.linqs.psl.application.learning.weight.bayesian.GaussianProcessPrior  - Iteration 46 -- Config Picked: (weights: [5.102E-5, 0.02206041, 0.37321752, 0.91934454], val: -0.106586, std: 0.000000), Curent Best Config: (weights: [0.07720209, 0.9854793, 3.0472E-4, 0.00296032], val: -0.037959, std: 0.000000).
+636826 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+636826 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+636831 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+637544 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 500 iterations. Objective: 37408.0, Feasible: true, Primal res.: 0.0018218644, Dual res.: 0.04957425
+637546 [main] INFO  org.linqs.psl.application.learning.weight.bayesian.GaussianProcessPrior  - Iteration 47 -- Config Picked: (weights: [2.088E-4, 0.8083174, 0.08472841, 0.13344522], val: -0.100312, std: 0.000000), Curent Best Config: (weights: [0.07720209, 0.9854793, 3.0472E-4, 0.00296032], val: -0.037959, std: 0.000000).
+666216 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+666216 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+666221 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+668300 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 1400 iterations. Objective: 37405.945, Feasible: true, Primal res.: 1.0157973E-4, Dual res.: 0.017053835
+668301 [main] INFO  org.linqs.psl.application.learning.weight.bayesian.GaussianProcessPrior  - Iteration 48 -- Config Picked: (weights: [0.01247439, 0.00990102, 0.59489506, 0.00285882], val: -0.039377, std: 0.000000), Curent Best Config: (weights: [0.07720209, 0.9854793, 3.0472E-4, 0.00296032], val: -0.037959, std: 0.000000).
+698191 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+698191 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+698196 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+698475 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 200 iterations. Objective: 37408.0, Feasible: true, Primal res.: 0.0027269502, Dual res.: 0.013382505
+698477 [main] INFO  org.linqs.psl.application.learning.weight.bayesian.GaussianProcessPrior  - Iteration 49 -- Config Picked: (weights: [5.4772E-4, 0.57695603, 4.1835E-4, 0.7235244], val: -0.106569, std: 0.000000), Curent Best Config: (weights: [0.07720209, 0.9854793, 3.0472E-4, 0.00296032], val: -0.037959, std: 0.000000).
+729206 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+729206 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+729211 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 37408 terms.
+729478 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 173 iterations. Objective: 37277.7, Feasible: true, Primal res.: 0.002848122, Dual res.: 0.014552408
+729479 [main] INFO  org.linqs.psl.application.learning.weight.bayesian.GaussianProcessPrior  - Iteration 50 -- Config Picked: (weights: [0.16428804, 0.04692508, 1.534E-5, 0.67859185], val: -0.079531, std: 0.000000), Curent Best Config: (weights: [0.07720209, 0.9854793, 3.0472E-4, 0.00296032], val: -0.037959, std: 0.000000).
+760995 [main] INFO  org.linqs.psl.application.learning.weight.bayesian.GaussianProcessPrior  - Total number of iterations completed: 50. Stopped early: false.
+760995 [main] INFO  org.linqs.psl.application.learning.weight.bayesian.GaussianProcessPrior  - Best config: (weights: [0.07720209, 0.9854793, 3.0472E-4, 0.00296032], val: -0.037959, std: 0.000000)
+760996 [main] INFO  org.linqs.psl.cli.Launcher  - Weight learning complete
+760996 [main] INFO  org.linqs.psl.cli.Launcher  - Writing learned model to friendship-learned.psl
+Running PSL Inference
+0    [main] DEBUG org.linqs.psl.config.Config  - Configuration stream loaded: project.properties
+4    [main] DEBUG org.linqs.psl.config.Config  - Configuration stream loaded: git.properties
+13   [main] DEBUG org.linqs.psl.config.Config  - Configuration stream loaded: classlist.properties
+13   [main] DEBUG org.linqs.psl.config.Config  - PSL configuration psl.properties file not found. Only default values will be used unless additional properties are specified.
+13   [main] DEBUG org.linqs.psl.config.Config  - Set option gpp.maxiterations to 50.
+13   [main] DEBUG org.linqs.psl.config.Config  - Set option log4j.threshold to DEBUG.
+13   [main] DEBUG org.linqs.psl.config.Config  - Found value 2.2.0-SNAPSHOT for option project.version.
+18   [main] DEBUG org.linqs.psl.config.Config  - Found value b35f97a for option git.commit.id.abbrev.
+18   [main] DEBUG org.linqs.psl.config.Config  - Found value false for option git.dirty.
+18   [main] INFO  org.linqs.psl.cli.Launcher  - Running PSL CLI Version 2.2.0-SNAPSHOT-b35f97a
+24   [main] DEBUG org.linqs.psl.database.rdbms.driver.PostgreSQLDriver  - Connecting to PostgreSQL database: vg_psl_experiments
+25   [main] DEBUG org.linqs.psl.config.Config  - No value found for option postgres.statspercentage. Returning default of 0.25.
+27   [main] DEBUG org.linqs.psl.config.Config  - No value found for option parallel.numthreads. Returning default of 4.
+140  [main] INFO  org.linqs.psl.cli.Launcher  - Loading data
+202  [main] DEBUG org.linqs.psl.cli.DataLoader  - Loading data for Block (observations partition)
+207  [main] DEBUG org.linqs.psl.cli.DataLoader  - Loading data for Similar (observations partition)
+272  [main] DEBUG org.linqs.psl.cli.DataLoader  - Loading data for Friends (targets partition)
+330  [main] DEBUG org.linqs.psl.cli.DataLoader  - Loading data for Friends (truth partition)
+395  [main] INFO  org.linqs.psl.cli.Launcher  - Data loading complete
+395  [main] INFO  org.linqs.psl.cli.Launcher  - Loading model from friendship-learned.psl
+464  [main] DEBUG org.linqs.psl.cli.Launcher  - Model:
+0.07720208913087845: ( BLOCK(P2, A) & (P1 != P2) & BLOCK(P1, A) & SIMILAR(P1, P2) ) >> FRIENDS(P1, P2) ^2
+0.9854792952537537: ( BLOCK(P2, A) & BLOCK(P3, A) & (P1 != P2) & FRIENDS(P2, P3) & (P2 != P3) & (P1 != P3) & BLOCK(P1, A) & FRIENDS(P1, P2) ) >> FRIENDS(P1, P3) ^2
+3.047199861612171E-4: ( BLOCK(P2, A) & (P1 != P2) & BLOCK(P1, A) & FRIENDS(P1, P2) ) >> FRIENDS(P2, P1) ^2
+0.002960320096462965: ~( FRIENDS(P1, P2) ) ^2
+464  [main] INFO  org.linqs.psl.cli.Launcher  - Model loading complete
+464  [main] INFO  org.linqs.psl.cli.Launcher  - Starting inference with class: org.linqs.psl.application.inference.MPEInference
+465  [main] DEBUG org.linqs.psl.database.rdbms.RDBMSDataStore  - Indexing predicates.
+784  [main] DEBUG org.linqs.psl.database.rdbms.RDBMSDataStore  - Predicate indexing complete.
+786  [main] DEBUG org.linqs.psl.config.Config  - No value found for option rdbmsdatabase.fetchsize. Returning default of 500.
+787  [main] DEBUG org.linqs.psl.config.Config  - No value found for option inference.reasoner. Returning default of org.linqs.psl.reasoner.admm.ADMMReasoner.
+788  [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.maxiterations. Returning default of 25000.
+788  [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.stepsize. Returning default of 1.0.
+789  [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.computeperiod. Returning default of 50.
+789  [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.objectivebreak. Returning default of true.
+789  [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.epsilonabs. Returning default of 1.0E-5.
+789  [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.epsilonrel. Returning default of 0.001.
+789  [main] DEBUG org.linqs.psl.config.Config  - No value found for option inference.termstore. Returning default of org.linqs.psl.reasoner.admm.term.ADMMTermStore.
+789  [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmmemorytermstore.internalstore. Returning default of org.linqs.psl.reasoner.term.MemoryTermStore.
+789  [main] DEBUG org.linqs.psl.config.Config  - No value found for option memorytermstore.initialsize. Returning default of 5000.
+789  [main] DEBUG org.linqs.psl.config.Config  - No value found for option inference.groundrulestore. Returning default of org.linqs.psl.application.groundrulestore.MemoryGroundRuleStore.
+789  [main] DEBUG org.linqs.psl.config.Config  - No value found for option inference.termgenerator. Returning default of org.linqs.psl.reasoner.admm.term.ADMMTermGenerator.
+791  [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmtermgenerator.invertnegativeweights. Returning default of false.
+791  [main] DEBUG org.linqs.psl.application.inference.MPEInference  - Creating persisted atom mannager.
+791  [main] DEBUG org.linqs.psl.config.Config  - No value found for option persistedatommanager.throwaccessexception. Returning default of true.
+928  [main] INFO  org.linqs.psl.application.inference.MPEInference  - Grounding out model.
+929  [main] DEBUG org.linqs.psl.config.Config  - No value found for option grounding.rewritequeries. Returning default of false.
+929  [main] DEBUG org.linqs.psl.application.util.Grounding  - Grounding 1 rules with query: [( BLOCK(P2, A) & (P1 != P2) & BLOCK(P1, A) & FRIENDS(P1, P2) )].
+995  [main] DEBUG org.linqs.psl.application.util.Grounding  - Generated 3644 ground rules with query: [( BLOCK(P2, A) & (P1 != P2) & BLOCK(P1, A) & FRIENDS(P1, P2) )].
+995  [main] DEBUG org.linqs.psl.application.util.Grounding  - Grounding 1 rules with query: [( BLOCK(P2, A) & (P1 != P2) & BLOCK(P1, A) & SIMILAR(P1, P2) )].
+1047 [main] DEBUG org.linqs.psl.application.util.Grounding  - Generated 3629 ground rules with query: [( BLOCK(P2, A) & (P1 != P2) & BLOCK(P1, A) & SIMILAR(P1, P2) )].
+1047 [main] DEBUG org.linqs.psl.application.util.Grounding  - Grounding 1 rules with query: [( BLOCK(P2, A) & BLOCK(P3, A) & (P1 != P2) & FRIENDS(P2, P3) & (P2 != P3) & (P1 != P3) & BLOCK(P1, A) & FRIENDS(P1, P2) )].
+1486 [main] DEBUG org.linqs.psl.application.util.Grounding  - Generated 86028 ground rules with query: [( BLOCK(P2, A) & BLOCK(P3, A) & (P1 != P2) & FRIENDS(P2, P3) & (P2 != P3) & (P1 != P3) & BLOCK(P1, A) & FRIENDS(P1, P2) )].
+1486 [main] DEBUG org.linqs.psl.application.util.Grounding  - Grounding 1 rules with query: [FRIENDS(P1, P2)].
+1559 [main] DEBUG org.linqs.psl.application.util.Grounding  - Generated 22350 ground rules with query: [FRIENDS(P1, P2)].
+1559 [main] DEBUG org.linqs.psl.application.inference.MPEInference  - Initializing objective terms for 115651 ground rules.
+1851 [main] DEBUG org.linqs.psl.application.inference.MPEInference  - Generated 115651 objective terms from 115651 ground rules.
+1851 [main] INFO  org.linqs.psl.application.inference.MPEInference  - Beginning inference.
+1851 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+1851 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+1852 [main] DEBUG org.linqs.psl.config.Config  - No value found for option random.seed. Returning default of 4.
+1886 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 22350 variables and 115651 terms.
+21689 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 3880 iterations. Objective: 115649.44, Feasible: true, Primal res.: 3.526618E-4, Dual res.: 0.006192852
+21695 [main] INFO  org.linqs.psl.application.inference.MPEInference  - Inference complete. Writing results to Database.
+22284 [main] INFO  org.linqs.psl.application.inference.MPEInference  - Results committed to database.
+22284 [main] INFO  org.linqs.psl.cli.Launcher  - Inference Complete
+22501 [main] INFO  org.linqs.psl.cli.Launcher  - Starting evaluation with class: org.linqs.psl.evaluation.statistics.DiscreteEvaluator.
+22502 [main] DEBUG org.linqs.psl.config.Config  - No value found for option rdbmsdatabase.fetchsize. Returning default of 500.
+22503 [main] DEBUG org.linqs.psl.config.Config  - No value found for option discreteevaluator.threshold. Returning default of 0.5.
+22503 [main] DEBUG org.linqs.psl.config.Config  - No value found for option discreteevaluator.representative. Returning default of F1.
+22507 [main] DEBUG org.linqs.psl.config.Config  - No value found for option persistedatommanager.throwaccessexception. Returning default of true.
+23821 [main] INFO  org.linqs.psl.cli.Launcher  - Evaluation results for FRIENDS -- Accuracy: 0.945280, F1: 0.798351, Positive Class Precision: 0.664380, Positive Class Recall: 1.000000, Negative Class Precision: 1.000000, Negative Class Recall: 0.938632
+23821 [main] INFO  org.linqs.psl.cli.Launcher  - Evaluation complete.

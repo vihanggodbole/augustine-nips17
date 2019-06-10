@@ -1,0 +1,843 @@
+Running PSL Weight Learning
+0    [main] DEBUG org.linqs.psl.config.Config  - Configuration stream loaded: project.properties
+4    [main] DEBUG org.linqs.psl.config.Config  - Configuration stream loaded: git.properties
+12   [main] DEBUG org.linqs.psl.config.Config  - Configuration stream loaded: classlist.properties
+12   [main] DEBUG org.linqs.psl.config.Config  - PSL configuration psl.properties file not found. Only default values will be used unless additional properties are specified.
+12   [main] DEBUG org.linqs.psl.config.Config  - Set option gpp.maxiterations to 50.
+12   [main] DEBUG org.linqs.psl.config.Config  - Set option log4j.threshold to DEBUG.
+13   [main] DEBUG org.linqs.psl.config.Config  - Found value 2.2.0-SNAPSHOT for option project.version.
+17   [main] DEBUG org.linqs.psl.config.Config  - Found value b35f97a for option git.commit.id.abbrev.
+17   [main] DEBUG org.linqs.psl.config.Config  - Found value false for option git.dirty.
+18   [main] INFO  org.linqs.psl.cli.Launcher  - Running PSL CLI Version 2.2.0-SNAPSHOT-b35f97a
+23   [main] DEBUG org.linqs.psl.database.rdbms.driver.PostgreSQLDriver  - Connecting to PostgreSQL database: vg_psl_experiments
+25   [main] DEBUG org.linqs.psl.config.Config  - No value found for option postgres.statspercentage. Returning default of 0.25.
+27   [main] DEBUG org.linqs.psl.config.Config  - No value found for option parallel.numthreads. Returning default of 4.
+141  [main] INFO  org.linqs.psl.cli.Launcher  - Loading data
+204  [main] DEBUG org.linqs.psl.cli.DataLoader  - Loading data for Block (observations partition)
+209  [main] DEBUG org.linqs.psl.cli.DataLoader  - Loading data for Similar (observations partition)
+239  [main] DEBUG org.linqs.psl.cli.DataLoader  - Loading data for Friends (targets partition)
+264  [main] DEBUG org.linqs.psl.cli.DataLoader  - Loading data for Friends (truth partition)
+290  [main] INFO  org.linqs.psl.cli.Launcher  - Data loading complete
+290  [main] INFO  org.linqs.psl.cli.Launcher  - Loading model from friendship.psl
+356  [main] DEBUG org.linqs.psl.cli.Launcher  - Model:
+1.0: ( BLOCK(P2, A) & (P1 != P2) & BLOCK(P1, A) & SIMILAR(P1, P2) ) >> FRIENDS(P1, P2) ^2
+1.0: ( BLOCK(P2, A) & BLOCK(P3, A) & (P1 != P2) & (P2 != P3) & (P1 != P3) & FRIENDS(P2, P3) & BLOCK(P1, A) & FRIENDS(P1, P2) ) >> FRIENDS(P1, P3) ^2
+1.0: ( BLOCK(P2, A) & (P1 != P2) & BLOCK(P1, A) & FRIENDS(P1, P2) ) >> FRIENDS(P2, P1) ^2
+1.0: ~( FRIENDS(P1, P2) ) ^2
+356  [main] INFO  org.linqs.psl.cli.Launcher  - Model loading complete
+356  [main] INFO  org.linqs.psl.cli.Launcher  - Starting weight learning with learner: org.linqs.psl.application.learning.weight.search.Hyperband
+357  [main] DEBUG org.linqs.psl.database.rdbms.RDBMSDataStore  - Indexing predicates.
+545  [main] DEBUG org.linqs.psl.database.rdbms.RDBMSDataStore  - Predicate indexing complete.
+547  [main] DEBUG org.linqs.psl.config.Config  - No value found for option rdbmsdatabase.fetchsize. Returning default of 500.
+547  [main] DEBUG org.linqs.psl.config.Config  - No value found for option rdbmsdatabase.fetchsize. Returning default of 500.
+550  [main] DEBUG org.linqs.psl.config.Config  - No value found for option weightlearning.evaluator. Returning default of org.linqs.psl.evaluation.statistics.ContinuousEvaluator.
+550  [main] DEBUG org.linqs.psl.config.Config  - No value found for option continuousevaluator.representative. Returning default of MSE.
+550  [main] DEBUG org.linqs.psl.config.Config  - No value found for option hyperband.survival. Returning default of 4.
+550  [main] DEBUG org.linqs.psl.config.Config  - No value found for option hyperband.numbrackets. Returning default of 4.
+550  [main] DEBUG org.linqs.psl.config.Config  - No value found for option hyperband.basebracketsize. Returning default of 10.
+551  [main] DEBUG org.linqs.psl.config.Config  - No value found for option persistedatommanager.throwaccessexception. Returning default of true.
+940  [main] DEBUG org.linqs.psl.config.Config  - No value found for option weightlearning.groundrulestore. Returning default of org.linqs.psl.application.groundrulestore.MemoryGroundRuleStore.
+940  [main] INFO  org.linqs.psl.application.learning.weight.WeightLearningApplication  - Grounding out model.
+941  [main] DEBUG org.linqs.psl.config.Config  - No value found for option grounding.rewritequeries. Returning default of false.
+941  [main] DEBUG org.linqs.psl.application.util.Grounding  - Grounding 1 rules with query: [( BLOCK(P2, A) & BLOCK(P3, A) & (P1 != P2) & (P2 != P3) & (P1 != P3) & FRIENDS(P2, P3) & BLOCK(P1, A) & FRIENDS(P1, P2) )].
+1135 [main] DEBUG org.linqs.psl.application.util.Grounding  - Generated 14382 ground rules with query: [( BLOCK(P2, A) & BLOCK(P3, A) & (P1 != P2) & (P2 != P3) & (P1 != P3) & FRIENDS(P2, P3) & BLOCK(P1, A) & FRIENDS(P1, P2) )].
+1135 [main] DEBUG org.linqs.psl.application.util.Grounding  - Grounding 1 rules with query: [( BLOCK(P2, A) & (P1 != P2) & BLOCK(P1, A) & FRIENDS(P1, P2) )].
+1148 [main] DEBUG org.linqs.psl.application.util.Grounding  - Generated 1214 ground rules with query: [( BLOCK(P2, A) & (P1 != P2) & BLOCK(P1, A) & FRIENDS(P1, P2) )].
+1148 [main] DEBUG org.linqs.psl.application.util.Grounding  - Grounding 1 rules with query: [( BLOCK(P2, A) & (P1 != P2) & BLOCK(P1, A) & SIMILAR(P1, P2) )].
+1172 [main] DEBUG org.linqs.psl.application.util.Grounding  - Generated 1209 ground rules with query: [( BLOCK(P2, A) & (P1 != P2) & BLOCK(P1, A) & SIMILAR(P1, P2) )].
+1172 [main] DEBUG org.linqs.psl.application.util.Grounding  - Grounding 1 rules with query: [FRIENDS(P1, P2)].
+1243 [main] DEBUG org.linqs.psl.application.util.Grounding  - Generated 9900 ground rules with query: [FRIENDS(P1, P2)].
+1243 [main] DEBUG org.linqs.psl.config.Config  - No value found for option weightlearning.termstore. Returning default of org.linqs.psl.reasoner.admm.term.ADMMTermStore.
+1245 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmmemorytermstore.internalstore. Returning default of org.linqs.psl.reasoner.term.MemoryTermStore.
+1245 [main] DEBUG org.linqs.psl.config.Config  - No value found for option memorytermstore.initialsize. Returning default of 5000.
+1245 [main] DEBUG org.linqs.psl.config.Config  - No value found for option weightlearning.termgenerator. Returning default of org.linqs.psl.reasoner.admm.term.ADMMTermGenerator.
+1246 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmtermgenerator.invertnegativeweights. Returning default of false.
+1246 [main] DEBUG org.linqs.psl.application.learning.weight.WeightLearningApplication  - Initializing objective terms for 26705 ground rules.
+1385 [main] DEBUG org.linqs.psl.application.learning.weight.WeightLearningApplication  - Generated 26705 objective terms from 26705 ground rules.
+2071 [main] DEBUG org.linqs.psl.config.Config  - No value found for option weightlearning.reasoner. Returning default of org.linqs.psl.reasoner.admm.ADMMReasoner.
+2072 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.maxiterations. Returning default of 25000.
+2072 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.stepsize. Returning default of 1.0.
+2072 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.computeperiod. Returning default of 50.
+2072 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.objectivebreak. Returning default of true.
+2072 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.epsilonabs. Returning default of 1.0E-5.
+2072 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.epsilonrel. Returning default of 0.001.
+2072 [main] DEBUG org.linqs.psl.config.Config  - No value found for option weightlearning.randomweights. Returning default of false.
+2090 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Bracket 1 / 4 -- Size: 10 (1.0), Budget: 1.0
+2090 [main] DEBUG org.linqs.psl.config.Config  - No value found for option random.seed. Returning default of 4.
+2090 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.maxiterations. Returning default of 25000.
+2106 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  -   Round 1 / 1 -- Size: 10, Budget: 1.0
+2174 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+2174 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+2180 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+2648 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 72 iterations. Objective: 26418.256, Feasible: true, Primal res.: 0.008908843, Dual res.: 0.030215066
+2665 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.039162948621534625, Weights: [0.7310389974575904, 0.7905228802098903, 0.7904890770856451, 0.7148948437834127]
+2734 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+2734 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+2747 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+2900 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 86 iterations. Objective: 26461.305, Feasible: true, Primal res.: 0.007075983, Dual res.: 0.026251405
+2914 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.045052949702679965, Weights: [0.5247883908139747, 0.5078467367834162, 0.7211228009111912, 0.7545434180146202]
+2996 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+2996 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+2999 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+3140 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 99 iterations. Objective: 26496.395, Feasible: true, Primal res.: 0.0048887446, Dual res.: 0.0234575
+3154 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.038192078902003226, Weights: [0.5478237898079201, 0.7923781974879283, 0.741545970346011, 0.5010690740212909]
+3225 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+3225 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+3229 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+3365 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 81 iterations. Objective: 26451.332, Feasible: true, Primal res.: 0.0070544155, Dual res.: 0.02726605
+3381 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.036052959687576, Weights: [0.732877458597264, 0.8023833451420813, 0.7604607134316406, 0.5596667934840472]
+3454 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+3454 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+3458 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+3559 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 88 iterations. Objective: 26472.006, Feasible: true, Primal res.: 0.0060685333, Dual res.: 0.025513763
+3570 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03879271506755867, Weights: [0.6031214874418718, 0.7376604754681931, 0.5886764431657971, 0.5727683958906744]
+3638 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+3639 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+3642 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+3713 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 68 iterations. Objective: 26400.951, Feasible: true, Primal res.: 0.010111021, Dual res.: 0.031665545
+3724 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.040017064302738284, Weights: [0.7553929992737503, 0.7400840963997841, 0.7470929459313748, 0.7824181074995931]
+3797 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+3797 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+3800 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+3891 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 80 iterations. Objective: 26444.275, Feasible: true, Primal res.: 0.007263034, Dual res.: 0.027782729
+3898 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.039242461671262274, Weights: [0.6657181128079392, 0.5162603661192212, 0.6096725159715451, 0.6518570686218002]
+3966 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+3966 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+3970 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+4040 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 69 iterations. Objective: 26415.264, Feasible: true, Primal res.: 0.009614287, Dual res.: 0.031477258
+4047 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.037638877347196634, Weights: [0.7866862405389901, 0.6803975107396005, 0.6763704240492809, 0.6808054587842388]
+4113 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+4113 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+4117 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+4195 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 78 iterations. Objective: 26447.826, Feasible: true, Primal res.: 0.0075426525, Dual res.: 0.027702322
+4201 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03518910504926726, Weights: [0.7838601472869071, 0.567834689339846, 0.6022509520754388, 0.5468432877525894]
+4268 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+4268 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+4271 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+4357 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 81 iterations. Objective: 26447.076, Feasible: true, Primal res.: 0.007198798, Dual res.: 0.027837353
+4363 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.037044228550321204, Weights: [0.715300863207574, 0.796130090487946, 0.6776487424695504, 0.59244566476569]
+4364 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Bracket 2 / 4 -- Size: 20 (2.0), Budget: 0.25
+4364 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.maxiterations. Returning default of 25000.
+4367 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  -   Round 1 / 2 -- Size: 20, Budget: 0.25
+4434 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+4435 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+4438 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+4536 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 89 iterations. Objective: 26469.285, Feasible: true, Primal res.: 0.006342963, Dual res.: 0.026173066
+4541 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.04186958163726157, Weights: [0.5515350508613318, 0.5669179352583688, 0.6604467012718439, 0.6500907168606564]
+4611 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+4611 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+4614 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+4705 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 83 iterations. Objective: 26454.258, Feasible: true, Primal res.: 0.0070941146, Dual res.: 0.027622906
+4710 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.04134178875229159, Weights: [0.5993636520418582, 0.5226228373737868, 0.5132265843457547, 0.6781293956146919]
+4778 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+4778 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+4782 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+4875 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 82 iterations. Objective: 26448.473, Feasible: true, Primal res.: 0.007018718, Dual res.: 0.027373116
+4879 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03701528991516541, Weights: [0.7089558711978904, 0.5811618715246558, 0.7996935056864247, 0.588558102363227]
+4952 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+4953 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+4956 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+5060 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 92 iterations. Objective: 26478.986, Feasible: true, Primal res.: 0.0057358956, Dual res.: 0.02519659
+5065 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03623707713179934, Weights: [0.6511106483075537, 0.5732578746619925, 0.5675772634798993, 0.5023810770615532]
+5133 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+5133 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+5136 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+5224 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 89 iterations. Objective: 26473.557, Feasible: true, Primal res.: 0.0060100234, Dual res.: 0.025032671
+5229 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03578096971855922, Weights: [0.6745372870203903, 0.62457076332844, 0.7944052536555266, 0.5050838096113109]
+5300 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+5300 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+5303 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+5399 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 86 iterations. Objective: 26457.572, Feasible: true, Primal res.: 0.0067205755, Dual res.: 0.026432004
+5404 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03478730493002668, Weights: [0.7638086864674167, 0.6372662855767065, 0.7110320930207389, 0.518069718019251]
+5473 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+5473 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+5477 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+5567 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 76 iterations. Objective: 26439.758, Feasible: true, Primal res.: 0.008142673, Dual res.: 0.028638436
+5572 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.0412993853043574, Weights: [0.6311622152924029, 0.5555596275498373, 0.741950552993007, 0.715998482277715]
+5638 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+5638 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+5642 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+5746 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 98 iterations. Objective: 26495.236, Feasible: true, Primal res.: 0.004869943, Dual res.: 0.023226852
+5751 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03978758140637655, Weights: [0.5209446464931692, 0.7998885936503997, 0.7404590089348937, 0.5351907046207021]
+5821 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+5821 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+5825 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+5930 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 91 iterations. Objective: 26481.975, Feasible: true, Primal res.: 0.005730022, Dual res.: 0.02445876
+5935 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.04250263540069842, Weights: [0.5130985854589512, 0.7143050065022029, 0.5815140848378043, 0.6295397251690669]
+6003 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+6003 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+6006 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+6105 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 81 iterations. Objective: 26447.227, Feasible: true, Primal res.: 0.007646014, Dual res.: 0.028177166
+6109 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.035018892968545344, Weights: [0.7842242014067276, 0.7887930223937811, 0.7812177468386279, 0.5451325381790174]
+6177 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+6178 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+6181 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+6259 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 76 iterations. Objective: 26429.82, Feasible: true, Primal res.: 0.008046318, Dual res.: 0.029417893
+6264 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03670944887235949, Weights: [0.7775780709113642, 0.8022094275086918, 0.6380247256122491, 0.6235983497088018]
+6331 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+6331 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+6334 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+6415 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 81 iterations. Objective: 26447.725, Feasible: true, Primal res.: 0.0074454704, Dual res.: 0.02815114
+6420 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.036242197336981294, Weights: [0.7367838784605709, 0.5301511628647859, 0.7531361689842967, 0.5724827656855889]
+6490 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+6490 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+6493 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+6580 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 91 iterations. Objective: 26479.484, Feasible: true, Primal res.: 0.0056336434, Dual res.: 0.024307404
+6585 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.04121259470594106, Weights: [0.5387179599743032, 0.7301654634267944, 0.5848869320874364, 0.6068753272705983]
+6654 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+6654 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+6657 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+6733 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 77 iterations. Objective: 26426.736, Feasible: true, Primal res.: 0.00831034, Dual res.: 0.02978761
+6738 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.036602056580614814, Weights: [0.7904556259667594, 0.7446474955811556, 0.6399683411103325, 0.6276044973361776]
+6807 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+6807 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+6811 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+6901 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 90 iterations. Objective: 26482.201, Feasible: true, Primal res.: 0.0056764334, Dual res.: 0.024431806
+6906 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.04193282445689237, Weights: [0.5210791487149573, 0.6253921829387719, 0.5868964369351097, 0.6158515086863392]
+6974 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+6974 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+6978 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+7059 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 82 iterations. Objective: 26449.236, Feasible: true, Primal res.: 0.007117302, Dual res.: 0.028051801
+7065 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03832881012473049, Weights: [0.6708088499934788, 0.6546100261232219, 0.7779413648744171, 0.6179280223636793]
+7130 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+7130 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+7134 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+7210 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 78 iterations. Objective: 26444.54, Feasible: true, Primal res.: 0.007380256, Dual res.: 0.02795571
+7215 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03948976694607354, Weights: [0.660455505085305, 0.744179209551477, 0.558084132104101, 0.6571071049660819]
+7283 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+7283 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+7287 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+7366 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 71 iterations. Objective: 26406.695, Feasible: true, Primal res.: 0.009722464, Dual res.: 0.031522952
+7370 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.04070363143309068, Weights: [0.7301900510966404, 0.7042504695146786, 0.5093713900374983, 0.7874146693856382]
+7438 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+7438 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+7441 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+7542 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 89 iterations. Objective: 26475.229, Feasible: true, Primal res.: 0.005846681, Dual res.: 0.024745164
+7546 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.038670898761947056, Weights: [0.5997569239888771, 0.5357916171795687, 0.5052996710472255, 0.5620903261201146]
+7614 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+7614 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+7617 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+7692 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 70 iterations. Objective: 26409.4, Feasible: true, Primal res.: 0.01014923, Dual res.: 0.0320654
+7697 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.04147303077910295, Weights: [0.7040154480440934, 0.5653043322679479, 0.5833972753635251, 0.8028846269897643]
+7697 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.maxiterations. Returning default of 25000.
+7700 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  -   Round 2 / 2 -- Size: 5, Budget: 1.0
+7768 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+7768 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+7772 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+7870 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 84 iterations. Objective: 26457.572, Feasible: true, Primal res.: 0.0068255444, Dual res.: 0.02638131
+7875 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.034789617087307434, Weights: [0.7638086864674167, 0.6372662855767065, 0.7110320930207389, 0.518069718019251]
+7940 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+7940 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+7944 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+8034 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 80 iterations. Objective: 26447.209, Feasible: true, Primal res.: 0.0074358582, Dual res.: 0.02720127
+8039 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03501810418200962, Weights: [0.7842242014067276, 0.7887930223937811, 0.7812177468386279, 0.5451325381790174]
+8106 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+8106 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+8109 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+8195 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 88 iterations. Objective: 26473.578, Feasible: true, Primal res.: 0.0060058306, Dual res.: 0.025226718
+8200 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03577566439592966, Weights: [0.6745372870203903, 0.62457076332844, 0.7944052536555266, 0.5050838096113109]
+8267 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+8267 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+8270 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+8373 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 94 iterations. Objective: 26478.988, Feasible: true, Primal res.: 0.005588546, Dual res.: 0.024855081
+8377 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03623528034919334, Weights: [0.6511106483075537, 0.5732578746619925, 0.5675772634798993, 0.5023810770615532]
+8443 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+8443 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+8446 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+8529 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 82 iterations. Objective: 26447.7, Feasible: true, Primal res.: 0.0072336188, Dual res.: 0.027582258
+8534 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03626172277941395, Weights: [0.7367838784605709, 0.5301511628647859, 0.7531361689842967, 0.5724827656855889]
+8534 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Bracket 3 / 4 -- Size: 54 (5.333333333333333), Budget: 0.0625
+8534 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.maxiterations. Returning default of 25000.
+8538 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  -   Round 1 / 3 -- Size: 54, Budget: 0.0625
+8605 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+8605 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+8609 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+8687 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 83 iterations. Objective: 26460.795, Feasible: true, Primal res.: 0.0066510965, Dual res.: 0.02601141
+8693 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.04178345171911988, Weights: [0.5712050420096388, 0.706962831563593, 0.8103163395090925, 0.6709198087358736]
+8770 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+8770 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+8774 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+8879 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 93 iterations. Objective: 26478.887, Feasible: true, Primal res.: 0.005541554, Dual res.: 0.024544073
+8884 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03903104704409765, Weights: [0.5786095171961272, 0.6291247965802954, 0.6435413432882169, 0.5610338744779109]
+8948 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+8949 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+8952 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+9025 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 77 iterations. Objective: 26435.959, Feasible: true, Primal res.: 0.007845999, Dual res.: 0.028380807
+9030 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.04047591223042095, Weights: [0.6579277514974003, 0.6310040415910877, 0.6881988928648868, 0.7044873388728522]
+9097 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+9097 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+9100 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+9190 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 82 iterations. Objective: 26449.512, Feasible: true, Primal res.: 0.007204747, Dual res.: 0.027405955
+9195 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.040667549234287205, Weights: [0.6202566990251501, 0.6239975582429671, 0.6894248091459891, 0.6742972788861217]
+9262 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+9262 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+9265 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+9348 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 84 iterations. Objective: 26457.9, Feasible: true, Primal res.: 0.006878467, Dual res.: 0.027335528
+9353 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03766857989942999, Weights: [0.6640320729020086, 0.5869995552269626, 0.7854065884902338, 0.5818961047321791]
+9418 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+9418 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+9422 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+9510 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 81 iterations. Objective: 26448.812, Feasible: true, Primal res.: 0.0072031384, Dual res.: 0.027485264
+9515 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.038751949741265494, Weights: [0.666763576840474, 0.663624369453588, 0.5683582968006674, 0.6286366716578076]
+9582 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+9582 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+9585 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+9666 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 86 iterations. Objective: 26466.19, Feasible: true, Primal res.: 0.006865796, Dual res.: 0.025414482
+9671 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.04598458432181746, Weights: [0.5043634869266473, 0.6308536334531558, 0.5794811657146399, 0.7651757488168167]
+9738 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+9738 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+9741 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+9813 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 68 iterations. Objective: 26404.41, Feasible: true, Primal res.: 0.010324853, Dual res.: 0.032120783
+9818 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.040728322388112415, Weights: [0.731807405514102, 0.669141250193076, 0.6406262441692573, 0.7941973129201818]
+9884 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+9884 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+9888 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+9982 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 83 iterations. Objective: 26457.8, Feasible: true, Primal res.: 0.0071826465, Dual res.: 0.026461981
+9987 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.0340945376700858, Weights: [0.8073435286130801, 0.6554895657824572, 0.5208320926795268, 0.5012045290396677]
+10051 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+10051 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+10054 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+10137 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 73 iterations. Objective: 26422.715, Feasible: true, Primal res.: 0.009151505, Dual res.: 0.03001992
+10142 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.0423379611963527, Weights: [0.6525707392567293, 0.7007171723751927, 0.7256967568755095, 0.7917971099855623]
+10209 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+10210 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+10213 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+10296 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 83 iterations. Objective: 26464.746, Feasible: true, Primal res.: 0.006502781, Dual res.: 0.026541237
+10301 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.036907560791598536, Weights: [0.6707981276032627, 0.8052692211577791, 0.6123368628802227, 0.5488966415649023]
+10369 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+10369 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+10373 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+10445 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 70 iterations. Objective: 26411.78, Feasible: true, Primal res.: 0.00934305, Dual res.: 0.030944435
+10450 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03705348778830646, Weights: [0.8136888106482587, 0.6556841258861771, 0.7347642964499096, 0.673880957262827]
+10516 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+10516 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+10520 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+10602 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 75 iterations. Objective: 26427.293, Feasible: true, Primal res.: 0.008801315, Dual res.: 0.030049825
+10606 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.04188508219403676, Weights: [0.6527026265132619, 0.6582553453761439, 0.5801359382599363, 0.7661635722094842]
+10673 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+10673 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+10677 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+10755 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 83 iterations. Objective: 26456.21, Feasible: true, Primal res.: 0.0067598885, Dual res.: 0.026763855
+10760 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03945841579630908, Weights: [0.6259683219987381, 0.7263743086114478, 0.8000957356870413, 0.6271914122574884]
+10829 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+10829 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+10832 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+10930 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 91 iterations. Objective: 26472.584, Feasible: true, Primal res.: 0.005729047, Dual res.: 0.025065381
+10935 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.036984863319317655, Weights: [0.6416195260674551, 0.5473539964506834, 0.7869955223946099, 0.5327537071987815]
+11003 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+11003 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+11006 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+11099 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 93 iterations. Objective: 26477.988, Feasible: true, Primal res.: 0.0055456404, Dual res.: 0.02461429
+11104 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03943109591387856, Weights: [0.571797884831565, 0.6523582502885008, 0.7245368384895978, 0.5720051844330519]
+11170 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+11170 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+11173 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+11264 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 83 iterations. Objective: 26458.395, Feasible: true, Primal res.: 0.0068060113, Dual res.: 0.027101392
+11269 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.037530822710423406, Weights: [0.6718721511161077, 0.5647373534190172, 0.5888460346267528, 0.5772984245202277]
+11334 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+11334 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+11338 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+11409 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 67 iterations. Objective: 26402.22, Feasible: true, Primal res.: 0.010634599, Dual res.: 0.03280495
+11414 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.040572232972901676, Weights: [0.7428892750942153, 0.6242511082477934, 0.5509599535101907, 0.795614363677076]
+11479 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+11479 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+11483 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+11549 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 68 iterations. Objective: 26397.193, Feasible: true, Primal res.: 0.010592418, Dual res.: 0.033161823
+11554 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03839587919888994, Weights: [0.8108994117788271, 0.7786980811325885, 0.7172220336970174, 0.7449888008999416]
+11620 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+11620 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+11623 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+11716 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 79 iterations. Objective: 26451.889, Feasible: true, Primal res.: 0.0075731226, Dual res.: 0.02793048
+11721 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.04293946025113877, Weights: [0.5754726648530275, 0.7669839405278445, 0.6519850766099864, 0.725827049834173]
+11788 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+11789 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+11792 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+11869 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 75 iterations. Objective: 26427.812, Feasible: true, Primal res.: 0.008258178, Dual res.: 0.02935598
+11874 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03776569377007902, Weights: [0.7524825102986918, 0.5790438282609053, 0.5379978210491607, 0.6542469857215185]
+11939 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+11939 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+11942 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+12022 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 76 iterations. Objective: 26431.047, Feasible: true, Primal res.: 0.008230844, Dual res.: 0.028940588
+12027 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03663338068489921, Weights: [0.7723929584681737, 0.6366820894931768, 0.7680466967346122, 0.6187856215990819]
+12092 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+12092 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+12096 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+12172 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 69 iterations. Objective: 26396.4, Feasible: true, Primal res.: 0.010646752, Dual res.: 0.033355348
+12177 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03962601666284814, Weights: [0.7772744964381806, 0.5220690708618712, 0.721991432119688, 0.7829801611401092]
+12243 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+12243 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+12246 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+12334 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 91 iterations. Objective: 26476.248, Feasible: true, Primal res.: 0.005733737, Dual res.: 0.024511004
+12339 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.039566998453462204, Weights: [0.574916969731972, 0.5605779136043344, 0.6632135086286501, 0.5789412738842098]
+12406 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+12406 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+12409 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+12485 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 73 iterations. Objective: 26424.79, Feasible: true, Primal res.: 0.00869048, Dual res.: 0.029935721
+12490 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03751691875045369, Weights: [0.7614765339662042, 0.6383658153220823, 0.7548063953113473, 0.6553787229590375]
+12557 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+12557 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+12560 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+12653 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 82 iterations. Objective: 26452.14, Feasible: true, Primal res.: 0.0069484264, Dual res.: 0.027116438
+12658 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03695555440197265, Weights: [0.7024176866681124, 0.7201140881056942, 0.7200362329984685, 0.5786858973884008]
+12724 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+12724 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+12727 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+12813 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 79 iterations. Objective: 26444.875, Feasible: true, Primal res.: 0.0075363917, Dual res.: 0.027715215
+12817 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.04052062679915189, Weights: [0.6343445436376636, 0.6299909817121444, 0.7146867788345984, 0.682337949494517]
+12883 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+12883 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+12886 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+12977 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 80 iterations. Objective: 26453.008, Feasible: true, Primal res.: 0.0076687746, Dual res.: 0.026737986
+12982 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.04562328626045087, Weights: [0.5374427037531124, 0.5972341249663179, 0.5575279566863891, 0.7970103098105588]
+13048 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+13048 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+13052 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+13127 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 77 iterations. Objective: 26428.818, Feasible: true, Primal res.: 0.008295649, Dual res.: 0.029673971
+13132 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.039217737259815026, Weights: [0.7046226640108592, 0.5055544118990039, 0.6986018978638832, 0.6898455097189707]
+13199 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+13199 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+13202 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+13284 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 76 iterations. Objective: 26430.121, Feasible: true, Primal res.: 0.00823209, Dual res.: 0.02906086
+13289 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.04073708430673232, Weights: [0.6649024856557504, 0.5342300771895613, 0.7924492523056426, 0.7269317001185635]
+13356 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+13356 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+13360 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+13447 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 87 iterations. Objective: 26457.943, Feasible: true, Primal res.: 0.0062430757, Dual res.: 0.02630561
+13452 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03767374990717169, Weights: [0.6712847272687716, 0.5970761507442145, 0.5264393577030685, 0.5816167814016348]
+13519 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+13519 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+13522 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+13604 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 73 iterations. Objective: 26427.115, Feasible: true, Primal res.: 0.008488528, Dual res.: 0.029482653
+13609 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03713154675434454, Weights: [0.7659105340970915, 0.5957913950128005, 0.8102443812503307, 0.640134313250453]
+13677 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+13677 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+13680 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+13753 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 75 iterations. Objective: 26432.16, Feasible: true, Primal res.: 0.008563095, Dual res.: 0.029919382
+13758 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.041992423778215104, Weights: [0.640210482187711, 0.6139742930707791, 0.5348752054911228, 0.7556230815020095]
+13830 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+13830 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+13834 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+13925 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 92 iterations. Objective: 26469.602, Feasible: true, Primal res.: 0.0059813755, Dual res.: 0.025981603
+13931 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03691637825699173, Weights: [0.6546195716818137, 0.5391055643527931, 0.6699644871053857, 0.5381744743660298]
+13998 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+13998 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+14001 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+14090 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 90 iterations. Objective: 26468.498, Feasible: true, Primal res.: 0.006117694, Dual res.: 0.025408348
+14095 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03988205609280328, Weights: [0.5904695045126682, 0.6308789196711229, 0.556814000901098, 0.6056700229512623]
+14162 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+14162 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+14165 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+14257 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 82 iterations. Objective: 26451.68, Feasible: true, Primal res.: 0.007211943, Dual res.: 0.02790277
+14262 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.04005661770199295, Weights: [0.625027206866262, 0.6659570245115292, 0.8000936798310321, 0.6530357539233853]
+14328 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+14328 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+14332 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+14416 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 83 iterations. Objective: 26462.941, Feasible: true, Primal res.: 0.007330468, Dual res.: 0.026175842
+14421 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.04653835100281437, Weights: [0.505042442423231, 0.6604696779322461, 0.5859036012870062, 0.7914789756491212]
+14486 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+14486 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+14490 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+14590 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 90 iterations. Objective: 26472.95, Feasible: true, Primal res.: 0.0061593107, Dual res.: 0.024807759
+14595 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.04362474336638121, Weights: [0.5160593826873286, 0.5637780049313517, 0.810716795239496, 0.6818658824369938]
+14663 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+14663 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+14667 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+14738 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 74 iterations. Objective: 26430.031, Feasible: true, Primal res.: 0.008921458, Dual res.: 0.029343285
+14743 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.04366712719153832, Weights: [0.6138162084857393, 0.6012354835882638, 0.6963590901278705, 0.8095321285499557]
+14811 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+14811 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+14814 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+14893 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 70 iterations. Objective: 26410.299, Feasible: true, Primal res.: 0.00962707, Dual res.: 0.032023475
+14898 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03833159078173585, Weights: [0.7770299242443841, 0.7273559856183605, 0.7238916572662006, 0.7118839149728328]
+14965 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+14965 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+14968 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+15071 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 91 iterations. Objective: 26468.215, Feasible: true, Primal res.: 0.0061163106, Dual res.: 0.026240107
+15076 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03743200626951771, Weights: [0.6432912438034657, 0.5317452703593082, 0.7134368882683054, 0.5522976651492612]
+15144 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+15144 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+15147 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+15231 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 85 iterations. Objective: 26464.512, Feasible: true, Primal res.: 0.0065583675, Dual res.: 0.026654698
+15236 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03675011474578713, Weights: [0.6727095591560688, 0.74775978124678, 0.7299065094800872, 0.5459477253720277]
+15305 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+15305 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+15308 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+15405 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 88 iterations. Objective: 26467.861, Feasible: true, Primal res.: 0.0063979025, Dual res.: 0.025142798
+15410 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.04406535736958917, Weights: [0.5250013300954364, 0.7696201295964964, 0.5251850176256242, 0.7084872644149095]
+15477 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+15478 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+15481 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+15569 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 94 iterations. Objective: 26488.598, Feasible: true, Primal res.: 0.005219793, Dual res.: 0.023913566
+15574 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03932316015949001, Weights: [0.546721957427149, 0.7994417726795358, 0.7158049053238416, 0.5428841355162427]
+15642 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+15642 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+15645 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+15719 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 75 iterations. Objective: 26429.332, Feasible: true, Primal res.: 0.008349659, Dual res.: 0.028707376
+15724 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.04080987383557061, Weights: [0.6665145307891566, 0.5599985220188336, 0.7402411394646506, 0.7307877510419802]
+15792 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+15792 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+15795 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+15888 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 95 iterations. Objective: 26483.418, Feasible: true, Primal res.: 0.00539969, Dual res.: 0.02460593
+15893 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03783975015447816, Weights: [0.5945643493588051, 0.5864198619044839, 0.5753891839646353, 0.5249578789739752]
+15960 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+15960 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+15963 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+16039 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 79 iterations. Objective: 26439.863, Feasible: true, Primal res.: 0.008127742, Dual res.: 0.028508175
+16044 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.04315875477158215, Weights: [0.6003965289756772, 0.6618986432995922, 0.6294572169342324, 0.7660325077881074]
+16110 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+16110 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+16114 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+16190 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 77 iterations. Objective: 26436.914, Feasible: true, Primal res.: 0.0076834136, Dual res.: 0.028077012
+16195 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.038725030410639676, Weights: [0.6932618838025216, 0.7392439303998813, 0.8078320021299281, 0.6571512112702105]
+16263 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+16263 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+16267 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+16344 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 78 iterations. Objective: 26443.756, Feasible: true, Primal res.: 0.0077176383, Dual res.: 0.027652206
+16349 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.04262477721849685, Weights: [0.59767410189192, 0.6334614955593675, 0.8037028398122312, 0.7402686839214317]
+16417 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+16417 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+16421 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+16506 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 85 iterations. Objective: 26465.928, Feasible: true, Primal res.: 0.006635654, Dual res.: 0.02571077
+16511 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.04321945433728356, Weights: [0.537850214699597, 0.6655366894748008, 0.7774877749565103, 0.6925163582379104]
+16578 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+16578 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+16582 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+16659 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 78 iterations. Objective: 26427.059, Feasible: true, Primal res.: 0.008278623, Dual res.: 0.029462341
+16664 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03639834063790658, Weights: [0.7921051184980153, 0.6697814503668008, 0.7667288679633271, 0.6219774755246756]
+16731 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+16731 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+16734 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+16821 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 79 iterations. Objective: 26432.93, Feasible: true, Primal res.: 0.007851394, Dual res.: 0.028723733
+16825 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03991854668436734, Weights: [0.6788485702776808, 0.5337494050946626, 0.6247027773231698, 0.6977032679780286]
+16893 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+16893 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+16897 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+16991 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 85 iterations. Objective: 26457.65, Feasible: true, Primal res.: 0.0066555375, Dual res.: 0.02707787
+16996 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03800775955725063, Weights: [0.6625402163063864, 0.5335605519042173, 0.5346963448158595, 0.5898894523232983]
+17060 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+17060 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+17064 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+17142 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 72 iterations. Objective: 26416.309, Feasible: true, Primal res.: 0.009050235, Dual res.: 0.02989496
+17147 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.04061246381479131, Weights: [0.7067539143749333, 0.6023532133717778, 0.5635963905995103, 0.7597220365893824]
+17147 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.maxiterations. Returning default of 25000.
+17151 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  -   Round 2 / 3 -- Size: 13, Budget: 0.25
+17218 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+17218 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+17221 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+17303 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 85 iterations. Objective: 26457.76, Feasible: true, Primal res.: 0.0073464103, Dual res.: 0.026455842
+17309 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.034107444628603774, Weights: [0.8073435286130801, 0.6554895657824572, 0.5208320926795268, 0.5012045290396677]
+17376 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+17376 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+17380 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+17454 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 75 iterations. Objective: 26427.06, Feasible: true, Primal res.: 0.008393224, Dual res.: 0.029473286
+17459 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03638717003251959, Weights: [0.7921051184980153, 0.6697814503668008, 0.7667288679633271, 0.6219774755246756]
+17527 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+17527 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+17530 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+17605 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 74 iterations. Objective: 26431.057, Feasible: true, Primal res.: 0.008307012, Dual res.: 0.02933184
+17610 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03663799564421158, Weights: [0.7723929584681737, 0.6366820894931768, 0.7680466967346122, 0.6187856215990819]
+17677 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+17677 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+17680 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+17775 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 86 iterations. Objective: 26464.521, Feasible: true, Primal res.: 0.006526529, Dual res.: 0.026474306
+17779 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.036743620992783166, Weights: [0.6727095591560688, 0.74775978124678, 0.7299065094800872, 0.5459477253720277]
+17847 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+17848 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+17851 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+17940 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 86 iterations. Objective: 26464.705, Feasible: true, Primal res.: 0.0062867007, Dual res.: 0.026525922
+17945 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03690714703811421, Weights: [0.6707981276032627, 0.8052692211577791, 0.6123368628802227, 0.5488966415649023]
+18012 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+18012 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+18016 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+18104 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 91 iterations. Objective: 26469.596, Feasible: true, Primal res.: 0.0060312846, Dual res.: 0.02578139
+18109 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.036924951202890605, Weights: [0.6546195716818137, 0.5391055643527931, 0.6699644871053857, 0.5381744743660298]
+18174 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+18174 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+18177 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+18265 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 81 iterations. Objective: 26452.158, Feasible: true, Primal res.: 0.007026361, Dual res.: 0.02759017
+18270 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.036940852901880684, Weights: [0.7024176866681124, 0.7201140881056942, 0.7200362329984685, 0.5786858973884008]
+18337 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+18337 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+18340 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+18444 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 91 iterations. Objective: 26472.576, Feasible: true, Primal res.: 0.005986704, Dual res.: 0.025311884
+18449 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03698023295538527, Weights: [0.6416195260674551, 0.5473539964506834, 0.7869955223946099, 0.5327537071987815]
+18516 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+18516 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+18519 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+18591 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 74 iterations. Objective: 26411.777, Feasible: true, Primal res.: 0.008955981, Dual res.: 0.030447362
+18596 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.037074118312405896, Weights: [0.8136888106482587, 0.6556841258861771, 0.7347642964499096, 0.673880957262827]
+18665 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+18665 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+18669 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+18748 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 72 iterations. Objective: 26427.162, Feasible: true, Primal res.: 0.008632262, Dual res.: 0.029527744
+18753 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.037108648593287726, Weights: [0.7659105340970915, 0.5957913950128005, 0.8102443812503307, 0.640134313250453]
+18831 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+18831 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+18834 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+18963 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 88 iterations. Objective: 26468.244, Feasible: true, Primal res.: 0.0060934974, Dual res.: 0.025639476
+18968 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03744502886238008, Weights: [0.6432912438034657, 0.5317452703593082, 0.7134368882683054, 0.5522976651492612]
+19033 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+19033 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+19037 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+19111 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 74 iterations. Objective: 26424.814, Feasible: true, Primal res.: 0.008627081, Dual res.: 0.029544849
+19116 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03750832814821653, Weights: [0.7614765339662042, 0.6383658153220823, 0.7548063953113473, 0.6553787229590375]
+19182 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+19182 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+19185 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+19269 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 84 iterations. Objective: 26458.396, Feasible: true, Primal res.: 0.0066687646, Dual res.: 0.02688255
+19274 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03752470837056085, Weights: [0.6718721511161077, 0.5647373534190172, 0.5888460346267528, 0.5772984245202277]
+19274 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.maxiterations. Returning default of 25000.
+19278 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  -   Round 3 / 3 -- Size: 3, Budget: 1.0
+19347 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+19347 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+19350 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+19428 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 83 iterations. Objective: 26457.78, Feasible: true, Primal res.: 0.0070147975, Dual res.: 0.026867192
+19433 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.034099230166011324, Weights: [0.8073435286130801, 0.6554895657824572, 0.5208320926795268, 0.5012045290396677]
+19500 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+19500 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+19503 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+19588 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 76 iterations. Objective: 26427.023, Feasible: true, Primal res.: 0.008326995, Dual res.: 0.029367954
+19592 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03639719718796023, Weights: [0.7921051184980153, 0.6697814503668008, 0.7667288679633271, 0.6219774755246756]
+19659 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+19659 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+19662 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+19751 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 79 iterations. Objective: 26431.016, Feasible: true, Primal res.: 0.007918781, Dual res.: 0.029498491
+19756 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03662566696985861, Weights: [0.7723929584681737, 0.6366820894931768, 0.7680466967346122, 0.6187856215990819]
+19756 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Bracket 4 / 4 -- Size: 160 (16.0), Budget: 0.015625
+19756 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.maxiterations. Returning default of 25000.
+19759 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  -   Round 1 / 4 -- Size: 160, Budget: 0.015625
+19827 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+19827 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+19830 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+19900 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 71 iterations. Objective: 26417.29, Feasible: true, Primal res.: 0.00970076, Dual res.: 0.031160885
+19905 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.04238750775330228, Weights: [0.6683276262828066, 0.6630618140532648, 0.5100485684620336, 0.8083438304779202]
+19971 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+19971 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+19974 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+20046 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 77 iterations. Objective: 26440.414, Feasible: true, Primal res.: 0.008119821, Dual res.: 0.02824929
+20051 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.04267254816942221, Weights: [0.6048352210490681, 0.6572576085534454, 0.7866671549729111, 0.7510289286681995]
+20117 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+20117 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+20120 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+20192 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 73 iterations. Objective: 26426.744, Feasible: true, Primal res.: 0.00879893, Dual res.: 0.030443745
+20197 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03924372358704104, Weights: [0.7076864705967447, 0.7992206216487108, 0.7599617750595447, 0.6961234023559766]
+20264 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+20264 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+20267 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+20356 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 79 iterations. Objective: 26444.357, Feasible: true, Primal res.: 0.00769424, Dual res.: 0.028396174
+20361 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03836742969145956, Weights: [0.6843695524339909, 0.5791513623110827, 0.7069208951680788, 0.6304930279384307]
+20426 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+20427 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+20430 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+20505 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 80 iterations. Objective: 26450.486, Feasible: true, Primal res.: 0.0080251945, Dual res.: 0.027934212
+20510 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.04542006110234028, Weights: [0.5443668803174, 0.6034240847536918, 0.64361418639267, 0.798984503077111]
+20579 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+20579 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+20583 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+20665 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 83 iterations. Objective: 26459.424, Feasible: true, Primal res.: 0.007221441, Dual res.: 0.026594233
+20670 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.04461697831610099, Weights: [0.534150983862493, 0.7343462413454317, 0.7414550691079739, 0.7486467247827585]
+20738 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+20738 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+20741 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+20825 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 83 iterations. Objective: 26455.508, Feasible: true, Primal res.: 0.0068453243, Dual res.: 0.026900874
+20830 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.036505012859660624, Weights: [0.7074724181543944, 0.5808839598308277, 0.6984187218414915, 0.5608872634816114]
+20897 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+20897 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+20900 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+20987 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 84 iterations. Objective: 26458.023, Feasible: true, Primal res.: 0.0065692705, Dual res.: 0.026171306
+20992 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03562272361726559, Weights: [0.7353412431436036, 0.6250050897220764, 0.5801084686479594, 0.5348592770953658]
+21058 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+21058 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+21062 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+21154 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 82 iterations. Objective: 26452.23, Feasible: true, Primal res.: 0.00703458, Dual res.: 0.026620219
+21158 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.04162892526519221, Weights: [0.5987054737014079, 0.7875178285586892, 0.5306407841250482, 0.6910321331205909]
+21226 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+21226 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+21229 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+21328 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 89 iterations. Objective: 26470.85, Feasible: true, Primal res.: 0.0063727503, Dual res.: 0.025357906
+21333 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.04368785604825968, Weights: [0.5231345887567184, 0.5812405272082234, 0.5421853182129155, 0.6896965835022488]
+21400 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+21400 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+21403 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+21491 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 83 iterations. Objective: 26456.078, Feasible: true, Primal res.: 0.007135805, Dual res.: 0.026308948
+21496 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.04415125243903379, Weights: [0.5496056291029493, 0.6132219436701885, 0.566855548734216, 0.7458765803647407]
+21562 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+21562 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+21565 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+21629 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 66 iterations. Objective: 26397.16, Feasible: true, Primal res.: 0.010678314, Dual res.: 0.033151075
+21634 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03887286837617329, Weights: [0.7966651205033419, 0.7819689032996902, 0.7151443609680679, 0.7588025093145485]
+21701 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+21701 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+21705 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+21780 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 80 iterations. Objective: 26449.053, Feasible: true, Primal res.: 0.007840807, Dual res.: 0.027122587
+21785 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.04565480237961464, Weights: [0.5432066139939333, 0.6167064609827019, 0.7950072240287065, 0.8098565933356454]
+21853 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+21853 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+21856 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+21951 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 86 iterations. Objective: 26458.79, Feasible: true, Primal res.: 0.0066336347, Dual res.: 0.026222527
+21956 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03622166435919442, Weights: [0.713200133451052, 0.5170462365322847, 0.5348371356890272, 0.5466970412648218]
+22024 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+22024 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+22027 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+22110 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 84 iterations. Objective: 26453.396, Feasible: true, Primal res.: 0.0070244595, Dual res.: 0.027360216
+22116 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03499849740189856, Weights: [0.7647535696213998, 0.6765590331648633, 0.8098500129722862, 0.5315028849941063]
+22184 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+22184 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+22187 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+22279 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 86 iterations. Objective: 26471.545, Feasible: true, Primal res.: 0.0067587644, Dual res.: 0.025979487
+22284 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.04501746811257298, Weights: [0.5021421889671903, 0.6911440383348223, 0.7898953496862118, 0.7221901813571991]
+22352 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+22352 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+22356 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+22440 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 86 iterations. Objective: 26460.598, Feasible: true, Primal res.: 0.006745361, Dual res.: 0.027145851
+22445 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03657780673057941, Weights: [0.687029616421816, 0.5026868894375557, 0.8131907007411426, 0.5511261795116073]
+22512 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+22512 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+22516 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+22594 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 80 iterations. Objective: 26443.754, Feasible: true, Primal res.: 0.007507683, Dual res.: 0.028644688
+22599 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.036039767442041924, Weights: [0.7612482028089584, 0.6322249055125848, 0.6250912200280934, 0.5759895798279753]
+22669 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+22669 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+22672 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+22752 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 72 iterations. Objective: 26421.27, Feasible: true, Primal res.: 0.0089526605, Dual res.: 0.030689538
+22756 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03826467967761465, Weights: [0.7481363793523088, 0.7256505438516518, 0.7685879227026564, 0.683558530021718]
+22824 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+22824 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+22828 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+22906 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 78 iterations. Objective: 26441.053, Feasible: true, Primal res.: 0.0080602355, Dual res.: 0.027986987
+22911 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.043521808261144546, Weights: [0.5931858827100457, 0.5851116012693953, 0.5387618384801209, 0.7731975540079556]
+22980 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+22980 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+22983 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+23070 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 77 iterations. Objective: 26443.771, Feasible: true, Primal res.: 0.0077291173, Dual res.: 0.028334608
+23074 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.04042445294944232, Weights: [0.6393413857798125, 0.6468646574386845, 0.6813196626391205, 0.6826944387149394]
+23155 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+23155 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+23159 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+23227 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 69 iterations. Objective: 26410.646, Feasible: true, Primal res.: 0.009781375, Dual res.: 0.03212461
+23232 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.037256977152351184, Weights: [0.814337978076056, 0.7948956282047767, 0.6287299905384256, 0.6812395499159893]
+23299 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+23299 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+23302 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+23385 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 86 iterations. Objective: 26453.242, Feasible: true, Primal res.: 0.0068872874, Dual res.: 0.027217232
+23390 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.039654499199504575, Weights: [0.6325452141480379, 0.5121259355182877, 0.6262988390685265, 0.639254799418919]
+23458 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+23458 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+23461 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+23541 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 81 iterations. Objective: 26456.01, Feasible: true, Primal res.: 0.0077334554, Dual res.: 0.027071273
+23546 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.046185361309097527, Weights: [0.521839121820778, 0.8130987292892733, 0.8127376639525734, 0.803855885936331]
+23614 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+23614 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+23617 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+23690 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 74 iterations. Objective: 26422.135, Feasible: true, Primal res.: 0.008674291, Dual res.: 0.029498087
+23695 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03791034907761655, Weights: [0.7555508198676447, 0.754824419985861, 0.8068126432661047, 0.672076012791765]
+23762 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+23762 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+23766 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+23842 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 75 iterations. Objective: 26433.172, Feasible: true, Primal res.: 0.008031476, Dual res.: 0.028332284
+23847 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03972815151275344, Weights: [0.6821081411762842, 0.5249635030231992, 0.6578604223728237, 0.692268205685827]
+23925 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+23925 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+23928 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+24022 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 87 iterations. Objective: 26465.023, Feasible: true, Primal res.: 0.006512572, Dual res.: 0.02624996
+24027 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.039273749818378556, Weights: [0.6080684637349757, 0.5373121125162695, 0.7411070204160494, 0.6009665775471376]
+24091 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+24092 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+24095 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+24164 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 74 iterations. Objective: 26419.86, Feasible: true, Primal res.: 0.009081226, Dual res.: 0.029796481
+24169 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.04264299668051752, Weights: [0.6551524736940755, 0.6805728621291849, 0.6433885227477351, 0.8086718990026633]
+24239 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+24239 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+24242 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+24311 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 73 iterations. Objective: 26414.15, Feasible: true, Primal res.: 0.009051534, Dual res.: 0.030365834
+24316 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.037685371201945296, Weights: [0.7930802597983049, 0.5277819401485059, 0.5476280605273759, 0.6844583771639637]
+24385 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+24385 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+24388 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+24479 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 84 iterations. Objective: 26458.766, Feasible: true, Primal res.: 0.007173059, Dual res.: 0.026222372
+24484 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.04526964044524342, Weights: [0.5273381101747946, 0.791555262267837, 0.7523902319467264, 0.7686465174322201]
+24552 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+24552 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+24556 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+24636 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 71 iterations. Objective: 26413.484, Feasible: true, Primal res.: 0.009383392, Dual res.: 0.030390255
+24641 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.04141118072189131, Weights: [0.6926896002510069, 0.6988176644448083, 0.7380056770441407, 0.7901035613314004]
+24709 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+24709 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+24712 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+24787 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 78 iterations. Objective: 26428.438, Feasible: true, Primal res.: 0.007992693, Dual res.: 0.028918471
+24792 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.039514101957101304, Weights: [0.7008875235755733, 0.5561111659589186, 0.5881514875644434, 0.6983826805714709]
+24861 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+24861 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+24864 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+24951 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 85 iterations. Objective: 26473.32, Feasible: true, Primal res.: 0.00614059, Dual res.: 0.025357207
+24956 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03567378452947731, Weights: [0.6782043109609102, 0.7729037167789163, 0.8006552320415483, 0.5036691297556519]
+25025 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+25025 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+25028 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+25119 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 91 iterations. Objective: 26470.506, Feasible: true, Primal res.: 0.0058448226, Dual res.: 0.025208587
+25124 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.0354931092577271, Weights: [0.7029413018792713, 0.6186372715507311, 0.5473266652190949, 0.5050257329933552]
+25190 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+25190 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+25194 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+25275 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 82 iterations. Objective: 26444.857, Feasible: true, Primal res.: 0.0075667663, Dual res.: 0.027542207
+25280 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.034989814113538104, Weights: [0.7956427298822701, 0.5837247902090197, 0.731662887647291, 0.5490438405493782]
+25346 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+25346 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+25350 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+25425 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 80 iterations. Objective: 26457.62, Feasible: true, Primal res.: 0.0077088024, Dual res.: 0.027180495
+25430 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.04595581611832175, Weights: [0.5209869127933251, 0.762875880088729, 0.8146420794133535, 0.7918709062938087]
+25498 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+25498 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+25501 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+25593 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 84 iterations. Objective: 26450.555, Feasible: true, Primal res.: 0.0070708366, Dual res.: 0.027793288
+25598 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.0374663643086355, Weights: [0.6960200258510674, 0.5471915960558961, 0.5780720878538784, 0.5938570989122958]
+25665 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+25665 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+25669 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+25748 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 82 iterations. Objective: 26456.57, Feasible: true, Primal res.: 0.0071866238, Dual res.: 0.027447853
+25753 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.042105069466511984, Weights: [0.5772767247016166, 0.6735850015058813, 0.7151507362252224, 0.6910518455304466]
+25821 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+25822 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+25825 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+25919 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 88 iterations. Objective: 26464.889, Feasible: true, Primal res.: 0.006357739, Dual res.: 0.02595645
+25923 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03973580959197013, Weights: [0.5991842480516414, 0.6178198226176129, 0.7272120716118644, 0.6115214765877358]
+25991 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+25991 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+25995 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+26086 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 82 iterations. Objective: 26455.18, Feasible: true, Primal res.: 0.0070764613, Dual res.: 0.027514733
+26090 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03880809113209463, Weights: [0.6448751018588328, 0.5750872498308538, 0.7228659432306194, 0.6145321500127469]
+26157 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+26157 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+26161 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+26254 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 76 iterations. Objective: 26440.318, Feasible: true, Primal res.: 0.008015682, Dual res.: 0.028979903
+26259 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.0413689529091933, Weights: [0.6292068492211811, 0.6123348118837082, 0.6951218065959659, 0.7165845099230791]
+26328 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+26328 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+26331 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+26415 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 87 iterations. Objective: 26461.771, Feasible: true, Primal res.: 0.0063709584, Dual res.: 0.026049044
+26420 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.039351911872704703, Weights: [0.616853448497259, 0.7152515949088889, 0.6492808904067053, 0.6107391592638541]
+26489 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+26489 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+26492 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+26573 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 73 iterations. Objective: 26416.105, Feasible: true, Primal res.: 0.009310477, Dual res.: 0.030444967
+26578 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.041781331074472586, Weights: [0.6818055428786305, 0.7504705205453797, 0.5707352222387981, 0.7938878334579829]
+26646 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+26646 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+26649 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+26739 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 81 iterations. Objective: 26443.863, Feasible: true, Primal res.: 0.0073646368, Dual res.: 0.027966367
+26743 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03658111532594072, Weights: [0.743337086443011, 0.6398854025635853, 0.5796767122591939, 0.5883968715435554]
+26812 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+26812 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+26815 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+26910 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 86 iterations. Objective: 26467.537, Feasible: true, Primal res.: 0.00659497, Dual res.: 0.025891643
+26915 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.04324574249377424, Weights: [0.5335123060647802, 0.7095326857008507, 0.8134005745641195, 0.6886329705359044]
+26982 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+26982 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+26986 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+27079 [main] INFO  org.linqs.psl.reasoner.admm.ADMMReasoner  - Optimization completed in 92 iterations. Objective: 26479.316, Feasible: true, Primal res.: 0.0056543653, Dual res.: 0.025202718
+27084 [main] DEBUG org.linqs.psl.application.learning.weight.search.Hyperband  - Training Objective: 0.03742475909362722, Weights: [0.6113035482105724, 0.5464823668030133, 0.7686620264813646, 0.5262498378840195]
+27152 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initialconsensusvalue. Returning default of RANDOM.
+27152 [main] DEBUG org.linqs.psl.config.Config  - No value found for option admmreasoner.initiallocalvalue. Returning default of RANDOM.
+27155 [main] DEBUG org.linqs.psl.reasoner.admm.ADMMReasoner  - Performing optimization with 9900 variables and 26705 terms.
+27155 [pool-1-thread-3] WARN  org.linqs.psl.util.Parallel  - Caught exception on worker: 2
+ERROR: Failed to run weight learning
